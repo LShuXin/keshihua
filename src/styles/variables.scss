@@ -2,6 +2,7 @@
 $menuText: #409eff ;
 $menuActiveText:#fff;
 $subMenuActiveText:#409eff; //https://github.com/ElemeFE/element/issues/12951
+$ActiveBorder:#000;
 
 $menuBg:#fff;
 $menuHover:#409eff;
@@ -24,4 +25,5 @@ $sideBarWidth: 210px;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
   menuHoverText:$menuHoverText;
+  ActiveBorder:$ActiveBorder;
 }

@@ -178,7 +178,7 @@
                   shadow="never"
                   id="lstp"
                   :body-style="{padding:'0px'}"
-                  @click.native="msgBox"
+                  @click.native="lsImgFun"
                 >
                   <span
                     class="icon iconfont"
@@ -204,7 +204,7 @@
                     id="One"
                     style="font-size:30px;display:block;"
                   >&#xe661;</span>
- 
+
                   <p>设备重启</p>
                 </el-card>
               </el-col>
@@ -337,11 +337,27 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </div>-->
     </el-dialog>
-    <el-dialog id="lsImg" title :visible.sync="LsImg" width="90%">
+    <el-dialog id="lsImg" title :visible.sync="lsImgBox" width="90%">
+      <el-row :gutter="10" style="padding-bottom:20px;">
+        <el-col :span="4" :offset="4">
+          <label style="font-size:16px;">所属线路：{{topData}}</label>
+        </el-col>
+        <el-col :span="6">
+          <el-date-picker
+            v-model="LsImgDate"
+            type="date"
+            placeholder="选择日期"
+            @change="lsImgdateFun"
+            value-format="yyyy-MM-dd"
+            size="mini"
+          ></el-date-picker>
+        </el-col>
+      </el-row>
+
       <div style="height:1000px;overflow:auto;">
-        <el-card v-for="(img ,i) in urls " :key="i">
-           <label></label>
-          <el-image style="width: 100%; height: 80%" :src="img" fit="fill" lazy></el-image>
+        <el-card v-for="(item ,i) in lsImgData " :key="i">
+          <label style="padding-bottom:15px; display:block">拍摄时间：{{item.createdAt}}</label>
+          <el-image style="width: 100%; height: 60%" :src="item.url" fit="fill" lazy></el-image>
         </el-card>
       </div>
       <!-- <div slot="footer">
@@ -983,7 +999,10 @@ export default {
         kzbgzms: "正常模式",
         fczt: "充放电"
       },
-      LsImg: true
+      lsImgBox: false,
+      lsImgData: undefined,
+      LsImgDate: undefined,
+      totalCountNum: undefined
     };
   },
   mounted() {
@@ -1487,7 +1506,7 @@ export default {
         if (msg.data.code === 20011) {
           console.log("没有访问权限！");
         } else {
-          if (msg.data.data.pictures === null) {
+          if (msg.data.data.pictures === undefined) {
             this.$message.error("暂无图片");
           } else {
             // console.log(msg)
@@ -1668,48 +1687,55 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
+          console.log(msg);
           if (msg.data.code === 20011) {
             this.$message.error("没有访问权限！");
           } else {
             if (msg.data.data.totalCount === 0) {
               // this.$message.error("暂无图片");
             } else {
-              this.dateMsg = msg.data.data.pictures[0].createdAt;
-              this.url = msg.data.data.pictures[0].url;
-              this.deviceCode = msg.data.data.pictures[0].deviceCode;
-              var urlse = [];
-              var dateArr = [];
-              for (var a = 0; a < msg.data.data.pictures.length; a++) {
-                urlse.push(msg.data.data.pictures[a].url);
-                // console.log(this.srcList);
-                dateArr.push(msg.data.data.pictures[a].createdAt);
-              }
-              this.srcList = urlse;
-              this.dateArr = dateArr;
-              if (msg.data.data.pictures.length <= 5) {
-                var urlsev = [];
-                var dateArr = [];
-                for (var b = 0; b < msg.data.data.pictures.length; b++) {
-                  urlsev.push(msg.data.data.pictures[b].url);
-                  dateArr.push(msg.data.data.pictures[b].createdAt);
-                  // console.log(this.urls);
-                }
-                // console.log();
-                this.urls = urlsev;
-                this.dateArr = dateArr;
-                this.ul = this.urls.length;
+              if (this.totalCountNum === msg.data.data.totalCount) {
+                console.log(this.totalCountNum);
+                return;
               } else {
-                this.urlsdata = msg.data.data.pictures;
-                var urlseve = [];
+                console.log(this.totalCountNum);
+                this.totalCountNum = msg.data.data.totalCount;
+                this.dateMsg = msg.data.data.pictures[0].createdAt;
+                this.url = msg.data.data.pictures[0].url;
+                this.deviceCode = msg.data.data.pictures[0].deviceCode;
+                var urlse = [];
                 var dateArr = [];
-                for (var b = 0; b < 5; b++) {
-                  urlseve.push(msg.data.data.pictures[b].url);
-                  dateArr.push(msg.data.data.pictures[b].createdAt);
-                  // console.log(this.urls);
+                for (var a = 0; a < msg.data.data.pictures.length; a++) {
+                  urlse.push(msg.data.data.pictures[a].url);
+                  // console.log(this.srcList);
+                  dateArr.push(msg.data.data.pictures[a].createdAt);
                 }
+                this.srcList = urlse;
                 this.dateArr = dateArr;
-                this.urls = urlseve;
+                if (msg.data.data.pictures.length <= 5) {
+                  var urlsev = [];
+                  var dateArr = [];
+                  for (var b = 0; b < msg.data.data.pictures.length; b++) {
+                    urlsev.push(msg.data.data.pictures[b].url);
+                    dateArr.push(msg.data.data.pictures[b].createdAt);
+                    // console.log(this.urls);
+                  }
+                  // console.log();
+                  this.urls = urlsev;
+                  this.dateArr = dateArr;
+                  this.ul = this.urls.length;
+                } else {
+                  this.urlsdata = msg.data.data.pictures;
+                  var urlseve = [];
+                  var dateArr = [];
+                  for (var b = 0; b < 5; b++) {
+                    urlseve.push(msg.data.data.pictures[b].url);
+                    dateArr.push(msg.data.data.pictures[b].createdAt);
+                    // console.log(this.urls);
+                  }
+                  this.dateArr = dateArr;
+                  this.urls = urlseve;
+                }
               }
             }
           }
@@ -1741,39 +1767,45 @@ export default {
             // this.$message.error("暂无图片");
           } else {
             // console.log(msg)
-            this.url = msg.data.data.pictures[0].url;
-            this.dateMsg = msg.data.data.pictures[0].createdAt;
-            var urlse = [];
-            var dateArr = [];
-            for (var a = 0; a < msg.data.data.pictures.length; a++) {
-              urlse.push(msg.data.data.pictures[a].url);
-              dateArr.push(msg.data.data.pictures[a].createdAt);
-            }
-            this.srcList = urlse;
-            this.dateArr = dateArr;
-            if (msg.data.data.pictures.length <= 5) {
-              var urlsev = [];
-              var dateArr = [];
-              for (var b = 0; b < msg.data.data.pictures.length; b++) {
-                dateArr.push(msg.data.data.pictures[b].createdAt);
-                urlsev.push(msg.data.data.pictures[b].url);
-                // console.log(this.urls);
-              }
-              // console.log();
-              this.urls = urlsev;
-              this.dateArr = dateArr;
-              this.ul = this.urls.length;
+            if (this.totalCountNum === msg.data.data.totalCount) {
+              console.log(this.totalCountNum);
+              return;
             } else {
-              this.urlsdata = msg.data.data.pictures;
+              this.totalCountNum = msg.data.data.totalCount;
+              this.url = msg.data.data.pictures[0].url;
+              this.dateMsg = msg.data.data.pictures[0].createdAt;
+              var urlse = [];
               var dateArr = [];
-              var urlseve = [];
-              for (var b = 0; b < 5; b++) {
-                urlseve.push(msg.data.data.pictures[b].url);
-                dateArr.push(msg.data.data.pictures[b].createdAt);
-                // console.log(this.urls);
+              for (var a = 0; a < msg.data.data.pictures.length; a++) {
+                urlse.push(msg.data.data.pictures[a].url);
+                dateArr.push(msg.data.data.pictures[a].createdAt);
               }
+              this.srcList = urlse;
               this.dateArr = dateArr;
-              this.urls = urlseve;
+              if (msg.data.data.pictures.length <= 5) {
+                var urlsev = [];
+                var dateArr = [];
+                for (var b = 0; b < msg.data.data.pictures.length; b++) {
+                  dateArr.push(msg.data.data.pictures[b].createdAt);
+                  urlsev.push(msg.data.data.pictures[b].url);
+                  // console.log(this.urls);
+                }
+                // console.log();
+                this.urls = urlsev;
+                this.dateArr = dateArr;
+                this.ul = this.urls.length;
+              } else {
+                this.urlsdata = msg.data.data.pictures;
+                var dateArr = [];
+                var urlseve = [];
+                for (var b = 0; b < 5; b++) {
+                  urlseve.push(msg.data.data.pictures[b].url);
+                  dateArr.push(msg.data.data.pictures[b].createdAt);
+                  // console.log(this.urls);
+                }
+                this.dateArr = dateArr;
+                this.urls = urlseve;
+              }
             }
           }
         }
@@ -1792,12 +1824,40 @@ export default {
         Math.random() * 10
       )}℃`;
     },
-    lsImgFun(){
-       if (this.ganta !== "") {
-         console.log("one")
+    lsImgFun() {
+      if (this.ganta !== "") {
+        this.lsImgBox = true;
       } else {
         this.$message.error("请先选择杆塔");
       }
+    },
+    lsImgdateFun(val) {
+      console.log(val);
+      Axios({
+        method: "POST",
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/picture/get-by-tower-id?user-id=" +
+          Number(localStorage.getItem("userId")) +
+          "&tower-id=" +
+          this.towerId +
+          "&day=" +
+          val,
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        console.log(msg);
+        if (msg.data.code === 0) {
+          if (msg.data.data.totalCount !== 0) {
+            this.lsImgData = msg.data.data.pictures;
+          } else {
+            this.$message.error("暂无图片");
+          }
+        } else {
+          this.$message.error(msg.data.message);
+        }
+      });
     }
   },
   destoryed() {

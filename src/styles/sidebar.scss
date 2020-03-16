@@ -78,17 +78,18 @@
     }
 
     .is-active > .el-submenu__title {
-      color: $subMenuActiveText ;
+      color: $subMenuActiveText;
     }
     .is-active {
       background: $menuHover !important;
       color: $menuHoverText !important;
+      border-left: 10px solid $ActiveBorder!important;
     }
 
     & .nest-menu .el-submenu > .el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
-      background-color: $subMenuBg ;
+      background-color: $subMenuBg;
       color: $subMenuHover;
 
       &:hover {
@@ -145,7 +146,6 @@
             overflow: hidden;
             visibility: hidden;
             display: inline-block;
-           
           }
         }
       }
