@@ -1794,7 +1794,7 @@ export default {
     },
     lsImgFun(){
        if (this.ganta !== "") {
-
+         console.log("one")
       } else {
         this.$message.error("请先选择杆塔");
       }
