@@ -77,13 +77,7 @@ export default {
     return {
       msg: "整体走势",
       chart: null,
-      data: [
-        { count: "11-9", day: 0 },
-        { count: "11-10", day: 2 },
-        { count: "11-11", day: 4 },
-        { count: "11-12", day: 5 },
-        { count: "11-13", day: 1 }
-      ]
+      data: []
     };
   },
   // 方法集合
@@ -133,14 +127,16 @@ export default {
       axios({
         method: "post",
         url:
-          this.GLOBAL.AJAX_URL+"/v1/alarm/get-day-total-count?end-time="+moment().format("YYYY-MM-DD"),
+          this.GLOBAL.AJAX_URL +
+          "/v1/alarm/get-day-total-count?end-time=" +
+          moment().format("YYYY-MM-DD"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         chart.changeData(msg.data.data);
-         console.log(this.data);
+        //  console.log(this.data);
       });
     }
   },

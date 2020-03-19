@@ -1,45 +1,71 @@
 <template>
-  <el-card shadow="hover" style="height:100%; border-radius:10px;" @click.native="rout">
+  <el-card
+    shadow="hover"
+    style="height:100%; border-radius:10px; overflow-y:auto;"
+    @click.native="rout"
+  >
     <div id="topBox" style="color:red;">实时告警</div>
     <el-table :data="tableData" style="width: 100%" height="180px">
-      <el-table-column prop="date" label="杆塔名称"></el-table-column>
-      <el-table-column prop="name" label="告警原因"></el-table-column>
-      <el-table-column prop="address" label="巡视时间"></el-table-column>
+      <el-table-column label="杆塔名称">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>经度: {{ scope.row.longitude }}</p>
+            <p>维度: {{ scope.row.latitude }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.towerName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column prop="causes" label="告警原因"></el-table-column>
+      <el-table-column prop="reportedAt" label="巡视时间"></el-table-column>
     </el-table>
   </el-card>
 </template>
 <script>
+import Axios from "axios";
+import Cookies from "js-cookie";
 export default {
   data() {
     return {
       tableData: [
         {
-          date: "枣庄I线#219",
-          name: "大型车辆",
-          address: "17:00:59"
-        },
-        {
-          date: "菏泽II线#121",
-          name: "烟火",
-          address: "11:20:00"
-        },
-        {
-          date: "黄滨I线#142",
-          name: "大型车辆",
-          address: "12:00:00"
-        },
-        {
-          date: "黄滨II线#221",
-          name: "大型车辆",
-          address: "13:00:00"
+          reportedAt: "11:28:35",
+          causes: "大型车辆",
+          towerName: "测试线路11",
+          longitude: "111",
+          latitude: "21"
         }
-      ]
+      ],
+      set: null
     };
+  },
+  created() {
+    this.set = setInterval(this.setFun, 5000);
+    this.setFun();
   },
   methods: {
     rout() {
       this.$router.push("/form");
+    },
+    setFun() {
+      Axios({
+        method: "post",
+        url: this.GLOBAL.AJAX_URL + "/v1/alarm/get-real-time-alarm",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        this.tableData = msg.data.data;
+        // console.log(msg);
+      });
     }
+  },
+  // destoryed() {
+  //   clearInterval(this.set);
+  // },
+  beforeDestroy() {
+    clearInterval(this.set);
   }
 };
 </script>

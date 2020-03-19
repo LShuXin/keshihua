@@ -507,11 +507,6 @@ export default {
     test(row, colunm, event) {
       // console.log(row);
       console.log(row);
-      if (row.id == 1282) {
-        this.url = "http://47.104.136.74/image/2.jpg";
-      } else {
-        this.url = "http://47.104.136.74/image/3.jpg";
-      }
       this.row = row;
       this.form.xgLineName = row.lineName;
       this.form.xgTowerName = row.towerNum;
@@ -531,21 +526,35 @@ export default {
       // }).then(msg => {
       //   row.hasRead = 1;
       // });
-       axios({
+      axios({
         method: "post",
-        url:
-          this.GLOBAL.AJAX_URL +
-          "/v1/user-alarm/create",
-          data:{
-            userId:localStorage.getItem("userId"),
-            alarmId:row.id
-          },
+        url: this.GLOBAL.AJAX_URL + "/v1/user-alarm/create",
+        data: {
+          userId: Number(localStorage.getItem("userId")),
+          alarmId: Number(row.id)
+        },
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // row.hasRead = 1;
-        console.log(msg)
+        axios({
+          method: "post",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/alarm/query?user-id=" +
+            localStorage.getItem("userId") +
+            "&order-by=created_at&order=asc&page=" +
+            this.index +
+            "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          // console.log(msg);
+
+          this.gjsjdata = msg.data.data.alarms;
+          // console.log(this.gjsjdata);
+        });
       });
     },
     handleCurrentChange(val) {

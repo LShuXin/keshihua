@@ -10,6 +10,8 @@
 import G2 from "@antv/g2";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Axios from "axios";
+import moment from "moment";
 export default {
   name: "listcard",
   mounted() {
@@ -19,36 +21,8 @@ export default {
     return {
       data: [
         {
-          type: "烟火",
-          value: 103
-        },
-        {
-          type: "大型车辆",
-          value: 142
-        },
-        {
-          type: "雷电侦测",
-          value: 251
-        },
-        {
-          type: "飞鸟入侵",
-          value: 367
-        },
-        {
-          type: "杆塔倾斜",
-          value: 491
-        },
-        {
-          type: "异物入侵",
-          value: 672
-        },
-        {
           type: "异常放电",
           value: 868
-        },
-        {
-          type: "树木生长",
-          value: 232
         }
       ]
     };
@@ -67,7 +41,7 @@ export default {
         value: {
           min: 0,
           nice: false,
-          alias: " "
+          alias: ""
         }
       });
       chart.axis("type", {
@@ -99,8 +73,8 @@ export default {
       chart.coord().transpose();
       chart
         .interval()
-        .position("type*value")
-        .color("type", [
+        .position("cause*count")
+        .color("cause", [
           "#4ab7bd",
           "#3a71a8",
           "#fec171",
@@ -112,16 +86,34 @@ export default {
         ])
         .size(10)
         .opacity(1)
-        .label("value", {
+        .label("count", {
           textStyle: {
             fill: "#000"
           },
           offset: 10
         });
-     chart.on("click", ev => {
+      chart.on("click", ev => {
         this.$router.push("/form");
       });
-      chart.render();
+      axios({
+        method: "post",
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/alarm/get-alarm-cause-statistics?start-time=" +
+          moment()
+            .subtract("days", 6)
+            .format("YYYY-MM-DD") +
+          "&end-time=" +
+          moment().format("YYYY-MM-DD"),
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        // console.log(msg);
+        chart.changeData(msg.data.data);
+        //  console.log(this.data);
+      });
+      chart.render(this.data);
     }
   }
 };
@@ -129,7 +121,7 @@ export default {
 <style scoped>
 .box-card >>> .el-card__body {
   height: 100%;
-  cursor:default
+  cursor: default;
 }
 #c3 {
   margin-top: 20px;
@@ -138,7 +130,7 @@ export default {
 .box-card {
   border-radius: 10px;
 }
-#c3 >>> canvas{
+#c3 >>> canvas {
   cursor: pointer !important;
 }
 #topBox {

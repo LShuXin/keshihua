@@ -54,7 +54,7 @@
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="gdVal" style="width: 100%">
+      <el-table :data="gdVal" style="width: 100%"  @row-click="reading">
         <el-table-column type="selection" width="30px"></el-table-column>
         <el-table-column label="序号" type="index"></el-table-column>
         <el-table-column prop="createdAt" label="派单时间"></el-table-column>
@@ -67,8 +67,8 @@
         <el-table-column prop="alarmAt" label="告警时间"></el-table-column>
         <el-table-column prop="orderNo" label="是否已读">
           <template slot-scope="scope">
-            <span v-if="scope.row.orderNo === '0'" style="color:#F56C6C;">未读</span>
-            <span v-else>已读</span>
+            <span v-if="scope.row.hasRead === '已读'" >已读</span>
+            <span v-else style="color:#F56C6C;">未读</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -242,7 +242,7 @@
         </el-form>
       </div>
       <div slot="footer">
-        <el-button @click="cllsBox = false" type="danger">关闭</el-button></el-button>
+        <el-button @click="cllsBox = false" type="danger">关闭</el-button>
       </div>
     </el-dialog>
   </el-container>
@@ -374,7 +374,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+        console.log(msg);
         this.gdVal = msg.data.data.devices;
       });
     },
@@ -580,6 +580,22 @@ export default {
     test(val) {
       // console.log(val);
       // console.log(this.gjdate);
+    },
+    reading(row){
+      console.log(row)
+      Axios({
+        method:"post",
+        url:this.GLOBAL.AJAX_URL+"/v1/user-work-order/create",
+        data:{
+            userId:Number(localStorage.getItem("userId")),
+            workOrderId:Number(row.workOrderId)
+        },
+        headers:{
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+      }).then(msg =>{
+        console.log(msg)
+      })
     }
   }
 };
