@@ -37,24 +37,34 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="primary" @click.stop="up(scope.row)" size="mini">123</el-button>
+            <!-- <el-button type="primary" @click.stop="up(scope.row)" size="mini">123</el-button> -->
             <el-button type="danger" @click.stop="del(scope.row)" size="mini">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-dialog title="添加杆塔" :visible.sync="tjBox" width="30%">
-          <el-select v-model="model" placeholder="">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        
+        <label>线路名：</label>
+        <el-select v-model="model" placeholder size="mini" clearable>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <label class="labelClass">杆塔号：</label>
+        <el-select v-model="model" placeholder clearable size="mini">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+
         <div slot="footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button @click="tjBox = false">取 消</el-button>
+          <el-button type="primary" @click="tjBox = false">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -78,104 +88,7 @@ export default {
     return {
       lineId: this.$route.query.id,
       page: 1,
-      tableData: [
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        },
-        {
-          towerNum: "1"
-        }
-      ],
+      tableData: [],
       total: "",
       tjBox: true,
       tjform: {
@@ -184,7 +97,9 @@ export default {
         towerId: ""
       },
       delId: "",
-      delBox: false
+      delBox: false,
+      model:"",
+      options:""
     };
   },
   filters: {
@@ -257,6 +172,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.labelClass {
+  margin-left: 15px;
+}
 .el-header {
   height: auto !important;
   padding: 20px 10px;

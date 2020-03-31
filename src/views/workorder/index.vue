@@ -41,9 +41,9 @@
             @change="test"
           ></el-date-picker>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <span>工单状态：</span>
-          <el-select v-model="status" placeholder="请选择工单状态" size="mini">
+          <el-select v-model="status" placeholder="请选择工单状态" size="mini" clearable>
             <el-option v-for="item in statusS" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-col>
@@ -636,5 +636,8 @@ export default {
 }
 .inLabel {
   margin-left: 20px;
+}
+.el-date-editor{
+  width: 70%;
 }
 </style>      

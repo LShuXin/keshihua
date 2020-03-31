@@ -16,7 +16,7 @@
         </el-col>
         <el-col :span="4">
           <span>电话号码：</span>
-          <el-input v-model="phoneNum" placeholder="请输入手机号码" size="mini" style="width:178px;"></el-input>
+          <el-input v-model="phoneNum" placeholder="请输入手机号码" size="mini" style="width:178px;" clearable></el-input>
         </el-col>
         <el-col :span="4">
           <span>使用情况：</span>
@@ -469,7 +469,7 @@ export default {
           this.GLOBAL.AJAX_URL +
           "/v1/sim/query-detail?order-by=sim.created_at&order=asc&page=" +
           this.page +
-          "&size=8" +
+          "&size=10" +
           "&department-id=" +
           this.departmentId +
           "&provider=" +
@@ -484,11 +484,16 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+         console.log(msg);
         if (msg.data.code === 0) {
-          this.tableData = msg.data.data.sims;
-          // this.total = msg.data.data.totalCount;
-          this.$message.success("查询成功");
+          if (msg.data.data.sims === null) {
+            this.$message.success("暂无数据");
+            this.tableData = []
+          } else {
+            this.tableData = msg.data.data.sims;
+            this.total = msg.data.data.totalCount
+          }
+         
         }
       });
     }

@@ -26,7 +26,7 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <span>杆塔号：</span>
-              <el-input v-model="name" placeholder="请输入杆塔号" size="mini" style="width:178px;"></el-input>
+              <el-input v-model="name" placeholder="请输入杆塔号" size="mini" style="width:178px;" clearable></el-input>
             </el-col>
           </el-row>
         </el-col>
@@ -134,7 +134,7 @@
       ></el-pagination>
     </el-main>
     <!-- 添加 -->
-    <el-dialog title="添加杆塔" :visible.sync="dialogFormVisible" width="45%">
+    <el-dialog title="添加杆塔" :visible.sync="dialogFormVisible" width="80%">
       <el-form :model="form">
         <el-form-item label="公司信息：" :label-width="formLabelWidth">
           <span>所属公司：</span>
@@ -192,7 +192,7 @@
           <el-select v-model="form.status" placeholder="请选择杆塔状态">
             <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
-          <span>所属线路：</span>
+          <span style="margin-left:10px">所属线路：</span>
           <el-select
             v-model="form.lineId"
             placeholder="请选择所属线路"
@@ -880,9 +880,9 @@ export default {
           "&order-by=tower.id&order=asc&page=" +
           this.page +
           "&size=8" +
-          "&natureId=" +
+          "&nature=" +
           this.natureId +
-          "&tower-category-id=" +
+          "&tower-category=" +
           this.towerId +
           "&status=" +
           this.statusId +

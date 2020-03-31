@@ -30,7 +30,7 @@
       </el-col>
       <el-col :span="4">
         <span>隐患类型：</span>
-        <el-select v-model="yinhuanId" placeholder="选择隐患类型" size="mini" clearabl>
+        <el-select v-model="yinhuanId" placeholder="选择隐患类型" size="mini" clearable>
           <el-option v-for="item in yinhuans" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-col>
@@ -366,6 +366,7 @@ export default {
     this.gongsiFun();
     // this.dianyaFun();
     this.changshangFun();
+    this.yinhuanFun();
   },
 
   methods: {
@@ -593,7 +594,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+        console.log(msg);
         this.yinhuans = msg.data.data;
       });
     },
@@ -739,7 +740,7 @@ export default {
           "&size=8" +
           "&company-id=" +
           this.gongsiId +
-          "&voltage-level-id=" +
+          "&voltage-level=" +
           this.dianyaId +
           "&line-id=" +
           this.xianluId +
@@ -754,6 +755,7 @@ export default {
         console.log(msg);
         this.tableData = msg.data.data.devices;
         this.total = msg.data.data.totalCount;
+        console.log(this.dianyas)
       });
     }
   }

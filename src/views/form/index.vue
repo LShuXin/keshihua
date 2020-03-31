@@ -6,19 +6,25 @@
           <el-row :gutter="10">
             <el-col :span="4">
               <span class="text">告警原因：</span>
-              <el-select v-model="gjyyvalue" placeholder="请选择类别" size="mini" @change="testSelect">
+              <el-select
+                v-model="gjyyvalue"
+                placeholder="请选择类别"
+                size="mini"
+                @change="testSelect"
+                clearable
+              >
                 <el-option v-for="item in gjyy" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>告警级别：</span>
-              <el-select v-model="gjjbvalue" placeholder size="mini">
+              <el-select v-model="gjjbvalue" placeholder size="mini" clearable>
                 <el-option v-for="item in gjjb" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>监拍朝向：</span>
-              <el-select v-model="jpcxvalue" placeholder size="mini">
+              <el-select v-model="jpcxvalue" placeholder size="mini" clearable>
                 <el-option
                   v-for="item in jpcx"
                   :key="item.id"
@@ -29,7 +35,7 @@
             </el-col>
             <el-col :span="4">
               <span>电压等级：</span>
-              <el-select v-model="dydjvalue" placeholder size="mini">
+              <el-select v-model="dydjvalue" placeholder size="mini" clearable>
                 <el-option
                   v-for="item in dydj"
                   :key="item.id"
@@ -40,13 +46,13 @@
             </el-col>
             <el-col :span="4">
               <span>是否分派：</span>
-              <el-select v-model="sffpvalue" placeholder size="mini" disabled>
+              <el-select v-model="sffpvalue" placeholder size="mini" disabled clearable>
                 <el-option v-for="item in sffp" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>超期提醒：</span>
-              <el-select v-model="cqtxvalue" placeholder size="mini" disabled>
+              <el-select v-model="cqtxvalue" placeholder size="mini" disabled clearable>
                 <el-option v-for="item in cqtx" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-col>
@@ -64,6 +70,7 @@
                 :remote-method="remoteMethod"
                 :loading="loading"
                 size="mini"
+                clearable
               >
                 <el-option v-for="item in gjbm" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -80,6 +87,7 @@
                 placeholder="请输入关键词"
                 :remote-method="remoteMethodbz"
                 :loading="loadingbz"
+                clearable
               >
                 <el-option v-for="item in gjbz" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -96,6 +104,7 @@
                 :loading="loadingxl"
                 @change="gjxlName"
                 size="mini"
+                clearable
               >
                 <el-option v-for="item in gjxl" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
@@ -138,11 +147,12 @@
                 end-placeholder="结束日期"
                 :picker-options="pickerOptions"
                 value-format="yyyy-MM-dd"
+                clearable
               ></el-date-picker>
             </el-col>
             <el-col :span="3">
               <el-button
-                @click="msgc"
+                @click="resloveFun"
                 plain
                 icon="el-icon-search"
                 style="border:0; background: #f7b84f; color:#fff;"
@@ -280,6 +290,9 @@
   .btnBoxRow {
     margin-top: 20px;
   }
+}
+.el-date-editor {
+  width: 70%;
 }
 .el-main::-webkit-scrollbar {
   width: 0 !important;
@@ -462,7 +475,7 @@ export default {
         // console.log(this.gjsjdata);
       });
     },
-    prev() {
+    next() {
       this.index = this.index + 1;
       axios({
         method: "post",
@@ -573,7 +586,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          //  console.log(msg);
+           console.log(msg);
 
           this.loading = false;
           this.gjbm = msg.data.data;
@@ -595,7 +608,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
+          console.log(msg);
           for (var i = 0; i < msg.data.data.length; i++) {
             var obj = {};
             obj = {
@@ -707,6 +720,23 @@ export default {
         this.pgBox = false;
       });
     },
+    resloveFun(){
+      this.gjyyvalue = ""
+      this.gjjbvalue = ""
+      this.gjjbname = ""
+      this.jpcxvalue = ""
+      this.dydjvalue = ""
+      this.cqtxvalue = ""
+      this.value2 = ""
+      this.gjbmvalue = ""
+      this.gjbmname = ""
+      this.gjbzvalue = ""
+      this.gjbzname = ""
+      this.gjxlvalue = ""
+      this.gjxlname = ""
+      this.gjgtvalue = ""
+      this.gjbzname = ""
+    },
     created() {
       var i = "";
       var o = "";
@@ -722,7 +752,7 @@ export default {
           this.GLOBAL.AJAX_URL +
           "/v1/alarm/query?user-id=" +
           localStorage.getItem("userId") +
-          "&order-by=created_at&order=&page=1&size=2&department=" +
+          "&order-by=alarm.created_at&order=&page=1&size=7&department=" +
           this.gjbmname +
           "&team=" +
           this.gjbzname +
@@ -748,6 +778,13 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
+        if (msg.data.code === 0) {
+          this.$message.success("查询成功");
+          this.gjsjdata = msg.data.data.alarms;
+          this.pagess = msg.data.data.totalCount
+        } else {
+          this.$message.error("查询失败");
+        }
         console.log(msg);
         console.log(this.value2);
 

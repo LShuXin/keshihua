@@ -1135,8 +1135,8 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log("第一层");
-        console.log(msg);
+        // console.log("第一层");
+        // console.log(msg);
         msg.data.data[0].key = 1;
         resolve(msg.data.data);
       });
@@ -1323,15 +1323,15 @@ export default {
     // },
 
     msgId(data, node, objc) {
-      console.log(data);
-      console.log(node);
-      console.log(node.childNodes.length);
-      console.log(objc);
+      // console.log(data);
+      // console.log(node);
+      // console.log(node.childNodes.length);
+      // console.log(objc);
 
       if (node.level === 1) {
         this.gongsi = node.data.name;
         // console.log(this.gongsi);
-        console.log(111111111);
+        // console.log(111111111);
       }
       if (node.level === 2) {
         this.bumen = node.data.name;
@@ -1350,8 +1350,8 @@ export default {
         this.$refs.Calendar.ChoseMonth(moment().format("YYYY-MM-DD"));
         this.ganta = node.data.name;
         this.topData = this.bumen + this.diya + this.xianlu + this.ganta;
-        // console.log(data);
         this.towerId = data.id;
+        console.log(this.towerId);
         Axios({
           method: "POST",
           url:
@@ -1487,6 +1487,7 @@ export default {
     clickDay(data) {
       // console.log( moment(data).format("YYYY-MM-DD"));
       // moment(data).format("YYYY-MM-DD")
+      console.log(this.towerId);
 
       Axios({
         method: "POST",
@@ -1506,7 +1507,7 @@ export default {
         if (msg.data.code === 20011) {
           console.log("没有访问权限！");
         } else {
-          if (msg.data.data.pictures === undefined) {
+          if (msg.data.data.pictures === null) {
             this.$message.error("暂无图片");
           } else {
             // console.log(msg)
@@ -1687,7 +1688,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
           if (msg.data.code === 20011) {
             this.$message.error("没有访问权限！");
           } else {
@@ -1695,10 +1696,10 @@ export default {
               // this.$message.error("暂无图片");
             } else {
               if (this.totalCountNum === msg.data.data.totalCount) {
-                console.log(this.totalCountNum);
+                // console.log(this.totalCountNum);
                 return;
               } else {
-                console.log(this.totalCountNum);
+                // console.log(this.totalCountNum);
                 this.totalCountNum = msg.data.data.totalCount;
                 this.dateMsg = msg.data.data.pictures[0].createdAt;
                 this.url = msg.data.data.pictures[0].url;
@@ -1860,7 +1861,7 @@ export default {
       });
     }
   },
-  destoryed() {
+  beforeDestroy() {
     if (this.set) {
       clearInterval(this.set);
     }

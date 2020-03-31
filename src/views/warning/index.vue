@@ -21,7 +21,12 @@
           <template slot-scope="scope">
             <span v-if="scope.row.captureStatus === 0">未抓拍</span>
             <span v-if="scope.row.captureStatus === 1">抓拍中</span>
-            <el-button type="primary" v-if="scope.row.captureStatus === 2" @click.stop="ZPimg(scope.row)" size="mini"> 查看图片</el-button>
+            <el-button
+              type="primary"
+              v-if="scope.row.captureStatus === 2"
+              @click.stop="ZPimg(scope.row)"
+              size="mini"
+            >查看图片</el-button>
             <span v-if="scope.row.captureStatus === 3">抓拍失败</span>
           </template>
         </el-table-column>
@@ -86,15 +91,12 @@
     </el-main>
     <el-dialog title :visible.sync="imgBox" width="60%" style="margin-top:5vh">
       <div>
-        <el-image
-          style="width: 100%; height: 80%"
-          :src="zpurl"
-          fit="fill"></el-image>
+        <el-image style="width: 100%; height: 70%" :src="zpurl" fit="fill"></el-image>
       </div>
       <!-- <div slot="footer">
         <el-button @click="imgBox = false">关闭</el-button>
-        <!-- <el-button type="primary" @click="imgBox = false">确 定</el-button> -->
-      </div> -->
+       <el-button type="primary" @click="imgBox = false">确 定</el-button>
+      </div>-->
     </el-dialog>
   </el-container>
 </template>
@@ -168,8 +170,8 @@ export default {
           this.reportedAt = msg.data.data.alarms[0].reportedAt;
           this.alarmImageUrl = msg.data.data.alarms[0].alarmImageUrl;
           this.total = msg.data.data.totalCount;
-        }else{
-          this.$message.error("暂无预警")
+        } else {
+          this.$message.error("暂无预警");
         }
       });
     },
@@ -211,6 +213,7 @@ export default {
       this.deviceCode = val.deviceCode;
       this.alarmId = val.id;
       this.towerId = val;
+      this.u;
     },
     NoAlarm() {
       Axios({
@@ -277,8 +280,8 @@ export default {
           console.log(msg);
           if (msg.data.message === "OK") {
             this.$message.success("抓拍成功！");
-          }else{
-            this.$message.error("抓拍失败！")
+          } else {
+            this.$message.error("抓拍失败！");
           }
         });
       } else {
@@ -291,8 +294,8 @@ export default {
       );
       // console.log("111");
     },
-    ZPimg(row){
-      console.log(row)
+    ZPimg(row) {
+      console.log(row);
       this.imgBox = true;
       // this.zpurl = row.captureImageUrl;
     }

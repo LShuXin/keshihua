@@ -18,13 +18,13 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <span>用户名：</span>
-              <el-input :v-model="username" placeholder="请输入用户名" size="mini" style="width:178px;"></el-input>
+              <el-input v-model="username" placeholder="请输入用户名" size="mini" style="width:178px;" clearable></el-input>
             </el-col>
           </el-row>
         </el-col>
         <el-col :span="4">
           <span>角色：</span>
-          <el-select v-model="casbinRoleId" placeholder size="mini">
+          <el-select v-model="casbinRoleId" placeholder size="mini" clearable>
             <el-option
               v-for="item in casbinRoles"
               :key="item.id"
@@ -35,7 +35,7 @@
         </el-col>
         <el-col :span="4">
           <span>所属公司：</span>
-          <el-select v-model="gongsiId" placeholder size="mini" @change="bumenFun">
+          <el-select v-model="gongsiId" placeholder size="mini" @change="bumenFun" clearable>
             <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-col>
@@ -305,7 +305,7 @@ export default {
   data() {
     return {
       Keys: ["1282"],
-      username: "",
+      username:"",
       casbinRoleId: "",
       casbinRoles: [],
       userId: "",

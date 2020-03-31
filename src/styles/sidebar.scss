@@ -83,7 +83,7 @@
     .is-active {
       background: $menuHover !important;
       color: $menuHoverText !important;
-      border-left: 10px solid $ActiveBorder!important;
+      // border-left: 10px solid $ActiveBorder!important;
     }
 
     & .nest-menu .el-submenu > .el-submenu__title,
