@@ -91,7 +91,7 @@
     </el-main>
     <el-dialog title :visible.sync="imgBox" width="60%" style="margin-top:5vh">
       <div>
-        <el-image style="width: 100%; height: 70%" :src="zpurl" fit="fill"></el-image>
+        <el-image style="width: 100%; height: 1000px" :src="zpurl" fit="fill"></el-image>
       </div>
       <!-- <div slot="footer">
         <el-button @click="imgBox = false">关闭</el-button>
@@ -170,6 +170,7 @@ export default {
           this.reportedAt = msg.data.data.alarms[0].reportedAt;
           this.alarmImageUrl = msg.data.data.alarms[0].alarmImageUrl;
           this.total = msg.data.data.totalCount;
+          this.url = msg.data.data.alarms[0].alarmImageUrl
         } else {
           this.$message.error("暂无预警");
         }
@@ -212,8 +213,8 @@ export default {
       console.log(val);
       this.deviceCode = val.deviceCode;
       this.alarmId = val.id;
-      this.towerId = val;
-      this.u;
+      this.towerId = val.towerId;
+      this.url = val.alarmImageUrl;
     },
     NoAlarm() {
       Axios({
@@ -262,15 +263,13 @@ export default {
       });
     },
     deviceSnap() {
-      if (this.deviceCode !== "") {
+      if (this.towerId !== "") {
         Axios({
           method: "POST",
           url:
             this.GLOBAL.AJAX_URL +
             "/v1/hub/device-snap?user-id=" +
             this.userId +
-            "&uuid=" +
-            this.deviceCode +
             "&tower-id=" +
             this.towerId,
           headers: {

@@ -49,12 +49,12 @@
         </el-col>
         <el-col :span="2">
           <el-button type="primary" @click="Query" size="mini">查询</el-button>
-          <el-button type="primary" size="mini">导出</el-button>
+          <!-- <el-button type="primary" size="mini">导出</el-button> -->
         </el-col>
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="gdVal" style="width: 100%"  @row-click="reading">
+      <el-table :data="gdVal" style="width: 100%" @row-click="reading">
         <el-table-column type="selection" width="30px"></el-table-column>
         <el-table-column label="序号" type="index"></el-table-column>
         <el-table-column prop="createdAt" label="派单时间"></el-table-column>
@@ -67,7 +67,7 @@
         <el-table-column prop="alarmAt" label="告警时间"></el-table-column>
         <el-table-column prop="orderNo" label="是否已读">
           <template slot-scope="scope">
-            <span v-if="scope.row.hasRead === '已读'" >已读</span>
+            <span v-if="scope.row.hasRead === '已读'">已读</span>
             <span v-else style="color:#F56C6C;">未读</span>
           </template>
         </el-table-column>
@@ -189,6 +189,8 @@
         name="media"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
+        :file-list="fileList"
+        ref="upload"
       >
         <i slot="default" class="el-icon-plus"></i>
       </el-upload>
@@ -202,7 +204,13 @@
     </el-dialog>
     <el-dialog title="处理历史" :visible.sync="cllsBox" width="70%">
       <div style="height:800px; overflow-y:auto;">
-        <el-form ref="form" label-width="80px"  v-for="(item,i) in lsform" :key="i" style="margin-bottom:40px; border-bottom:1px solid #000;">
+        <el-form
+          ref="form"
+          label-width="80px"
+          v-for="(item,i) in lsform"
+          :key="i"
+          style="margin-bottom:40px; border-bottom:1px solid #000;"
+        >
           <el-form-item label="处理时间">
             <el-input v-model="item.createdAt" disabled></el-input>
             <label class="inLabel">处理用户</label>
@@ -236,8 +244,14 @@
           <el-form-item label="处理信息">
             <el-input type="textarea" v-model="item.handleDesc"></el-input>
           </el-form-item>
-          <el-form-item label="现场图片" >
-            <el-image style="width: 220px; height: 200px;margin-left:20px;" v-for="(img,x) in item.pictures" :key="x" :src="img" fit="fill"></el-image>
+          <el-form-item label="现场图片">
+            <el-image
+              style="width: 220px; height: 200px;margin-left:20px;"
+              v-for="(img,x) in item.pictures"
+              :key="x"
+              :src="img"
+              fit="fill"
+            ></el-image>
           </el-form-item>
         </el-form>
       </div>
@@ -300,7 +314,15 @@ export default {
       handleDesc: "",
       id: "",
       imgArr: [],
-      statusS: this.LABEL_DATA.ALARM_HAS_READ,
+      statusS: [
+        {
+          id:1,
+          name:"处理中"
+        },{
+          id:0,
+          name:"未处理"
+        }
+      ],
       pageNum: 1,
       status: "",
       cllsBox: false,
@@ -329,7 +351,8 @@ export default {
       ReworkOrder: [
         { id: 0, name: "否" },
         { id: 1, name: "是" }
-      ]
+      ],
+      fileList: []
     };
   },
   mounted() {
@@ -369,7 +392,10 @@ export default {
     workOrder() {
       Axios({
         method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/work-order/query-detail?user-id="+localStorage.getItem("userId"),
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/work-order/query-detail?user-id=" +
+          localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -379,7 +405,7 @@ export default {
       });
     },
     xiangqing(row) {
-      // console.log(row);
+      console.log(row);
       this.gdxqData = [row];
       this.url = row.alarmImagePath;
       // console.log(this.url);
@@ -424,8 +450,10 @@ export default {
         // console.log(msg);
         if (msg.data.code === 0) {
           this.$message.success("工单终结");
+           this.$refs.upload.clearFiles()
         } else {
           this.$message.error("终结失败");
+           this.$refs.upload.clearFiles()
         }
         this.workOrder();
         this.gdcl = false;
@@ -460,8 +488,10 @@ export default {
         // console.log(msg);
         if (msg.data.code === 0) {
           this.$message.success("工单跟进~");
+          this.$refs.upload.clearFiles();
         } else {
           this.$message.error("跟进失败");
+           this.$refs.upload.clearFiles()
         }
         this.workOrder();
         this.gdcl = false;
@@ -471,7 +501,7 @@ export default {
         this.scene = "";
         this.handleDesc = "";
         this.id = "";
-        this.imgArr = "";
+        this.imgArr = [];
       });
     },
     handlePictureCardPreview(file) {
@@ -486,8 +516,8 @@ export default {
     },
     upImg(response, file, fileList) {
       // console.log(file);
-      // console.log(response);
-      // console.log(fileList);
+      console.log(response);
+      console.log(fileList);
       this.$message.success("上传成功");
       this.uping = false;
       this.imgArr.push(response.data.id);
@@ -501,8 +531,7 @@ export default {
       this.$message.error("只能上传五张图片");
     },
     chulilishi(row) {
-   
-      this.cllsBox = true
+      this.cllsBox = true;
       Axios({
         method: "post",
         url:
@@ -514,16 +543,16 @@ export default {
         }
       }).then(msg => {
         // console.log(msg);
-           if(msg.data.code === 0){
-             
-        this.lsform = msg.data.data;
-           }else{
-             this.$message.error("查询失败")
-           }
+        if (msg.data.code === 0) {
+          this.lsform = msg.data.data;
+        } else {
+          this.$message.error("查询失败");
+        }
       });
     },
     Query() {
-      if (this.gjdate[0] !== undefined) {
+      if (this.gjdate !== null && this.gjdate[0] !== undefined) {
+        console.log(this.gjdate);
         Axios({
           method: "post",
           url:
@@ -541,14 +570,14 @@ export default {
             "&end-time=" +
             this.gjdate[1] +
             "&status=" +
-            this.status+
-            "&user-id="+
+            this.status +
+            "&user-id=" +
             localStorage.getItem("userId"),
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-        this.gdVal = msg.data.data.devices;
+          this.gdVal = msg.data.data.devices;
           // console.log(msg);
         });
       } else {
@@ -565,14 +594,14 @@ export default {
             "&line-name=" +
             this.xianluId +
             "&status=" +
-            this.status+"&user-id="+
-            localStorage.getItem
-            ("userId"),
+            this.status +
+            "&user-id=" +
+            localStorage.getItem("userId"),
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-        this.gdVal = msg.data.data.devices;
+          this.gdVal = msg.data.data.devices;
           // console.log(msg);
         });
       }
@@ -581,21 +610,21 @@ export default {
       // console.log(val);
       // console.log(this.gjdate);
     },
-    reading(row){
-      console.log(row)
+    reading(row) {
+      console.log(row);
       Axios({
-        method:"post",
-        url:this.GLOBAL.AJAX_URL+"/v1/user-work-order/create",
-        data:{
-            userId:Number(localStorage.getItem("userId")),
-            workOrderId:Number(row.workOrderId)
+        method: "post",
+        url: this.GLOBAL.AJAX_URL + "/v1/user-work-order/create",
+        data: {
+          userId: Number(localStorage.getItem("userId")),
+          workOrderId: Number(row.workOrderId)
         },
-        headers:{
-            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-          }
-      }).then(msg =>{
-        console.log(msg)
-      })
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        console.log(msg);
+      });
     }
   }
 };
@@ -637,7 +666,7 @@ export default {
 .inLabel {
   margin-left: 20px;
 }
-.el-date-editor{
+.el-date-editor {
   width: 70%;
 }
 </style>      

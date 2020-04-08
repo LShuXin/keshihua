@@ -262,7 +262,8 @@ export default {
         orderNo: "",
         cityName: "",
         expiredAt: "",
-        status: ""
+        status: "",
+         departmentId: ""
       },
       deviceIds: [],
       delId: "",

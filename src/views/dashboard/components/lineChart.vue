@@ -105,6 +105,8 @@ export default {
         range: [0, 1]
       });
       chart.tooltip({
+        showTitle: false,
+        itemTpl: "<li>告警： {value} </li>",
         crosshairs: {
           type: "line"
         }

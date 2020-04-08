@@ -1,20 +1,31 @@
 <template>
   <div class="navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
-         <el-dropdown-item divided>
-            <!-- <span style="display:block;" @click="logout">Log Out</span> -->
-            <el-button type="primary" size="mini" @click="logout">退出</el-button>
-          </el-dropdown-item>
-          <el-dropdown-menu></el-dropdown-menu>
-          <!-- <div class="avatar-wrapper">
+        <el-dropdown-item divided>
+          <!-- <span style="display:block;" @click="logout">Log Out</span> -->
+          <el-button type="primary" size="mini" @click="logoutFun">退出</el-button>
+        </el-dropdown-item>
+        <el-dropdown-menu></el-dropdown-menu>
+        <el-dialog title="确定退出吗？" :visible.sync="logout" width="30%" id="dialog">
+          <div></div>
+          <div slot="footer">
+            <el-button @click="logout = false">取 消</el-button>
+            <el-button type="primary" @click="logoutFunT">确 定</el-button>
+          </div>
+        </el-dialog>
+        <!-- <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
-        </div> -->
+        </div>-->
         <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
@@ -28,41 +39,50 @@
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
          
-        </el-dropdown-menu> -->
+        </el-dropdown-menu>-->
       </el-dropdown>
     </div>
   </div>
 </template>
-
+<style lang="scss" scoped>
+#dialog >>> .el-dialog__title{
+  color: red;
+}
+</style>
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
 import Cookies from "js-cookie";
 
 export default {
+  data() {
+    return {
+      logout: false
+    };
+  },
   components: {
     Breadcrumb,
     Hamburger
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
+    ...mapGetters(["sidebar", "avatar"])
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('app/toggleSideBar')
+      this.$store.dispatch("app/toggleSideBar");
     },
-    async logout() {
-      Cookies.remove('vue_admin_template_token')
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    logoutFun() {
+      this.logout = true;
+    },
+    async logoutFunT() {
+      Cookies.remove("vue_admin_template_token");
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
       this.$router.go(0);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -71,18 +91,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -109,10 +129,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

@@ -18,4 +18,7 @@ export default {
 body::-webkit-scrollbar {
   width: 0 !important;
 }
+body{
+  overflow-y: auto !important;
+}
 </style>

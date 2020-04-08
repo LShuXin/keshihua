@@ -36,9 +36,9 @@
           <span class="timeBox">{{dateMsg}}</span>
           <el-image
             style="width: 100%; height:100%;"
-            fit="fill"
+            fit="contain"
             :src="url"
-            :preview-src-list="srcList"
+            :preview-src-list="urls"
           ></el-image>
         </el-card>
 
@@ -161,7 +161,7 @@
                   shadow="never"
                   id="yjts"
                   :body-style="{padding:'0px'}"
-                  @click.native="msgBox"
+                  @click.native="alarmBoxFun"
                 >
                   <span
                     class="icon iconfont"
@@ -354,16 +354,42 @@
         </el-col>
       </el-row>
 
-      <div style="height:1000px;overflow:auto;">
+      <div style="height:800px;overflow:auto;">
         <el-card v-for="(item ,i) in lsImgData " :key="i">
-          <label style="padding-bottom:15px; display:block">拍摄时间：{{item.createdAt}}</label>
-          <el-image style="width: 100%; height: 60%" :src="item.url" fit="fill" lazy></el-image>
+          <label style="padding-bottom:15px; display:block;text-align:center">拍摄时间：{{item.createdAt}}</label>
+          <el-image style="width: 100%; height: 600px" :src="item.url" fit="fill" lazy></el-image>
         </el-card>
       </div>
       <!-- <div slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </div>-->
+    </el-dialog>
+    <el-dialog title="预警推送" :visible.sync="yujingBox" width="30%">
+      <div>
+        <label for>告警原因：</label>
+        <el-select v-model="alarmCause" placeholder multiple>
+          <el-option
+            v-for="item in this.LABEL_DATA.ALARM_CAUSE"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <label for>告警级别：</label>
+        <el-select v-model="alarmLevel" placeholder>
+          <el-option
+            v-for="item in this.LABEL_DATA.ALARM_LEVEL"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </div>
+      <div slot="footer">
+        <el-button @click="yujingBox = false">取 消</el-button>
+        <el-button type="primary" @click="alarmFun">确 定</el-button>
+      </div>
     </el-dialog>
   </el-card>
 </template>
@@ -941,6 +967,10 @@ export default {
   },
   data() {
     return {
+      yujingBox: true,
+      alarmCause: [],
+      alarmLevel: null,
+      alarmImgUrl: null,
       dateMsg: "",
       dateArr: [],
       ul: 1,
@@ -974,7 +1004,7 @@ export default {
       diya: "",
       xianlu: "",
       ganta: "",
-      deviceCode: "",
+      deviceCode: null,
       userId: Number(localStorage.getItem("userId")),
       SettingBox: false,
       treeId: [3],
@@ -1022,6 +1052,40 @@ export default {
     });
   },
   methods: {
+    imgBigBox(url) {
+      console.log(url);
+      this.srcList = [url];
+    },
+    alarmBoxFun() {
+      if (this.deviceCode === null) {
+        this.$message.error("请选择杆塔");
+      } else {
+        this.yujingBox = true;
+        this.alarmImgUrl = this.url.replace("http://47.104.136.74:8083/", "");
+        // console.log(this.alarmImgUrl);
+      }
+    },
+    alarmFun() {
+      console.log(String(this.alarmCause))
+      Axios({
+        method: "POST",
+        url: this.GLOBAL.AJAX_URL + "/v1/alarm/create",
+        data: {
+          causes: String(this.alarmCause),
+          level: this.alarmLevel,
+          alarmImagePath: this.alarmImgUrl,
+          deviceId: 1294 //ID没有数据
+        },
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        // console.log("第一层");
+        // console.log(msg);
+        msg.data.data[0].key = 1;
+        resolve(msg.data.data);
+      });
+    },
     msg() {
       Axios({
         method: "POST",
@@ -1030,9 +1094,7 @@ export default {
           "/v1/picture/get-by-tower-id?&user-id=" +
           this.userId +
           "&tower-id=" +
-          this.TowerNumId +
-          "&day=" +
-          moment().format("YYYY-MM-DD"),
+          this.TowerNumId,
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -1681,9 +1743,7 @@ export default {
             "/v1/picture/get-by-tower-id?user-id=" +
             Number(localStorage.getItem("userId")) +
             "&tower-id=" +
-            this.towerId +
-            "&day=" +
-            moment().format("YYYY-MM-DD"),
+            this.towerId,
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }

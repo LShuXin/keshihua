@@ -160,7 +160,7 @@
               <el-button
                 plain
                 icon="el-icon-search"
-                @click="created"
+                @click="createdMsg"
                 style="border:0; background: #1ca3ff;color:#fff;"
               >查询</el-button>
             </el-col>
@@ -337,9 +337,15 @@ export default {
       }
     }).then(msg => {
       console.log(msg);
-      this.pagess = msg.data.data.totalCount;
-      this.gjsjdata = msg.data.data.alarms;
-      console.log(this.gjsjdata);
+      if (msg.data.data.alarms === []) {
+        this.$message.warning("暂无告警");
+      } else {
+        this.pagess = msg.data.data.totalCount;
+        this.gjsjdata = msg.data.data.alarms;
+        console.log(this.gjsjdata);
+        this.url =
+          "http://47.104.136.74:8083/" + msg.data.data.alarms[0].alarmImagePath;
+      }
     });
   },
   data() {
@@ -428,7 +434,7 @@ export default {
       gjgtvalue: "",
       // list: [],
       loadinggt: false,
-      url: "http://47.104.136.74/image/3.jpg",
+      url: "http://47.104.136.74/image/error.jpg",
       srcList: [
         "http://47.104.136.74/image/3.jpg",
         "http://47.104.136.74/image/2.jpg"
@@ -452,7 +458,7 @@ export default {
   },
   methods: {
     testSelect(val) {
-      console.log(val);
+      // console.log(val);
     },
     prev() {
       this.index = this.index - 1;
@@ -503,14 +509,14 @@ export default {
           this.GLOBAL.AJAX_URL +
           "/v1/alarm/query?user-id=" +
           localStorage.getItem("userId") +
-          "&order-by=created_at&order=asc&page=" +
+          "&order-by=alarm.created_at&order=asc&page=" +
           val +
           "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+         console.log(msg);
 
         this.gjsjdata = msg.data.data.alarms;
         // console.log(this.gjsjdata);
@@ -525,7 +531,7 @@ export default {
       this.form.xgTowerName = row.towerNum;
       this.form.xgUserName = row.userName;
       this.form.xgPhoneNum = row.userPhone;
-
+      this.url = "http://47.104.136.74:8083/" + row.alarmImagePath;
       // console.log(event);
       // axios({
       //   method: "post",
@@ -556,16 +562,15 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/alarm/query?user-id=" +
             localStorage.getItem("userId") +
-            "&order-by=created_at&order=asc&page=" +
+            "&order-by=alarm.created_at&order=asc&page=" +
             this.index +
             "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
-
-          this.gjsjdata = msg.data.data.alarms;
+          console.log(msg);
+          // this.gjsjdata = msg.data.data.alarms;
           // console.log(this.gjsjdata);
         });
       });
@@ -586,7 +591,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-           console.log(msg);
+          console.log(msg);
 
           this.loading = false;
           this.gjbm = msg.data.data;
@@ -700,13 +705,14 @@ export default {
       this.pgBox = true;
     },
     pgTrue() {
+      console.log(this.row)
       axios({
         method: "post",
         url: this.GLOBAL.AJAX_URL + "/v1/work-order/create-work-order",
         data: {
           alarmId: Number(this.row.id),
           userName: this.row.userName,
-          userPhone: this.row.userName
+          userPhone: this.row.userPhone
         },
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
@@ -720,76 +726,134 @@ export default {
         this.pgBox = false;
       });
     },
-    resloveFun(){
-      this.gjyyvalue = ""
-      this.gjjbvalue = ""
-      this.gjjbname = ""
-      this.jpcxvalue = ""
-      this.dydjvalue = ""
-      this.cqtxvalue = ""
-      this.value2 = ""
-      this.gjbmvalue = ""
-      this.gjbmname = ""
-      this.gjbzvalue = ""
-      this.gjbzname = ""
-      this.gjxlvalue = ""
-      this.gjxlname = ""
-      this.gjgtvalue = ""
-      this.gjbzname = ""
+    resloveFun() {
+      this.gjyyvalue = "";
+      this.gjjbvalue = "";
+      this.gjjbname = "";
+      this.jpcxvalue = "";
+      this.dydjvalue = "";
+      this.cqtxvalue = "";
+      this.value2 = "";
+      this.gjbmvalue = "";
+      this.gjbmname = "";
+      this.gjbzvalue = "";
+      this.gjbzname = "";
+      this.gjxlvalue = "";
+      this.gjxlname = "";
+      this.gjgtvalue = "";
+      // this.gjbzname = "";
     },
-    created() {
-      var i = "";
-      var o = "";
-      if (this.checked) {
-        i = "1";
-      }
-      if (this.checked2) {
-        o = "0";
-      }
-      axios({
-        method: "post",
-        url:
-          this.GLOBAL.AJAX_URL +
-          "/v1/alarm/query?user-id=" +
-          localStorage.getItem("userId") +
-          "&order-by=alarm.created_at&order=&page=1&size=7&department=" +
-          this.gjbmname +
-          "&team=" +
-          this.gjbzname +
-          "&has-read=" +
-          i +
-          "" +
-          o +
-          "&start-time=" +
-          this.value2[0] +
-          "&end-time=" +
-          this.value2[1] +
-          "&cause-level=" +
-          this.gjjbvalue +
-          "&location=" +
-          this.jpcxvalue +
-          "&line=" +
-          this.gjxlname +
-          "&tower=" +
-          this.gjgtvalue +
-          "&voltage-level=" +
-          this.dydjvalue,
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        if (msg.data.code === 0) {
-          this.$message.success("查询成功");
-          this.gjsjdata = msg.data.data.alarms;
-          this.pagess = msg.data.data.totalCount
-        } else {
-          this.$message.error("查询失败");
-        }
-        console.log(msg);
+    createdMsg() {
+      if (this.value2 !== null && this.value2[0] !== undefined) {
         console.log(this.value2);
+        var i = "";
+        var o = "";
+        if (this.checked) {
+          i = "1";
+        }
+        if (this.checked2) {
+          o = "0";
+        }
+        axios({
+          method: "post",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/alarm/query?user-id=" +
+            localStorage.getItem("userId") +
+            "&order-by=alarm.created_at&order=&page=1&size=7&department=" +
+            this.gjbmname +
+            "&team=" +
+            this.gjbzname +
+            "&has-read=" +
+            i +
+            "" +
+            o +
+            "&start-time=" +
+            this.value2[0] +
+            "&end-time=" +
+            this.value2[1] +
+            "&cause-level=" +
+            this.gjjbvalue +
+            "&location=" +
+            this.jpcxvalue +
+            "&line=" +
+            this.gjxlname +
+            "&tower=" +
+            this.gjgtvalue +
+            "&voltage-level=" +
+            this.dydjvalue +
+            "&cause-name=" +
+            String(this.gjyyvalue),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          console.log(String(this.gjyyvalue));
+          if (msg.data.code === 0) {
+            this.$message.success("查询成功");
+            this.gjsjdata = msg.data.data.alarms;
+            this.pagess = msg.data.data.totalCount;
+          } else {
+            this.$message.error("查询失败");
+          }
+          console.log(msg);
+          console.log(this.value2);
 
-        // console.log(this.dydjvalue)
-      });
+          // console.log(this.dydjvalue)
+        });
+      } else {
+        var i = "";
+        var o = "";
+        if (this.checked) {
+          i = "1";
+        }
+        if (this.checked2) {
+          o = "0";
+        }
+        axios({
+          method: "post",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/alarm/query?user-id=" +
+            localStorage.getItem("userId") +
+            "&order-by=alarm.created_at&order=&page=1&size=7&department=" +
+            this.gjbmname +
+            "&team=" +
+            this.gjbzname +
+            "&has-read=" +
+            i +
+            "" +
+            o +
+            "&cause-level=" +
+            this.gjjbvalue +
+            "&location=" +
+            this.jpcxvalue +
+            "&line=" +
+            this.gjxlname +
+            "&tower=" +
+            this.gjgtvalue +
+            "&voltage-level=" +
+            this.dydjvalue +
+            "&cause-name=" +
+            String(this.gjyyvalue),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          console.log(String(this.gjyyvalue));
+          if (msg.data.code === 0) {
+            this.$message.success("查询成功");
+            this.gjsjdata = msg.data.data.alarms;
+            this.pagess = msg.data.data.totalCount;
+          } else {
+            this.$message.error("查询失败");
+          }
+          console.log(msg);
+          console.log(this.value2);
+
+          // console.log(this.dydjvalue)
+        });
+      }
     },
     msgc() {
       this.$message.warning("该功能正在研发中~");

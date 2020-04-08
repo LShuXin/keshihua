@@ -264,8 +264,8 @@
 
     <!-- 删除 -->
 
-    <el-dialog id="delBox" title="删除设备" :visible.sync="delBox" width="30%" style="color:#F56C6C;">
-      <span>确定删除此设备吗？</span>
+    <el-dialog id="delBox" title="删除杆塔" :visible.sync="delBox" width="30%" style="color:#F56C6C;">
+      <span>确定删除此杆塔吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="delBox = false">取 消</el-button>
         <el-button type="primary" @click="delTrue">确 定</el-button>
@@ -648,6 +648,7 @@ export default {
       });
     },
     pageChange(index) {
+      console.log(index)
       this.page = index;
       this.oneMsg();
     },

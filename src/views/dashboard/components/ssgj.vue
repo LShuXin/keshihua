@@ -10,7 +10,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>经度: {{ scope.row.longitude }}</p>
-            <p>维度: {{ scope.row.latitude }}</p>
+            <p>纬度: {{ scope.row.latitude }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.towerName }}</el-tag>
             </div>

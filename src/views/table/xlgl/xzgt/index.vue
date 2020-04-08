@@ -42,30 +42,50 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog title="添加杆塔" :visible.sync="tjBox" width="30%">
-        <label>线路名：</label>
-        <el-select v-model="model" placeholder size="mini" clearable>
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
+      <el-dialog title="添加杆塔" :visible.sync="tjBox" width="50%">
+        <label class="labelClass">线路名：</label>
+        <el-select
+          clearable
+          v-model="xianluId"
+          placeholder="选择线路名"
+          size="mini"
+          filterable
+          remote
+          :remote-method="xianluFun"
+          @change="lineTowerFun"
+        >
+          <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
-        <label class="labelClass">杆塔号：</label>
-        <el-select v-model="model" placeholder clearable size="mini">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
+        <!-- <label class="labelClass">杆塔号：</label>
+        <el-input v-model="name" placeholder="请输入杆塔号" size="mini" style="width:178px;" clearable ></el-input>-->
+        <el-card style="margin-top:20px" shadow="never">
+          <div slot="杆塔列表"></div>
+          <div style="height:500px; overflow-y:auto">
+            <el-table :data="towers" style="width: 100%">
+              <el-table-column header-align="center" align="center" prop="towerNum" label="杆塔号"></el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="creatTower(scope.$index, scope.row)"
+                  >添加</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
 
         <div slot="footer">
           <el-button @click="tjBox = false">取 消</el-button>
           <el-button type="primary" @click="tjBox = false">确 定</el-button>
         </div>
+        <el-dialog title="请输入绑定后的杆塔号" :visible.sync="towerNumBox" width="30%" append-to-body>
+          <el-input v-model="TowerNumStr"></el-input>
+          <div slot="footer">
+            <el-button type="primary" @click="creatTowerFun">确 定</el-button>
+          </div>
+        </el-dialog>
       </el-dialog>
 
       <el-dialog id="delBox" title="确认删除吗" :visible.sync="delBox" width="30%">
@@ -75,6 +95,13 @@
           <el-button type="primary" @click="delTrue">确 定</el-button>
         </div>
       </el-dialog>
+      <el-pagination
+        background
+        @current-change="pageChange"
+        layout="prev, pager, next"
+        :total="totalT"
+        :page-size="10"
+      ></el-pagination>
     </el-main>
   </el-container>
 </template>
@@ -89,17 +116,23 @@ export default {
       lineId: this.$route.query.id,
       page: 1,
       tableData: [],
-      total: "",
-      tjBox: true,
+      tjBox: false,
       tjform: {
         lineId: "",
-        towerNum: "",
+        Str: "",
         towerId: ""
       },
       delId: "",
       delBox: false,
-      model:"",
-      options:""
+      dianyaId: "",
+      dianyas: [],
+      xianluId: "",
+      xianlus: [],
+      towers: [],
+      totalT: null,
+      TowerNumStr: "",
+      creatTowerId: null,
+      towerNumBox:false
     };
   },
   filters: {
@@ -116,15 +149,15 @@ export default {
           this.GLOBAL.AJAX_URL +
           "/v1/line-tower/query-detail?order-by=line_tower.created_at&order=asc&page=" +
           this.page +
-          "&line-id=" +
-          this.lineId,
+          "&size=10&line-id=" +
+          this.xianluId,
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
         console.log(msg);
+        this.totalT = msg.data.data.totalCount;
         this.tableData = msg.data.data.lineTowers;
-        this.total = msg.data.data.totalCount;
       });
     },
     up(row) {
@@ -165,8 +198,78 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+       this.delBox = false
+        if(msg.data.code === 0){
+          this.$message.success("删除成功")
+          this.oneMsg()
+        }else{
+          this.$message.error("删除失败")
+        }
       });
+    },
+    xianluFun(query) {
+      if (query !== "") {
+        this.loading = true;
+        Axios({
+          method: "post",
+          url: this.GLOBAL.AJAX_URL + "/v1/line/search-by-name?name=" + query,
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          console.log(msg);
+          this.xianlus = msg.data.data;
+        });
+      }
+    },
+    creatTower(index, row) {
+      console.log(row);
+      this.creatTowerId = row.towerID;
+      this.towerNumBox = true;
+    },
+    creatTowerFun() {
+      Axios({
+        method: "post",
+        url: this.GLOBAL.AJAX_URL + "/v1/line-tower/create",
+        data: {
+          towerNum: this.TowerNumStr,
+          lineId: Number(this.lineId),
+          towerId: this.creatTowerId
+        },
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        if (msg.data.code === 0) {
+          this.$message.success("添加成功");
+        } else {
+          this.$message.warning(msg.data.message);
+        }
+        this.TowerNumStr = null;
+        this.creatTowerId = null;
+        this.towerNumBox = false;
+      });
+    },
+    lineTowerFun() {
+      console.log(this.xianluId);
+      Axios({
+        method: "post",
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/line-tower/get-tower?line-id=" +
+          this.xianluId,
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        // console.log(msg);
+        this.towers = msg.data.data;
+      });
+    },
+    pageChange(index) {
+      console.log(index);
+      this.page = index;
+      this.oneMsg();
     }
   }
 };
