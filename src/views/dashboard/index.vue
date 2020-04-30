@@ -37,7 +37,6 @@
         </div>
       </el-col>
     </el-row>
-
     <!-- <div id="mapBox">
       <mapBox></mapBox>
     </div>

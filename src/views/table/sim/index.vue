@@ -30,17 +30,18 @@
             <el-option v-for="item in expireds" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
           <el-button type="primary" size="mini" icon="el-icon-search" @click="chaxun">查询</el-button>
-        </el-col>
-        <el-col :span="2">
+        
           <el-button type="primary" size="mini" icon="el-icon-plus" @click="tianjia">添加</el-button>
+      
+          <el-button type="primary" size="mini" icon="el-icon-download" @click="daochu">导出</el-button>
         </el-col>
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="tableData" highlight-current-row>
-        <el-table-column type="selection"></el-table-column>
+      <el-table :data="tableData" highlight-current-row  header-row-class-name="rowtitle">
+        <el-table-column type="selection" align="center"></el-table-column>
         <el-table-column label="序号" type="index"></el-table-column>
         <el-table-column property="departmentName" label="公司"></el-table-column>
         <el-table-column property="cityName" label="属地化"></el-table-column>
@@ -172,6 +173,13 @@
   </el-container>
 </template>
 <style lang="scss" scoped>
+.el-table>>>{
+  .rowtitle{
+    .cell{
+      color:#1ca3ff;
+    }
+  }
+}
 .el-header {
   height: auto !important;
   padding: 20px 10px;
@@ -460,6 +468,18 @@ export default {
     valNum(val) {
       this.xgform.orderNo = Number(val);
       this.tjform.orderNo = Number(val);
+    },
+    daochu(){
+      Axios({
+        method: "post",
+        url: this.GLOBAL.AJAX_URL + "/v1/sim/export",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg =>{
+        console.log(msg)
+        window.location.href = msg.data.data
+      })
     },
     // 查询
     chaxun() {

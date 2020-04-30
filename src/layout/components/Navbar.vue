@@ -7,14 +7,9 @@
     />
 
     <breadcrumb class="breadcrumb-container" />
-
+       <el-avatar class="header" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+        <span class="nameBox">{{Username}}</span>
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <el-dropdown-item divided>
-          <!-- <span style="display:block;" @click="logout">Log Out</span> -->
-          <el-button type="primary" size="mini" @click="logoutFun">退出</el-button>
-        </el-dropdown-item>
-        <el-dropdown-menu></el-dropdown-menu>
         <el-dialog title="确定退出吗？" :visible.sync="logout" width="30%" id="dialog">
           <div></div>
           <div slot="footer">
@@ -22,31 +17,31 @@
             <el-button type="primary" @click="logoutFunT">确 定</el-button>
           </div>
         </el-dialog>
-        <!-- <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>-->
-        <!-- <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
-         
-        </el-dropdown-menu>-->
+        
+      <el-dropdown split-button trigger="click" size="small" type="primary" @click="logoutFun" class="avatar-container" :hide-on-click="false">
+        退出登录
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>设备升级</el-dropdown-item>
+        </el-dropdown-menu>
       </el-dropdown>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-#dialog >>> .el-dialog__title{
+.nameBox{
+  line-height: 50px;
+  display: inline-block;
+  position: absolute;
+  right: 180px;
+  color: #666666;
+}
+#dialog >>> .el-dialog__title {
   color: red;
+}
+.header{
+  position: absolute;
+  right: 250px;
+  top: 5px;
 }
 </style>
 <script>
@@ -58,7 +53,8 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      logout: false
+      logout: false,
+      Username:localStorage.getItem("userName")
     };
   },
   components: {

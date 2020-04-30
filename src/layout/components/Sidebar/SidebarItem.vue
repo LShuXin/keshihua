@@ -3,20 +3,59 @@
     <template
       v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
     >
+      <!-- <el-badge v-else-if="onlyOneChild.hase === 0" value=" "/> -->
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item
           :index="resolvePath(onlyOneChild.path)"
           :class="{'submenu-title-noDropdown':!isNest}"
         >
+          <!-- <el-badge is-dot v-else class="itemFalse item"></el-badge> -->
+
+          <el-badge
+            is-dot
+            v-if="onlyOneChild.name==='工单管理'&&this.workOrders === 1"
+            class="item"
+            style="position:absolute"
+          >
+            <item
+              :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
+              :title="onlyOneChild.meta.title"
+            />
+          </el-badge>
+          <el-badge
+            is-dot
+            v-if="onlyOneChild.name==='预警页面'&&this.crealarmNum === 1"
+            class="item"
+            style="position:absolute"
+          >
+            <item
+              :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
+              :title="onlyOneChild.meta.title"
+            />
+          </el-badge>
+          <el-badge
+            is-dot
+            v-if="onlyOneChild.name==='告警列表'&&this.alarms === 1"
+            class="item"
+            style="position:absolute"
+          >
+            <item
+              :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
+              :title="onlyOneChild.meta.title"
+            />
+          </el-badge>
+          <!-- <el-badge is-dot v-else class="itemFalse item" style="positio:absolute"> -->
           <item
             :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
             :title="onlyOneChild.meta.title"
           />
+          <!-- </el-badge> -->
         </el-menu-item>
       </app-link>
     </template>
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template slot="title">
+        <!-- <el-badge is-dot  class="itemFalse item"></el-badge> -->
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
       <sidebar-item
@@ -28,18 +67,29 @@
         class="nest-menu"
       />
     </el-submenu>
+    <!-- <el-button type="primary" @click="test">11</el-button> -->
   </div>
 </template>
 
 
-<style  >
-.menu-wrapper{
+<style lang="scss" scoped>
+.item >>> .is-dot {
+  width: 10px !important;
+  height: 10px !important;
+  top: 20px;
+  left: 5px;
+}
+.itemFalse >>> .el-badge__content {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: 0px !important;
+}
+.menu-wrapper {
   background: #fff;
 }
 .submenu-title-noDropdown {
   background: #fff;
 }
-.el-submenu__title{
+.el-submenu__title {
   background: #fff !important;
 }
 </style>
@@ -51,7 +101,7 @@ import { isExternal } from "@/utils/validate";
 import Item from "./Item";
 import AppLink from "./Link";
 import FixiOSBug from "./FixiOSBug";
-
+import { on } from "events";
 export default {
   name: "SidebarItem",
   components: { Item, AppLink },
@@ -69,6 +119,18 @@ export default {
     basePath: {
       type: String,
       default: ""
+    },
+    alarms: {
+      type: Number,
+      default: null
+    },
+    workOrders: {
+      type: Number,
+      default: null
+    },
+    crealarmNum: {
+      type: Number,
+      default: null
     }
   },
   data() {
@@ -77,14 +139,34 @@ export default {
     this.onlyOneChild = null;
     return {};
   },
+  created() {},
+  watch: {},
   methods: {
     hasOneShowingChild(children = [], parent) {
+      // console.log(parent)
+      // console.log(children);
       const showingChildren = children.filter(item => {
         if (item.hidden) {
           return false;
         } else {
-          // Temp set(will be used if only has one showing child)
+          // console.log(this.crealarmNum);
+          // // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item;
+          // if (this.workOrders === 1) {
+          //   if (this.onlyOneChild.name === "工单管理") {
+          //     this.onlyOneChild.hase = 1;
+          //   }
+          // }
+          // if (this.alarms === 1) {
+          //   if (this.onlyOneChild.name === "告警列表") {
+          //     this.onlyOneChild.hase = 1;
+          //   }
+          // }
+          // if (this.crealarmNum === 1) {
+          //   if (this.onlyOneChild.name === "预警页面") {
+          //     this.onlyOneChild.hase = 1;
+          //   }
+          // }
           return true;
         }
       });
@@ -111,6 +193,15 @@ export default {
       }
       return path.resolve(this.basePath, routePath);
     }
+    // autoPlay() {
+    //   var msg = new SpeechSynthesisUtterance("您有新的信息请及时查看");
+    //   msg.lang = "zh";
+    //   msg.volume = 1;
+    //   msg.rate = 0.8;
+    //   msg.pitch = 2;
+    //   speechSynthesis.speak(msg);
+    //   // console.log(msg);
+    // }
   }
 };
 </script>

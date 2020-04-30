@@ -19,6 +19,7 @@ import API_DATA from '@/api/axios.js';
 Vue.prototype.GLOBAL = API_DATA
 import LABEL_DATA from '@/api/label.js';
 Vue.prototype.LABEL_DATA = LABEL_DATA;
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

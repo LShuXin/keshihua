@@ -1,10 +1,10 @@
 <template>
   <el-card class="box-card BigBox" shadow="hover" style="height:100%">
-    <span class="topBox">厂商统计</span>
+    <span class="topBox">厂商兼容</span>
     <div class="text item">
       <el-card class="box-card SmallBox" shadow="hover" v-for="(item,i) in datas" :key="i">
         <div class="text item">
-          <span class="icon iconfont" id="One">&#xe7e5;</span>
+          <span class="icon iconfont" id="One" :class="'ss'+i">&#xe7e5;</span>
           <span class="nameBox">{{item.shortName}}</span>
           <span class="numBox">{{item.percent}}</span>
         </div>
@@ -43,13 +43,13 @@
   color: #999999;
   font-size: 14px;
 }
-#One {
+.ss0 {
   color: #28d70c;
 }
-#Two {
+.ss1 {
   color: #f7b84f;
 }
-#Three {
+.ss2 {
   color: #f74f77;
 }
 .BigBox {
@@ -75,16 +75,16 @@ export default {
     return {
       datas: [
         {
-          shortName: "智洋",
+          shortName: "智景无限",
           percent: "70%"
         },
         {
-          name: "信通",
-          num: "20%"
+          shortName: "信通",
+          percent: "10%"
         },
         {
-          name: "智景",
-          num: "10%"
+          shortName: "智洋",
+          percent: "10%"
         }
       ]
     };
@@ -96,7 +96,7 @@ export default {
     msg(){
       Axios({
         method:"post",
-        url:this.GLOBAL.AJAX_URL + "/v1/device/get-device-manufacture-info",
+        url:this.GLOBAL.AJAX_URL + "/v1/device/get-device-manufacture-info?user-id="+localStorage.getItem("userId"),
         headers:{
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }

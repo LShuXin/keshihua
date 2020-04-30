@@ -18,7 +18,13 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <span>用户名：</span>
-              <el-input v-model="username" placeholder="请输入用户名" size="mini" style="width:178px;" clearable></el-input>
+              <el-input
+                v-model="username"
+                placeholder="请输入用户名"
+                size="mini"
+                style="width:178px;"
+                clearable
+              ></el-input>
             </el-col>
           </el-row>
         </el-col>
@@ -50,17 +56,20 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="2" :offset="4">
+        <el-col :span="2" :offset="2">
           <el-button type="primary" size="mini" icon="el-icon-search" @click="chaxun">查询</el-button>
         </el-col>
         <el-col :span="2">
           <el-button type="primary" size="mini" icon="el-icon-plus" @click="tianjia">添加</el-button>
         </el-col>
+        <el-col :span="2">
+          <el-button type="primary" size="mini" icon="el-icon-download" @click="daochu">导出</el-button>
+        </el-col>
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="users" highlight-current-row>
-        <el-table-column type="selection" width="30px"></el-table-column>
+      <el-table :data="users" highlight-current-row header-row-class-name="rowtitle">
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column label="序号" type="index"></el-table-column>
         <el-table-column property="companyName" label="公司"></el-table-column>
         <el-table-column property="departmentName" label="部门"></el-table-column>
@@ -82,7 +91,7 @@
         background
         layout="prev, pager, next"
         :total="total"
-        :page-size="8"
+        :page-size="10"
         @current-change="pageChange"
         style="float:right;margin-top:5px;"
       ></el-pagination>
@@ -95,27 +104,9 @@
         <el-button type="primary" @click="delTrue">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 修改 -->
-    <!-- <el-dialog title="修改信息" :visible.sync="xgBox" width="30%">
-    <el-form :model="xgform">
-      <el-form-item label="姓名：" :label-width="formLabelWidth">
-        <el-input v-model="xgform.name"></el-input>
-      </el-form-item>
-      <el-form-item label="手机号：" :label-width="formLabelWidth">
-        <el-input v-model="xgform.phone"></el-input>
-      </el-form-item>
-      <el-form-item label="微信号：" :label-width="formLabelWidth">
-        <el-input v-model="xgform.weChat"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
-      <el-button @click="xgBox = false">取 消</el-button>
-      <el-button type="primary" @click="xgTrue">确 定</el-button>
-    </div>
-    </el-dialog>-->
     <el-dialog title="添加用户" :visible.sync="tjBox" width="60%">
-      <el-form :model="tjform">
-        <el-form-item label="个人信息：" :label-width="formLabelWidth">
+      <el-form v-model="tjform">
+        <el-form-item label="个人信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;姓名：</span>
           <el-input v-model="tjform.name" size="mini"></el-input>
           <span id="right-item">手机号：</span>
@@ -188,7 +179,7 @@
 
     <el-dialog title="修改用户" :visible.sync="xgBox" width="60%">
       <el-form :model="xgform">
-        <el-form-item label="个人信息：" :label-width="formLabelWidth">
+        <el-form-item label="个人信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;姓名：</span>
           <el-input v-model="xgform.name" size="mini"></el-input>
           <span id="right-item">手机号：</span>
@@ -204,15 +195,7 @@
           <span id="right-item">密码：</span>
           <el-input v-model="xgform.password" show-password size="mini"></el-input>
         </el-form-item>
-        <el-form-item
-          prop="email"
-          label
-          :label-width="formLabelWidth"
-          :rules="[
-            { required: false, message: '请输入邮箱地址', trigger: 'blur' },
-            { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-          ]"
-        >
+        <el-form-item :label-width="formLabelWidth">
           <span>&nbsp;&nbsp;&nbsp;邮箱：</span>
           <el-input v-model="xgform.email" size="mini"></el-input>
         </el-form-item>
@@ -260,24 +243,6 @@
     </el-dialog>
 
     <el-dialog title="用户访问权限" :visible.sync="qxBox" width="30%" @opened="openFun">
-      <!-- <el-form :model="qxform">
-      <el-form-item label="部门" :label-width="formLabelWidth">
-        <el-select v-model="qxform.companyId" placeholder="请选择部门" size="mini" @change="voltageFun">
-          <el-option v-for="item in companys" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-        <label class="miniTitle">电压等级</label>
-        <el-select v-model="qxform.voltageId" placeholder="请选择电压等级" size="mini" @change="xianluFun">
-          <el-option v-for="item in voltages" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-        <label class="miniTitle">线路名称</label>
-        <el-select v-model="qxform.lineId" placeholder="请选择线路名" size="mini" @change="TowerFun">
-          <el-option v-for="item in lines" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
-      </el-form>-->
-      <!-- <el-table :data="Towers" v-if="tableBox">
-      <el-table-column label="杆塔号" prop="towerNum"></el-table-column>
-      </el-table>-->
       <div class style="margin-left:40px;">
         <el-tree
           :props="props"
@@ -305,7 +270,7 @@ export default {
   data() {
     return {
       Keys: ["1282"],
-      username:"",
+      username: "",
       casbinRoleId: "",
       casbinRoles: [],
       userId: "",
@@ -320,6 +285,7 @@ export default {
       page: 1,
       delBox: false,
       xgform: {
+        id: "",
         name: "",
         userName: "",
         password: "",
@@ -373,8 +339,23 @@ export default {
     this.usersFun();
     this.casbinRolesFun();
     this.gongsiFun();
+    this.bumenFun();
   },
   methods: {
+    valFun(val) {
+      console.log(val);
+    },
+    daochu() {
+      Axios({
+        method: "post",
+        url: this.GLOBAL.AJAX_URL + "/v1/user/export",
+        headers: {
+          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+        }
+      }).then(msg => {
+        window.location.href = msg.data.data;
+      });
+    },
     //   所有数据
     usersFun() {
       Axios({
@@ -420,7 +401,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+        console.log(msg);
         this.gongsis = msg.data.data;
       });
     },
@@ -430,13 +411,12 @@ export default {
         method: "post",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/department/get-no-limit-by-company-id?company-id=" +
-          this.gongsiId,
+          "/v1/department/get-no-limit-by-company-id?company-id=1282",
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+        console.log(msg);
         this.departments = msg.data.data;
       });
     },
@@ -456,7 +436,10 @@ export default {
         this.departments = msg.data.data;
       });
     },
-    bumenFunXg2() {
+    bumenFunXg2(val) {
+      console.log(val);
+      console.log(this.xgform.companyId);
+      console.log(this.gongsis);
       Axios({
         method: "post",
         url:
@@ -540,33 +523,66 @@ export default {
       this.tjform.departmentId = Number(this.tjform.departmentId);
       this.tjform.teamId = Number(this.tjform.teamId);
       this.tjform.roleId = Number(this.tjform.roleId);
-      Axios({
-        method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/user/create ",
-        data: this.tjform,
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        // console.log(msg);
-        this.tjBox = false;
-        if (msg.data.code === 0) {
-          this.$message.success("添加成功");
-          this.tjform.name = "";
-          this.tjform.phone = "";
-          this.tjform.weChat = "";
-          this.tjform.username = "";
-          this.tjform.password = "";
-          this.tjform.email = "";
-          this.tjform.companyId = "";
-          this.tjform.departmentId = "";
-          this.tjform.teamId = "";
-          this.tjform.roleId = "";
-          this.usersFun();
-        } else {
-          this.$message.error("添加失败");
-        }
-      });
+      switch ("" || 0) {
+        case this.tjform.name:
+          this.$message.error("姓名不能为空");
+          break;
+        case this.tjform.phone:
+          this.$message.error("手机号不能为空");
+          break;
+        case this.tjform.weChat:
+          this.$message.error("微信不能为空");
+          break;
+        case this.tjform.userName:
+          this.$message.error("用户名不能为空");
+          break;
+        case this.tjform.password:
+          this.$message.error("密码不能为空");
+          break;
+        case this.tjform.email:
+          this.$message.error("邮箱不能为空");
+          break;
+        case this.tjform.companyId:
+          this.$message.error("未选择公司");
+          break;
+        case this.tjform.departmentId:
+          this.$message.error("未选择部门");
+          break;
+        case this.tjform.teamId:
+          this.$message.error("未选择班组");
+          break;
+        case this.tjform.roleId:
+          this.$message.error("未选择角色");
+          break;
+        default:
+          Axios({
+            method: "post",
+            url: this.GLOBAL.AJAX_URL + "/v1/user/create ",
+            data: this.tjform,
+            headers: {
+              Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+            }
+          }).then(msg => {
+            console.log(msg);
+            // this.tjBox = false;
+            if (msg.data.code === 0) {
+              this.$message.success("添加成功");
+              this.tjform.name = "";
+              this.tjform.phone = "";
+              this.tjform.weChat = "";
+              this.tjform.userName = "";
+              this.tjform.password = "";
+              this.tjform.email = "";
+              this.tjform.companyId = "";
+              this.tjform.departmentId = "";
+              this.tjform.teamId = "";
+              this.tjform.roleId = "";
+              this.usersFun();
+            } else {
+            }
+          });
+          break;
+      }
     },
     //修改
     xgFun(row) {
@@ -576,13 +592,15 @@ export default {
       this.xgform.phone = row.phone;
       this.xgform.weChat = row.weChat;
       this.xgform.userName = row.userUsername;
-      this.xgform.phone = row.phone;
+      // this.xgform.phone = row.phone;
       this.xgform.teamId = Number(row.teamId);
       this.xgform.companyId = Number(row.companyId);
       this.xgform.departmentId = Number(row.departmentId);
       this.xgform.roleId = Number(row.roleId);
       this.xgform.password = row.password;
       this.xgform.email = row.email;
+      this.gongsiFun();
+      this.banzuFun2();
       this.xgBox = true;
     },
     xgTrue() {
@@ -632,7 +650,7 @@ export default {
             for (var i = 0; i < msg.data.data.towers.length; i++) {
               a.push(`${msg.data.data.towers[i].towerId}`);
             }
-            
+
             this.$refs.tree.setCheckedKeys(a);
           } else {
             this.$refs.tree.setCheckedKeys([]);
@@ -875,6 +893,13 @@ export default {
 
 
 <style lang="scss" scoped>
+.el-table >>> {
+  .rowtitle {
+    .cell {
+      color: #1ca3ff;
+    }
+  }
+}
 #right-item {
   margin-left: 10px;
 }

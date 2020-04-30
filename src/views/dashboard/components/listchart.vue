@@ -104,12 +104,12 @@ export default {
             .subtract("days", 6)
             .format("YYYY-MM-DD") +
           "&end-time=" +
-          moment().format("YYYY-MM-DD"),
+          moment().format("YYYY-MM-DD")+"&user-id="+localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
+        console.log(msg);
         chart.changeData(msg.data.data);
         //  console.log(this.data);
       });

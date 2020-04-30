@@ -29,7 +29,7 @@ const VOLTAGE_LEVEL = [
     { id: 1, name: "35kV" },
     { id: 2, name: "220kV" },
     { id: 3, name: "500kV" },
-    { id: 4, name: "±6660kV" },
+    { id: 4, name: "±660kV" },
     { id: 5, name: "±800kV" },
     { id: 6, name: "1000kV" }
 ]
@@ -117,6 +117,7 @@ const Device_Snap_Setting = [
     { id: 2, name: "15分钟" },
     { id: 3, name: "30分钟" },
 ]
+const Early_Alarms = false
 
 export default {
     ALARM_CAUSE,//告警原因
@@ -136,6 +137,6 @@ export default {
     TOWER_NATURE,//杆塔性质
     TOWER_CATEGORY,//杆塔类型
     Device_Snap_Setting,//拍摄时间设置
-
+    Early_Alarms
 
 }

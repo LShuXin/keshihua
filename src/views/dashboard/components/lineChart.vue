@@ -130,7 +130,7 @@ export default {
         method: "post",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/alarm/get-day-total-count?end-time=" +
+          "/v1/alarm/get-day-total-count?user-id="+localStorage.getItem("userId")+"&end-time=" +
           moment().format("YYYY-MM-DD"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")

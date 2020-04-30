@@ -47,3 +47,17 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+.el-image {
+  .el-icon-circle-close{
+    color: #fff !important;
+    position: fixed;
+    right: 200px;
+    top: 50px;
+  }
+} 
+// .el-icon-circle-close{
+//   color:red !important;
+//   position: fixed;
+//   top: 50px;
+//   right: 200px;
+// }

@@ -28,15 +28,7 @@ import Cookies from "js-cookie";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          reportedAt: "11:28:35",
-          causes: "大型车辆",
-          towerName: "测试线路11",
-          longitude: "111",
-          latitude: "21"
-        }
-      ],
+      tableData: [],
       set: null
     };
   },
@@ -51,7 +43,7 @@ export default {
     setFun() {
       Axios({
         method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/alarm/get-real-time-alarm",
+        url: this.GLOBAL.AJAX_URL + "/v1/alarm/get-real-time-alarm?user-id="+localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }

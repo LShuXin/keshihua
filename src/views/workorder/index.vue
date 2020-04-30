@@ -4,7 +4,7 @@
       <el-row :gutter="10">
         <el-col :span="4">
           <span>部门名称：</span>
-          <el-select v-model="departmentId" placeholder="请选择部门" size="mini" clearable>
+          <el-select clearable v-model="departmentId" placeholder="请选择部门" size="mini">
             <el-option v-for="item in bumens" :key="item.id" :label="item.name" :value="item.name"></el-option>
           </el-select>
         </el-col>
@@ -54,10 +54,16 @@
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="gdVal" style="width: 100%" @row-click="reading">
-        <el-table-column type="selection" width="30px"></el-table-column>
+      <el-table
+        :data="gdVal"
+        style="width: 100%"
+        @row-click="reading"
+        header-row-class-name="rowtitle"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column prop="createdAt" label="派单时间"></el-table-column>
+        <el-table-column prop="createdAt" label="派单时间" style="background:#000;"></el-table-column>
         <el-table-column prop="status" label="工单状态"></el-table-column>
         <el-table-column prop="departmentName" label="部门名称"></el-table-column>
         <el-table-column prop="voltageLevel" label="电压等级"></el-table-column>
@@ -65,12 +71,15 @@
         <el-table-column prop="towerName" label="杆塔号"></el-table-column>
         <el-table-column prop="deviceInstallationLocation" label="监拍朝向"></el-table-column>
         <el-table-column prop="alarmAt" label="告警时间"></el-table-column>
-        <el-table-column prop="orderNo" label="是否已读">
+
+        <el-table-column prop="orderNo" label="是否已读" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.hasRead === '已读'">已读</span>
-            <span v-else style="color:#F56C6C;">未读</span>
+            <span v-else style="color:#ff0000;">未读</span>
           </template>
         </el-table-column>
+        <el-table-column prop="status" label="处理状态" align="center"></el-table-column>
+
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click.stop="xiangqing(scope.row)">查看详情</el-button>
@@ -177,6 +186,7 @@
       </el-row>
       <p>现场图片上传（最多五张）</p>
       <el-upload
+        id="el-upload"
         :action="upimgUrl"
         list-type="picture-card"
         :auto-upload="true"
@@ -259,6 +269,7 @@
         <el-button @click="cllsBox = false" type="danger">关闭</el-button>
       </div>
     </el-dialog>
+    <el-pagination background layout="prev, pager, next" :total="totalNum" :page-size="5" @current-change="pageChange"></el-pagination>
   </el-container>
 </template>
 <script>
@@ -316,43 +327,28 @@ export default {
       imgArr: [],
       statusS: [
         {
-          id:1,
-          name:"处理中"
-        },{
-          id:0,
-          name:"未处理"
+          id: 1,
+          name: "处理中"
+        },
+        {
+          id: 0,
+          name: "未处理"
+        },
+        {
+          id: 2,
+          name: "已终结"
         }
       ],
       pageNum: 1,
       status: "",
       cllsBox: false,
-      lsform: [
-        // {
-        //   createdAt: "1",
-        //   userName: "2",
-        //   userPhone: "3",
-        //   teamName: "4",
-        //   isReworkOrder: 1,
-        //   isRecordIntoRiskSystem: 0,
-        //   scene: "5",
-        //   handleDesc: "6",
-        //   pictures:[
-        //     "http://47.104.136.74/image/3.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //     "http://47.104.136.74/image/2.jpg",
-        //   ]
-        // }
-      ],
-
+      lsform: [],
       ReworkOrder: [
         { id: 0, name: "否" },
         { id: 1, name: "是" }
       ],
-      fileList: []
+      fileList: [],
+      totalNum: null
     };
   },
   mounted() {
@@ -360,6 +356,11 @@ export default {
     this.workOrder();
   },
   methods: {
+    tableRowClassName({ row, rowIndex }) {
+      // if (row.hasRead !== "已读") {
+      //   return "warning-row";
+      // }
+    },
     //公司
     gongsiFun() {
       Axios({
@@ -394,7 +395,7 @@ export default {
         method: "post",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/work-order/query-detail?user-id=" +
+          "/v1/work-order/query-detail?page="+this.pageNum+"&size=5&user-id=" +
           localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
@@ -402,6 +403,7 @@ export default {
       }).then(msg => {
         console.log(msg);
         this.gdVal = msg.data.data.devices;
+        this.totalNum = msg.data.data.totalCount;
       });
     },
     xiangqing(row) {
@@ -450,10 +452,10 @@ export default {
         // console.log(msg);
         if (msg.data.code === 0) {
           this.$message.success("工单终结");
-           this.$refs.upload.clearFiles()
+          this.$refs.upload.clearFiles();
         } else {
           this.$message.error("终结失败");
-           this.$refs.upload.clearFiles()
+          this.$refs.upload.clearFiles();
         }
         this.workOrder();
         this.gdcl = false;
@@ -463,7 +465,7 @@ export default {
         this.scene = "";
         this.handleDesc = "";
         this.id = "";
-        this.imgArr = "";
+        this.imgArr = [];
       });
     },
     gdgj() {
@@ -491,7 +493,7 @@ export default {
           this.$refs.upload.clearFiles();
         } else {
           this.$message.error("跟进失败");
-           this.$refs.upload.clearFiles()
+          this.$refs.upload.clearFiles();
         }
         this.workOrder();
         this.gdcl = false;
@@ -511,16 +513,24 @@ export default {
     handleDownload(file) {
       // console.log(file);
     },
-    handleRemove(file) {
-      // console.log(file);
+    handleRemove(file, fileList) {
+      console.log(file);
+      for (var i = 0; i < this.imgArr.length; i++) {
+        if (this.imgArr[i] === file.id) {
+          this.imgArr.splice(i, "1");
+        }
+      }
+      console.log(this.imgArr);
     },
     upImg(response, file, fileList) {
       // console.log(file);
-      console.log(response);
-      console.log(fileList);
+      file.id = response.data.id;
+      // console.log(response);
+      // console.log(fileList);
       this.$message.success("上传成功");
       this.uping = false;
       this.imgArr.push(response.data.id);
+      console.log(this.imgArr);
     },
     upingFun() {
       this.uping = true;
@@ -550,6 +560,7 @@ export default {
         }
       });
     },
+
     Query() {
       if (this.gjdate !== null && this.gjdate[0] !== undefined) {
         console.log(this.gjdate);
@@ -559,7 +570,7 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/work-order/query-detail?order-by=work_order.created_at&order=asc&page=" +
             this.pageNum +
-            "&size=12&department-name=" +
+            "&size=5&department-name=" +
             this.departmentId +
             "&voltage-level=" +
             this.dianyaId +
@@ -578,6 +589,7 @@ export default {
           }
         }).then(msg => {
           this.gdVal = msg.data.data.devices;
+          this.totalNum = msg.data.data.totalCount;
           // console.log(msg);
         });
       } else {
@@ -587,7 +599,7 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/work-order/query-detail?order-by=work_order.created_at&order=asc&page=" +
             this.pageNum +
-            "&size=12&department-name=" +
+            "&size=5&department-name=" +
             this.departmentId +
             "&voltage-level=" +
             this.dianyaId +
@@ -602,6 +614,7 @@ export default {
           }
         }).then(msg => {
           this.gdVal = msg.data.data.devices;
+          this.totalNum = msg.data.data.totalCount;
           // console.log(msg);
         });
       }
@@ -624,12 +637,46 @@ export default {
         }
       }).then(msg => {
         console.log(msg);
+        row.hasRead = "已读";
       });
+    },
+    pageChange(val){
+      this.pageNum = val
+      this.Query()
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+// #el-upload >>> .el-icon-delete{
+//   // display: none !important;
+// }
+// .el-upload-list >>> .el-icon-delete{
+//   // display: none !important;
+// }
+.el-pagination{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+.el-table >>> {
+  .rowtitle {
+    .cell {
+      color: #409eff;
+    }
+  }
+  .warning-row {
+    background: #f8a3a3;
+    color: #fff;
+    &:hover {
+      color: #000 !important;
+      td {
+        background: #fdc7c7 !important;
+      }
+    }
+  }
+}
+
 .el-header {
   height: auto !important;
   padding: 20px 10px;

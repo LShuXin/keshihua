@@ -5,7 +5,6 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -30,19 +29,30 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+// import login from "@/views/login"
+// import dashboard from '@/views/dashboard/index'
+// import loss from '@/views/404'
+// import ssjk from '@/views/example/index'
+// import yjym from '@/views/warning/index'
+// import gjlb from '@/views/form/index'
+// import gdgl from '@/views/workorder/index'
+// import tplb from '@/views/nested/index'
+// import zjyp from '@/views/zhijingyun/index2'
+// import xlgl from '@/views/table/xlgl/index'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: (resolve) => require(["@/views/login/index.vue"],resolve),
+    // component: login,
     hidden: true
   },
-
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: (resolve) => require(["@/views/404"],resolve),
+    // component: loss,
+
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -52,34 +62,13 @@ export const constantRoutes = [
     children: [{
       path: 'dashboard',
       name: '首页',
-      component: () => import('@/views/dashboard/index'),
+      component: (resolve) => require(["@/views/dashboard/index"],resolve),
+      // component: dashboard,
       meta: { title: '首页', icon: 'index' },
       noCache: true,
       affix: true
     }]
   },
-
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'example' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // },
   {
     path: '/example',
     component: Layout,
@@ -90,7 +79,8 @@ export const constantRoutes = [
     children: [{
       path: '',
       name: '实时监控',
-      component: () => import('@/views/example/index'),
+      component: (resolve) => require([ "@/views/example/index"],resolve),
+      // component:() => import('@/views/ssjk'),
       meta: { title: '实时监控', icon: 'ssjk' },
       noCache: true,
       affix: true
@@ -106,13 +96,13 @@ export const constantRoutes = [
     children: [{
       path: '',
       name: '预警页面',
-      component: () => import('@/views/warning/index'),
+      component: (resolve) => require(["@/views/warning/index"],resolve),
+      // component: yjym,
       meta: { title: '预警页面', icon: 'ssjk' },
       noCache: true,
       affix: true
     }]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -120,8 +110,9 @@ export const constantRoutes = [
       {
         path: '',
         name: '告警列表',
-        component: () => import('@/views/form/index'),
-        meta: { title: '告警列表', icon: 'gjlb' }
+        component: (resolve) => require(["@/views/form/index"],resolve),
+        // component: gjlb,
+        meta: { title: '告警列表', icon: 'gjlb',noCache:true }
       }
     ]
   },
@@ -135,13 +126,13 @@ export const constantRoutes = [
     children: [{
       path: '',
       name: '工单管理',
-      component: () => import('@/views/workorder/index'),
-      meta: { title: '工单管理', icon: 'ssjk' },
+      component: (resolve) => require(["@/views/workorder/index"],resolve),
+      // component: gdgl,
+      meta: { title: '工单管理', icon: 'ssjk' ,noCache:true},
       noCache: true,
       affix: true
     }]
   },
-
   {
     path: '/nested',
     component: Layout,
@@ -149,8 +140,22 @@ export const constantRoutes = [
       {
         path: '',
         name: '图片轮播',
-        component: () => import('@/views/nested/index'),
+        component: (resolve) => require(["@/views/nested/index"],resolve),
+        // component: tplb,
         meta: { title: '图片轮播', icon: 'tplb' }
+      }
+    ]
+
+  },{
+    path: '/zhijingyun',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: '智景云盘',
+        component: (resolve) => require(["@/views/zhijingyun/index2"],resolve),
+        // component: zjyp,
+        meta: { title: '智景云盘', icon: 'tplb' }
       }
     ]
 
@@ -168,39 +173,39 @@ export const constantRoutes = [
       {
         path: 'xlgl',
         name: '线路管理',
-        component: () => import('@/views/table/xlgl/index'),
+        component: (resolve) => require(["@/views/table/xlgl/index"],resolve),
+        // component: xlgl,
         meta: { title: '线路管理', icon: 'tplb' },
       },
       {
         path: "gtgl",
         name: "杆塔管理",
-        component: () => import('@/views/table/gtgl/index'),
+        component: (resolve) => require(["@/views/table/gtgl/index"],resolve),
         meta: { title: "杆塔管理", icon: "tplb" }
       },
       {
         path: "sim",
         name: "SIM卡管理",
-        component: () => import('@/views/table/sim/index'),
+        component: (resolve) => require(["@/views/table/sim/index"],resolve),
         meta: { title: "SIM卡管理", icon: "tplb" }
       },
       {
         path: 'sblb',
         name: '设备列表',
-        component: () => import('@/views/table/sbxx/index'),
+        component: (resolve) => require(["@/views/table/sbxx/index"],resolve),
         meta: { title: '设备列表', icon: 'tplb' }
       },
       {
         path: 'rygl',
         name: '人员管理',
-        component: () => import('@/views/table/rygl/index'),
+        component: (resolve) => require(["@/views/table/rygl/index"],resolve),
         meta: { title: '人员管理', icon: 'tplb' }
       },
-
       {
         path: "xzgt",
         name: "新增杆塔",
         hidden: true,
-        component: () => import('@/views/table/xlgl/xzgt/index'),
+        component: (resolve) => require(["@/views/table/xlgl/xzgt/index"],resolve),
         meta: { title: "新增杆塔", icon: 'tplb' }
       }
     ]

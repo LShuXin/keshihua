@@ -5,7 +5,7 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
-  avatar: ''
+  avatar: '',
 }
 
 const mutations = {
@@ -41,25 +41,25 @@ const actions = {
   },
 
   // get user info
-//   getInfo({ commit, state }) {
-//     return new Promise((resolve, reject) => {
-//      // getInfo(state.token).then(response => {
-//         const { data } = response
-//         console.log(response)
-//         if (!data) {
-//           reject('Verification failed, please Login again.')
-//         }
+  //   getInfo({ commit, state }) {
+  //     return new Promise((resolve, reject) => {
+  //      // getInfo(state.token).then(response => {
+  //         const { data } = response
+  //         console.log(response)
+  //         if (!data) {
+  //           reject('Verification failed, please Login again.')
+  //         }
 
-//         const { name, avatar } = data
+  //         const { name, avatar } = data
 
-//         commit('SET_NAME', name)
-//         commit('SET_AVATAR', avatar)
-//         resolve(data)
-//       }).catch(error => {
-//         reject(error)
-//       })
-//  //   })
-//   },
+  //         commit('SET_NAME', name)
+  //         commit('SET_AVATAR', avatar)
+  //         resolve(data)
+  //       }).catch(error => {
+  //         reject(error)
+  //       })
+  //  //   })
+  //   },
 
   // user logout
   // logout({ commit, state }) {

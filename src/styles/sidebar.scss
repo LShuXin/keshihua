@@ -74,6 +74,7 @@
       &:hover {
         background-color: $menuHover !important;
         color: $menuHoverText !important;
+        font-size: 18px !important;
       }
     }
 
@@ -83,6 +84,8 @@
     .is-active {
       background: $menuHover !important;
       color: $menuHoverText !important;
+      font-size: 18px !important;
+
       // border-left: 10px solid $ActiveBorder!important;
     }
 
@@ -94,7 +97,10 @@
 
       &:hover {
         background-color: $subMenuHover !important;
-        color: $subMenuBg !important;
+        color: $menuHoverText !important;
+      font-size: 18px !important;
+
+
       }
     }
   }

@@ -12,27 +12,27 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <el-button type="primary">分组轮播</el-button>
+            <el-button type="primary" @click="cFun">分组轮播</el-button>
           </div>
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <el-button type="primary">场景轮播</el-button>
+            <el-button type="primary" @click="cFun">场景轮播</el-button>
           </div>
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <el-button type="primary">预警轮播</el-button>
+            <el-button type="primary" @click="cFun">预警轮播</el-button>
           </div>
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <el-button type="primary">告警轮播</el-button>
+            <el-button type="primary" @click="cFun">告警轮播</el-button>
           </div>
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <el-button type="primary">轮播配置</el-button>
+            <el-button type="primary" @click="cFun">轮播配置</el-button>
           </div>
         </el-col>
         <el-col :span="4" :offset="6">
@@ -51,17 +51,18 @@
         </div>-->
         <el-row :gutter="10">
           <el-col :span="6" v-for="(item,index) in items" :key="index">
+            <span style="position:absolute">{{item.lineName}}   #{{item.towerNum}}  {{item.deviceInstallationLocationName}}  {{item.lastPhotographAt | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}  </span>
+            <span style="position:absolute;top:20px;"></span>
             <el-image
               :key="index"
-              style="width:100%; height:200px; margin-top:30px;"
+              style="width:400px; height:200px; margin-top:30px;"
               :src="item.imageUrl"
-              @click="test(item.imageUrl)"
-              :preview-src-list="srcList"
+              :preview-src-list="[item.imageUrl]"
               fit="fill"
             ></el-image>
-            <span class="icon iconfont" id="One" @click.stop="copyData(item.towerNum,item.lineName,item.departmentName,item.installedAt,item.imageUrl)">&#xe618;</span>
+            <span class="icon iconfont" id="One" @click.stop="copyData(item)">&#xe618;</span>
             <!-- <span class="icon iconfont" id="Two"  v-bind:class="{'waring':item.waring}">&#xe62e;</span> -->
-            <span class="icon iconfont" id="Two"  >&#xe62e;</span>
+            <span class="icon iconfont" id="Two">&#xe62e;</span>
           </el-col>
         </el-row>
 
@@ -69,10 +70,10 @@
           <el-pagination
             background
             layout="prev, pager, next"
-            :current-page="pagenum"
             :total="pagess"
             @current-change="current"
             :page-size="12"
+            :current-page="pagenum"
           ></el-pagination>
         </div>
       </el-card>
@@ -107,7 +108,7 @@ header {
     right: 30px;
     background: #667599;
     display: inline-block;
-    cursor:pointer
+    cursor: pointer;
   }
   #One {
     position: absolute;
@@ -117,7 +118,7 @@ header {
     right: 60px;
     background: #667599;
     display: inline-block;
-    cursor:pointer
+    cursor: pointer;
   }
 
   .waring {
@@ -138,6 +139,7 @@ header {
 import Axios from "axios";
 import Cookies from "js-cookie";
 import moment from "moment";
+import { parseTime } from "@/utils/index.js";
 export default {
   data() {
     return {
@@ -146,17 +148,15 @@ export default {
       items: [
         {
           imageUrl: "http://47.104.136.74/image/3.jpg",
-          waring:true
-
+          waring: true
         },
         {
           imageUrl: "http://47.104.136.74/image/3.jpg",
-          waring:false
-
+          waring: false
         },
         {
           imageUrl: "http://47.104.136.74/image/3.jpg",
-          waring:true
+          waring: true
         }
       ],
       srcList: [],
@@ -166,15 +166,18 @@ export default {
       pagess: 1
     };
   },
+  filters: {
+    parseTime: parseTime
+  },
   mounted() {
     // this.set;
     Axios({
       method: "post",
       url:
         this.GLOBAL.AJAX_URL +
-        "/v1/device/query?order-by=created_at&order=asc&page=" +
+        "/v1/device/get-latest-image?&page=" +
         this.index +
-        "&size=12",
+        "&size=12&user-id="+localStorage.getItem("userId"),
       headers: {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
@@ -184,21 +187,29 @@ export default {
         this.items = msg.data.data.devices;
         //  console.log(this.items);
         this.index = this.index + 1;
+        this.pagess = msg.data.data.totalCount;
+        console.log(this.pagess);
       } else {
         console.log(msg);
         this.$message("没有更多图片");
         clearInterval(this.set);
-        this.pagess = msg.data.totalCount;
       }
     });
   },
   methods: {
-    copyData(T,L,D,I,Img){
-      this.$copyText(`所属部门：${D}，线路名：${L}，杆塔号：${T}，时间：${moment(I).format("YYYY-MM-DD")}，图片地址：${Img}。`)
-      console.log("复制成功！")
+    copyData(item) {
+      // console.log(item)
+      this.$copyText(
+        `时间：${moment(item.lastPhotographAt).format("YYYY-MM-DD")}，图片地址：${
+          item.imageUrl
+        }。`
+      );
+      console.log("复制成功！");
+      this.$message.success("复制成功！");
     },
     test(value) {
       this.srcList = [value];
+      console.log(this.srcList);
     },
     pageup() {
       this.index = this.index - 1;
@@ -206,9 +217,9 @@ export default {
         method: "post",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/device/query?order-by=created_at&order=asc&page=" +
+          "/v1/device/get-latest-image?&page=" +
           this.index +
-          "&size=12",
+          "&size=12&user-id="+localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -224,9 +235,9 @@ export default {
         method: "post",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/device/query?order-by=created_at&order=asc&page=" +
+          "/v1/device/get-latest-image?&page=" +
           val +
-          "&size=12",
+          "&size=12&user-id="+localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -246,9 +257,9 @@ export default {
           method: "post",
           url:
             this.GLOBAL.AJAX_URL +
-            "/v1/device/query?order-by=created_at&order=asc&page=" +
+            "/v1/device/get-latest-image?&page=" +
             this.index +
-            "&size=12",
+            "&size=12&user-id="+localStorage.getItem("userId"),
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
@@ -272,34 +283,39 @@ export default {
         method: "post",
         url:
           THIS.GLOBAL.AJAX_URL +
-          "/v1/device/query?order-by=created_at&order=asc&page=" +
+          "/v1/device/get-latest-image?&page=" +
           this.index +
-          "&size=12",
+          "&size=12&user-id="+localStorage.getItem("userId"),
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        console.log(msg+111);
         this.items = msg.data.data.devices;
 
         this.setime = 12;
       });
     },
     ourTv() {
-      var ele = document.getElementById("imgBigBox");
-      if (ele.requestFullscreen) {
-        ele.requestFullscreen();
-        this.titleTF = true;
-      } else if (ele.mozRequestFullScreen) {
-        ele.mozRequestFullScreen();
-        this.titleTF = true;
-      } else if (ele.webkitRequestFullscreen) {
-        ele.webkitRequestFullscreen();
-        this.titleTF = true;
-      } else if (ele.msRequestFullscreen) {
-        ele.msRequestFullscreen();
-        this.titleTF = true;
-      }
+      //全屏
+      // var ele = document.getElementById("imgBigBox");
+      // if (ele.requestFullscreen) {
+      //   ele.requestFullscreen();
+      //   this.titleTF = true;
+      // } else if (ele.mozRequestFullScreen) {
+      //   ele.mozRequestFullScreen();
+      //   this.titleTF = true;
+      // } else if (ele.webkitRequestFullscreen) {
+      //   ele.webkitRequestFullscreen();
+      //   this.titleTF = true;
+      // } else if (ele.msRequestFullscreen) {
+      //   ele.msRequestFullscreen();
+      //   this.titleTF = true;
+      // }
+      this.$router.go(0);
+    },
+    cFun(){
+      this.$message.warning("该账号没有此权限")
     }
   },
   destroyed() {

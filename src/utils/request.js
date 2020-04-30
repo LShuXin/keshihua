@@ -44,8 +44,23 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log(res)
-
+    
+    if(res.code===31801){
+      Message({
+        message: "用户名错误",
+        type: 'error',
+        duration: 2000
+      })
+      // this.$message.error("用户名错误")
+    }
+    if(res.code === 31808){
+      Message({
+        message: "密码错误",
+        type: 'error',
+        duration: 2000
+      })
+    }
+    localStorage.setItem("userName",res.data.user.name)
     localStorage.setItem("userId",res.data.user.id)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 0) {
@@ -74,9 +89,9 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err456' + error) // for debug
+    console.log(error) // for debug
     Message({
-      message: error.message,
+      message: "网络连接失败",
       type: 'error',
       duration: 5 * 1000
     })

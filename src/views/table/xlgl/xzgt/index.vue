@@ -8,8 +8,8 @@
       </el-row>
     </el-header>
     <el-main>
-      <el-table :data="tableData" @row-click="up2">
-        <el-table-column type="selection"></el-table-column>
+      <el-table :data="tableData" @row-click="up2" header-row-class-name="rowtitle">
+        <el-table-column type="selection" align="center"></el-table-column>
         <el-table-column header-align="center" align="center" property="teamName" label="班组"></el-table-column>
         <el-table-column header-align="center" align="center" property="nature" label="杆塔属性"></el-table-column>
         <el-table-column
@@ -150,7 +150,7 @@ export default {
           "/v1/line-tower/query-detail?order-by=line_tower.created_at&order=asc&page=" +
           this.page +
           "&size=10&line-id=" +
-          this.xianluId,
+          this.lineId,
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -242,8 +242,9 @@ export default {
       }).then(msg => {
         if (msg.data.code === 0) {
           this.$message.success("添加成功");
+          this.oneMsg();
         } else {
-          this.$message.warning(msg.data.message);
+          this.$message.warning("杆塔已存在");
         }
         this.TowerNumStr = null;
         this.creatTowerId = null;
@@ -275,6 +276,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.el-table >>> {
+  .rowtitle{
+    .cell{
+      color: #1ca3ff;
+    }
+  }
+}
 .labelClass {
   margin-left: 15px;
 }

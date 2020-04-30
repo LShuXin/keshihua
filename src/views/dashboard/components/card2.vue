@@ -42,7 +42,7 @@
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="zcgl" @click.native="msge">
+        <el-card class="box-card" shadow="hover" id="zcgl" @click.native="zcgl">
           <!-- <img src="../../../../public/image/tj.png" alt  /> -->
           <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe6d9;</span>
 
@@ -263,13 +263,17 @@ export default {
     msge() {
       this.$message({
         showClose: false,
-        message: "该功能正在研发中~",
+        message: "该账号没有此权限~",
         type: "warning"
       });
     },
     rout(){
        this.$router.push("/nested")
+    },
+    zcgl(){
+      this.$router.push("/table/xlgl")
     }
+
   }
 };
 </script>

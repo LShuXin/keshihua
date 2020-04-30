@@ -2,7 +2,7 @@
   <el-card id="bigBoxCard" :body-style="{padding:'0px'}">
     <el-container>
       <el-aside width="250px">
-        <el-select
+        <!-- <el-select
           v-model="value"
           filterable
           placeholder
@@ -15,7 +15,7 @@
             :value="item.value"
             style="float:left"
           ></el-option>
-        </el-select>
+        </el-select>-->
         <!-- <span class="btnSelect" style="float:right">快速搜索</span>
         <span class="btnSelect" style="float:right">详情搜索</span>-->
         <el-tree
@@ -34,11 +34,35 @@
         <div class="Small">{{this.topData}}</div>
         <el-card id="imgCardBox" shadow="always" :body-style="{padding:'10px'}">
           <span class="timeBox">{{dateMsg}}</span>
+          <!-- <span class="newPhont" v-if="newPhont">新抓拍</span></span> -->
+          <div class="qixiang">
+            <p>
+              <span class="QxName">温度：</span>
+              <el-tag type="success">22℃</el-tag>
+            </p>
+            <p>
+              <span class="QxName">湿度：</span>
+              <el-tag type="info">16%</el-tag>
+            </p>
+            <p>
+              <span class="QxName">风向：</span>
+              <el-tag type="warning">东北风</el-tag>
+            </p>
+            <p>
+              <span class="QxName">风力：</span>
+              <el-tag type="danger">3级</el-tag>
+            </p>
+
+            <p>
+              <span class="QxName">降水：</span>
+              <el-tag>0</el-tag>
+            </p>
+          </div>
           <el-image
             style="width: 100%; height:100%;"
             fit="contain"
             :src="url"
-            :preview-src-list="urls"
+            :preview-src-list="[url]"
           ></el-image>
         </el-card>
 
@@ -48,16 +72,24 @@
               <i id="leftIconSmall" class="el-icon-arrow-left"></i>
             </div>
           </el-aside>
-          <el-main id="SmallBox">
-            <el-image
-              v-for="(url,i) in urls"
-              :key="i"
-              style="width: 100%; height: 89%; margin:1%;border-radius:10px;"
-              :src="url"
-              @click="testIndex(url,i)"
-              v-bind:class="{'ImgActive' : i === imgIndex}"
-              fit="contain"
-            ></el-image>
+          <el-main id="SmallBox" style="position:relative">
+            <el-badge
+              v-if="newPhont"
+              value="抓拍"
+              class="item"
+              style="position:absolute;top:22px;left:15px; z-index:999;"
+            />
+            <el-card shadow="never" v-for="(item,i) in imgArr" :key="i">
+              <div style="text-align: right;">{{item.createdAt}}</div>
+              <el-image
+                :key="i"
+                style="width: 100%; height: 89%; margin:1%;border-radius:10px;"
+                :src="item.url"
+                @click="testIndex(item.url,i)"
+                v-bind:class="{'ImgActive' : i === imgIndex}"
+                fit="contain"
+              ></el-image>
+            </el-card>
           </el-main>
           <el-aside width="60px">
             <div id="leftBox" @click="downarr">
@@ -264,7 +296,7 @@
             </el-row>
           </el-card>
 
-          <el-card style="margin-top:10px;" shadow="never">
+          <!-- <el-card style="margin-top:10px;" shadow="never">
             <el-button type="button" style="background:#f7b84f; color:#Fff;" @click="msgBox">
               <i class="el-icon-arrow-left"></i> 上一杆塔
             </el-button>
@@ -276,18 +308,37 @@
               下一杆塔
               <i class="el-icon-arrow-right"></i>
             </el-button>
-          </el-card>
+          </el-card> -->
         </el-card>
       </el-aside>
     </el-container>
-    <el-dialog title="请选择拍摄间隔" :visible.sync="SettingBox" width="30%" center>
+    <!-- <el-dialog
+      title="请输入密码"
+      :visible.sync="mimaBox"
+      width="30%"
+      >
+     
+      <div><el-input v-model="mima" placeholder="请输入密码" show-password></el-input></div>
       <div slot="footer">
+        <el-button @click="mimaBox = false">取 消</el-button>
+        <el-button type="primary" @click="mimaFun">确 定</el-button>
+      </div>
+    </el-dialog>-->
+    <el-dialog :title="titleName" :visible.sync="SettingBox" width="30%" center>
+      <div v-if="!mimaBox">
+        <el-input v-model="mima" placeholder="123456" show-password></el-input>
+      </div>
+      <div v-if="!mimaBox" slot="footer">
+        <el-button type="primary" @click="mimaFun">确定</el-button>
+      </div>
+      <div v-else slot="footer">
         <el-button type="primary" @click="FiveM">5分钟</el-button>
         <el-button type="primary" @click="FifteenM">15分钟</el-button>
         <el-button type="primary" @click="Halfhour">30分钟</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="运行参数" :visible.sync="yxcsBox" width="15%">
+
+    <el-dialog title="运行参数" :visible.sync="yxcsBox" width="20%">
       <el-form ref="form" label-width="120px">
         <el-form-item label="程序版本号" size="mini">
           <el-input v-model="yxcs.cxbbh" placeholder disabled class="yxcsInput"></el-input>
@@ -356,7 +407,9 @@
 
       <div style="height:800px;overflow:auto;">
         <el-card v-for="(item ,i) in lsImgData " :key="i">
-          <label style="padding-bottom:15px; display:block;text-align:center">拍摄时间：{{item.createdAt}}</label>
+          <label
+            style="padding-bottom:15px; display:block;text-align:center"
+          >拍摄时间：{{item.createdAt}}</label>
           <el-image style="width: 100%; height: 600px" :src="item.url" fit="fill" lazy></el-image>
         </el-card>
       </div>
@@ -955,6 +1008,23 @@
   z-index: 999;
   background: rgba(44, 61, 75, 0.418);
 }
+.qixiang {
+  position: absolute;
+  padding: 0px;
+  z-index: 999;
+  .QxName {
+    color: #666666;
+  }
+}
+.newPhont {
+  position: absolute;
+  left: 20px;
+  top: 35px;
+  font-size: 22px;
+  color: red;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0);
+}
 </style>
 <script>
 import Axios from "axios";
@@ -967,11 +1037,18 @@ export default {
   },
   data() {
     return {
-      yujingBox: true,
+      imgArr: [],
+      titleName: "请输入密码",
+      mimaBox: false,
+      newPhont: false,
+      totalAt: null,
+      yujingBox: false,
       alarmCause: [],
       alarmLevel: null,
       alarmImgUrl: null,
+      deviceId: null,
       dateMsg: "",
+      mima: null,
       dateArr: [],
       ul: 1,
       imgIndex: 0,
@@ -1036,6 +1113,7 @@ export default {
     };
   },
   mounted() {
+    this.xinzhi();
     Axios({
       method: "POST",
       url:
@@ -1046,14 +1124,23 @@ export default {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
     }).then(msg => {
-      console.log(msg);
+      // console.log(msg);
       this.TowerNumId = msg.data.data.id;
+      // console.log(this.TowerNumId);
       this.msg();
     });
   },
   methods: {
+    mimaFun() {
+      if (this.mima === "123456") {
+        this.titleName = "请选择拍摄间隔";
+        this.mimaBox = true;
+      } else {
+        this.$message.error("密码错误！");
+      }
+    },
     imgBigBox(url) {
-      console.log(url);
+      // console.log(url);
       this.srcList = [url];
     },
     alarmBoxFun() {
@@ -1066,7 +1153,7 @@ export default {
       }
     },
     alarmFun() {
-      console.log(String(this.alarmCause))
+      // console.log(String(this.alarmCause))
       Axios({
         method: "POST",
         url: this.GLOBAL.AJAX_URL + "/v1/alarm/create",
@@ -1074,7 +1161,7 @@ export default {
           causes: String(this.alarmCause),
           level: this.alarmLevel,
           alarmImagePath: this.alarmImgUrl,
-          deviceId: 1294 //ID没有数据
+          deviceId: Number(this.deviceId)
         },
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
@@ -1082,8 +1169,19 @@ export default {
       }).then(msg => {
         // console.log("第一层");
         // console.log(msg);
-        msg.data.data[0].key = 1;
-        resolve(msg.data.data);
+        if (msg.data.code === 0) {
+          this.$message.success("预警成功！");
+          this.yujingBox = false;
+          this.alarmCause = [];
+          this.alarmLevel = null;
+        } else {
+          this.$message.error("预警失败！");
+          this.yujingBox = false;
+          this.alarmCause = [];
+          this.alarmLevel = null;
+        }
+        // msg.data.data[0].key = 1;
+        // console.log(msg.data.data);
       });
     },
     msg() {
@@ -1091,7 +1189,7 @@ export default {
         method: "POST",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/picture/get-by-tower-id?&user-id=" +
+          "/v1/picture/get-by-tower-id?size=5&user-id=" +
           this.userId +
           "&tower-id=" +
           this.TowerNumId,
@@ -1099,14 +1197,14 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         if (msg.data.data.code === 20011) {
           this.$message.error("没有访问权限！");
         } else {
           if (msg.data.data.totalCount === 0) {
             this.$message.error("暂无图片");
           } else {
-            // console.log(msg)
+            this.imgArr = msg.data.data.pictures;
             this.url = msg.data.data.pictures[0].url;
             this.dateMsg = msg.data.data.pictures[0].createdAt;
             var urlse = [];
@@ -1146,21 +1244,25 @@ export default {
       });
     },
     renderConent(h, node, data, store) {
-      console.log(node.node.level);
+      // console.log(node.node.level);
       if (node.node.level === 1) {
         return (
           <span>
-            <span style="font-size:14px;"> {node.data.name} </span>
+            <span style="font-size:14px; color:#000000">
+              {" "}
+              {node.data.name}{" "}
+            </span>
           </span>
         );
       }
       if (node.node.level === 2) {
         return (
           <span>
-            {" "}
             <i class="icon iconfont"> &#xe60d; </i>
-            {""}
-            <span style="font-size:13px;"> {node.data.name} </span>{" "}
+            <span style="font-size:13px; color:#67C23A;">
+              {" "}
+              {node.data.name}{" "}
+            </span>{" "}
           </span>
         );
       }
@@ -1168,7 +1270,10 @@ export default {
         return (
           <span>
             <i class="icon iconfont"> &#xe610; </i>{" "}
-            <span style="font-size:12px;"> {node.data.name} </span>{" "}
+            <span style="font-size:12px; color:#E6A23C;">
+              {" "}
+              {node.data.name}{" "}
+            </span>{" "}
           </span>
         );
       }
@@ -1176,7 +1281,10 @@ export default {
         return (
           <span>
             <i class="icon iconfont"> &#xe764; </i>{" "}
-            <span style="font-size:12px;"> {node.data.name} </span>{" "}
+            <span style="font-size:12px; color:#F56C6C;">
+              {" "}
+              {node.data.name}{" "}
+            </span>{" "}
           </span>
         );
       }
@@ -1184,7 +1292,10 @@ export default {
         return (
           <span>
             {" "}
-            <span style="font-size:12px;"> {node.data.name} </span>{" "}
+            <span style="font-size:12px; color:#409EFF;">
+              {" "}
+              {node.data.name}{" "}
+            </span>{" "}
           </span>
         );
       }
@@ -1301,124 +1412,29 @@ export default {
         return resolve([]);
       }
     },
-    // upImgBtn() {
-    //   if (this.imgIndex === 0 && this.ul === 1) {
-    //     this.$message("已是第一张照片");
-    //   } else {
-    //     if (this.imgIndex === 0) {
-    //       // console.log(this.ul)
-    //       this.ul = this.ul - 1;
-    //       Axios({
-    //         method: "POST",
-    //         url:
-    //           this.GLOBAL.AJAX_URL +
-    //           "/v1/picture/get-by-tower-id?user-id=" +
-    //           localStorage.getItem("userId") +
-    //           "&tower-id=" +
-    //           this.towerId +
-    //           "&page=" +
-    //           this.ul +
-    //           "&size=5",
-    //         headers: {
-    //           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-    //         }
-    //       }).then(msg => {
-    //         // console.log("接口");
-    //         var arr = [];
-    //         var dateArr = [];
-    //         for (var i = 0; i < msg.data.data.pictures.length; i++) {
-    //           arr.push(msg.data.data.pictures[i].url);
-    //           dateArr.push(msg.data.data.pictures[i].createdAt)
-    //         }
-    //         this.urls = arr;
-    //         this.imgIndex = 4;
-    //         this.ui = this.ul - 1;
-    //         this.dateArr = dateArr
-    //       });
-    //     } else {
-    //       // console.log("上一张");
-    //       // console.log(this.imgIndex);
-    //       // console.log(this.urls);
-    //       this.imgIndex = this.imgIndex - 1;
-    //       this.url = this.urls[this.imgIndex];
-    //     }
-    //   }
-    // },
-    // downImgBtn() {
-    //   if (this.imgIndex === this.urls.length - 1) {
-    //     this.ul = this.ul + 1;
-    //     Axios({
-    //       method: "POST",
-    //       url:
-    //         this.GLOBAL.AJAX_URL +
-    //         "/v1/picture/get-by-tower-id?user-id=" +
-    //         localStorage.getItem("userId") +
-    //         "&tower-id=" +
-    //         this.towerId +
-    //         "&page=" +
-    //         this.ul +
-    //         "&size=5",
-    //       headers: {
-    //         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-    //       }
-    //     }).then(msg => {
-    //       // console.log(msg);
-    //       if (msg.data.data.pictures === null) {
-    //         this.$message.error("没有更多图片");
-    //       } else {
-    //         var arr = [];
-    //         for (var i = 0; i < msg.data.data.pictures.length; i++) {
-    //           arr.push(msg.data.data.pictures[i].url);
-    //           // console.log(msg.data.data.pictures[i].url)
-    //         }
-    //         this.urls = arr;
-    //         this.imgIndex = 0;
-    //         this.url = this.urls[this.imgIndex];
-    //         this.ul = this.ul + 1;
-    //       }
-    //     });
-    //   } else {
-    //     this.imgIndex = this.imgIndex + 1;
-    //     this.url = this.urls[this.imgIndex];
-    //     // console.log("下一张");
-    //   }
-    // },
-
     msgId(data, node, objc) {
-      // console.log(data);
-      // console.log(node);
-      // console.log(node.childNodes.length);
-      // console.log(objc);
-
       if (node.level === 1) {
         this.gongsi = node.data.name;
-        // console.log(this.gongsi);
-        // console.log(111111111);
       }
       if (node.level === 2) {
         this.bumen = node.data.name;
-        //  console.log(this.bumen);
       }
       if (node.level === 3) {
         this.diya = node.data.name;
-        //  console.log(this.diya);
       }
       if (node.level === 4) {
         this.xianlu = node.data.name;
-        //  console.log(this.xianlu);
       }
-
       if (node.level === 5) {
-        this.$refs.Calendar.ChoseMonth(moment().format("YYYY-MM-DD"));
         this.ganta = node.data.name;
         this.topData = this.bumen + this.diya + this.xianlu + this.ganta;
         this.towerId = data.id;
-        console.log(this.towerId);
+        this.$refs.Calendar.ChoseMonth(moment().format("YYYY-MM-DD"));
         Axios({
           method: "POST",
           url:
             this.GLOBAL.AJAX_URL +
-            "/v1/picture/get-by-tower-id?user-id=" +
+            "/v1/picture/get-by-tower-id?size=5&user-id=" +
             Number(localStorage.getItem("userId")) +
             "&tower-id=" +
             this.towerId +
@@ -1435,9 +1451,12 @@ export default {
             if (msg.data.data.totalCount === 0) {
               // this.$message.error("暂无图片");
             } else {
+              this.imgArr = msg.data.data.pictures;
               this.url = msg.data.data.pictures[0].url;
               this.dateMsg = msg.data.data.pictures[0].createdAt;
               this.deviceCode = msg.data.data.pictures[0].deviceCode;
+              this.deviceId = msg.data.data.pictures[0].deviceId;
+              this.totalAt = msg.data.data.pictures[0].createdAt;
               var urlse = [];
               var dateArr = [];
               for (var a = 0; a < msg.data.data.pictures.length; a++) {
@@ -1480,6 +1499,7 @@ export default {
       this.url = url;
       this.imgIndex = i;
       this.dateMsg = this.dateArr[i];
+      this.newPhont = false;
     },
     uparr() {
       if (this.ul === 1) {
@@ -1501,7 +1521,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
           var arr = [];
           var dateArr = [];
           for (var i = 0; i < msg.data.data.pictures.length; i++) {
@@ -1510,6 +1530,7 @@ export default {
           }
           this.dateArr = dateArr;
           this.urls = arr;
+          this.imgArr = msg.data.data.pictures;
         });
       }
     },
@@ -1543,6 +1564,7 @@ export default {
           this.urls = arr;
           this.imgIndex = 4;
           this.dateArr = dateArr;
+          this.imgArr = msg.data.data.pictures;
         }
       });
     },
@@ -1555,7 +1577,7 @@ export default {
         method: "POST",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/picture/get-by-tower-id?user-id=" +
+          "/v1/picture/get-by-tower-id?size=5&user-id=" +
           localStorage.getItem("userId") +
           "&tower-id=" +
           this.towerId +
@@ -1565,16 +1587,23 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         if (msg.data.code === 20011) {
-          console.log("没有访问权限！");
+          // console.log("没有访问权限！");
         } else {
+          // console.log(msg);
+          // console.log(this.towerId);
+          if (msg.data.code === 31001) {
+            this.$message.error("请选择杆塔");
+          }
           if (msg.data.data.pictures === null) {
             this.$message.error("暂无图片");
           } else {
             // console.log(msg)
+            this.imgArr = msg.data.data.pictures;
             this.url = msg.data.data.pictures[0].url;
             this.deviceCode = msg.data.data.pictures[0].deviceCode;
+            this.deviceId = msg.data.data.pictures[0].deviceId;
             var dateArr = [];
             var urlse = [];
             for (var a = 0; a < msg.data.data.pictures.length; a++) {
@@ -1616,7 +1645,7 @@ export default {
       // console.log(data); // 跳到了本月
     },
     msgBox() {
-      this.$message.warning("该功能正在研发中~");
+      this.$message.warning("该账号不支持此功能");
     },
     deviceSnap() {
       if (this.towerId !== "") {
@@ -1634,7 +1663,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
           if (msg.data.message === "OK") {
             this.$message.success("抓拍成功！");
           }
@@ -1648,6 +1677,7 @@ export default {
       // console.log(this.deviceCode)
       if (this.deviceCode !== "") {
         this.SettingBox = true;
+        // this.mimaBox = true;
       } else {
         this.$message.warning("请选择设备！");
       }
@@ -1674,6 +1704,7 @@ export default {
           this.$message.error("设置失败！");
         }
         this.SettingBox = false;
+        this.mimaBox = false;
       });
     },
     FifteenM() {
@@ -1698,6 +1729,7 @@ export default {
           this.$message.error("设置失败！");
         }
         this.SettingBox = false;
+        this.mimaBox = false;
       });
     },
     Halfhour() {
@@ -1722,6 +1754,7 @@ export default {
           this.$message.error("设置失败！");
         }
         this.SettingBox = false;
+        this.mimaBox = false;
       });
     },
     CopeyFun() {
@@ -1740,32 +1773,37 @@ export default {
           method: "POST",
           url:
             this.GLOBAL.AJAX_URL +
-            "/v1/picture/get-by-tower-id?user-id=" +
+            "/v1/picture/get-by-tower-id?size=5&user-id=" +
             Number(localStorage.getItem("userId")) +
             "&tower-id=" +
-            this.towerId,
+            this.towerId +
+            "&day=" +
+            moment().format("YYYY-MM-DD"),
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           if (msg.data.code === 20011) {
-            this.$message.error("没有访问权限！");
+            // this.$message.error("没有访问权限！");
           } else {
             if (msg.data.data.totalCount === 0) {
               // this.$message.error("暂无图片");
             } else {
-              if (this.totalCountNum === msg.data.data.totalCount) {
-                // console.log(this.totalCountNum);
+              if (this.totalAt === msg.data.data.pictures[0].createdAt) {
+                // console.log(this.totalAt);
+                // console.log(msg)
                 return;
               } else {
-                // console.log(this.totalCountNum);
-                this.totalCountNum = msg.data.data.totalCount;
+                this.imgArr = msg.data.data.pictures;
+                // console.log(this.totalAt);
+                // console.log(msg.data.data.pictures[0].createdAt)
+                this.totalAt = msg.data.data.pictures[0].createdAt;
                 this.dateMsg = msg.data.data.pictures[0].createdAt;
                 this.url = msg.data.data.pictures[0].url;
                 this.deviceCode = msg.data.data.pictures[0].deviceCode;
                 var urlse = [];
                 var dateArr = [];
+                this.newPhont = true;
                 for (var a = 0; a < msg.data.data.pictures.length; a++) {
                   urlse.push(msg.data.data.pictures[a].url);
                   // console.log(this.srcList);
@@ -1810,7 +1848,7 @@ export default {
         method: "POST",
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/picture/get-by-tower-id?&user-id=" +
+          "/v1/picture/get-by-tower-id?size=5&user-id=" +
           this.userId +
           "&tower-id=" +
           this.TowerNumId +
@@ -1828,11 +1866,12 @@ export default {
             // this.$message.error("暂无图片");
           } else {
             // console.log(msg)
-            if (this.totalCountNum === msg.data.data.totalCount) {
-              console.log(this.totalCountNum);
+            if (this.totalAt === msg.data.data.pictures[0].createdAt) {
+              // console.log(this.totalCountNum);
               return;
             } else {
-              this.totalCountNum = msg.data.data.totalCount;
+              this.imgArr = msg.data.data.pictures;
+              this.totalAt = msg.data.data.pictures[0].createdAt;
               this.url = msg.data.data.pictures[0].url;
               this.dateMsg = msg.data.data.pictures[0].createdAt;
               var urlse = [];
@@ -1888,12 +1927,37 @@ export default {
     lsImgFun() {
       if (this.ganta !== "") {
         this.lsImgBox = true;
+        Axios({
+          method: "POST",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/picture/get-by-tower-id?user-id=" +
+            Number(localStorage.getItem("userId")) +
+            "&tower-id=" +
+            this.towerId +
+            "&day=" +
+            moment().format("YYYY-MM-DD"),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          // console.log(msg);
+          if (msg.data.code === 0) {
+            if (msg.data.data.totalCount !== 0) {
+              this.lsImgData = msg.data.data.pictures;
+            } else {
+              this.$message.error("暂无图片");
+            }
+          } else {
+            this.$message.error(msg.data.message);
+          }
+        });
       } else {
         this.$message.error("请先选择杆塔");
       }
     },
     lsImgdateFun(val) {
-      console.log(val);
+      // console.log(val);
       Axios({
         method: "POST",
         url:
@@ -1908,7 +1972,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         if (msg.data.code === 0) {
           if (msg.data.data.totalCount !== 0) {
             this.lsImgData = msg.data.data.pictures;
@@ -1918,6 +1982,15 @@ export default {
         } else {
           this.$message.error(msg.data.message);
         }
+      });
+    },
+    xinzhi() {
+      console.log("xina");
+      Axios({
+        url:
+          "https://api.seniverse.com/v3/weather/now.json?key=SzL0DKgRtOdN8UCfF&location=linyi&language=zh-Hans&unit=c"
+      }).then(msg => {
+        console.log(msg);
       });
     }
   },

@@ -36,12 +36,7 @@
             <el-col :span="4">
               <span>电压等级：</span>
               <el-select v-model="dydjvalue" placeholder size="mini" clearable>
-                <el-option
-                  v-for="item in dydj"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                ></el-option>
+                <el-option v-for="item in dydj" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="4">
@@ -198,14 +193,7 @@
                 style="border:0; background: #6b5af4; color:#fff;"
               >最近一周告警</el-button>
             </el-col>
-            <el-col :span="3">
-              <el-button
-                @click="pgFun"
-                plain
-                icon="el-icon-user"
-                style="border:0; background: #f74f77; color:#fff;"
-              >&nbsp;&nbsp;&nbsp;&nbsp;一键派工&nbsp;&nbsp;&nbsp;&nbsp;</el-button>
-            </el-col>
+            <el-col :span="3"></el-col>
           </el-row>
         </el-card>
       </el-header>
@@ -213,20 +201,21 @@
         <el-aside width="50%">
           <el-card id="gjimgBox">
             <p>告警详情图</p>
-            <el-image style="width:100%; height:100%" :src="url" :preview-src-list="srcList"></el-image>
+            <el-image style="width:100%; height:100%" :src="url" :preview-src-list="[url]"></el-image>
           </el-card>
         </el-aside>
         <el-main style="padding:0 20px 15px 20px">
           <p>数据详情表</p>
           <el-table
             :data="gjsjdata"
-            stripe
             highlight-current-row
             @current-change="handleCurrentChange"
             style="width: 100%;height:88%; "
             @row-click="test"
+            header-row-class-name="rowtitle"
+            :row-class-name="tableRowClassName"
           >
-            <el-table-column prop="createdAt" label="告警时间">
+            <el-table-column prop="createdAt" label="告警时间" width="120px">
               <template slot-scope="scope">
                 <span>{{scope.row.createdAt | parseTime('{y}-{m}-{d}')}}</span>
               </template>
@@ -236,7 +225,6 @@
             <el-table-column prop="teamName" label="班组"></el-table-column>
             <el-table-column prop="lineName" label="线路"></el-table-column>
             <el-table-column prop="towerNum" label="杆塔"></el-table-column>
-            <el-table-column prop="installationLocationName" label="监拍朝向"></el-table-column>
             <el-table-column prop="causes" label="告警原因"></el-table-column>
             <el-table-column prop="hasRead" label="是否已读">
               <template slot-scope="scope">
@@ -244,7 +232,19 @@
                 <span v-else style="color:#1AE642">已读</span>
               </template>
             </el-table-column>
-            <el-table-column prop="gjfpLabel" label="分派"></el-table-column>
+            <el-table-column label="分派" width="100">
+              <template>
+                <el-button
+                  @click="pgFun"
+                  plain
+                  icon="el-icon-user"
+                  style="border:0; background: #f74f77; color:#fff;"
+                  size="mini"
+                >派工</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="installationLocationName" label="监拍朝向"></el-table-column>
+
             <el-table-column prop="gjcqLabel" label="超期"></el-table-column>
           </el-table>
           <el-pagination
@@ -258,19 +258,19 @@
         </el-main>
       </el-container>
     </el-container>
-    <el-dialog title :visible.sync="pgBox" width="20%">
-      <el-form ref="form" :model="form" label-width="120px" size="mini">
+    <el-dialog title :visible.sync="pgBox" width="30%">
+      <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-form-item label="线路名">
-          <el-input v-model="form.xgLineName" disable></el-input>
+          <el-input v-model="form.xgLineName" disabled></el-input>
         </el-form-item>
         <el-form-item label="杆塔号">
-          <el-input v-model="form.xgTowerName" disable></el-input>
+          <el-input v-model="form.xgTowerName" disabled></el-input>
         </el-form-item>
         <el-form-item label="负责人">
-          <el-input v-model="form.xgUserName" disable></el-input>
+          <el-input v-model="form.xgUserName" disabled></el-input>
         </el-form-item>
         <el-form-item label="手机号码">
-          <el-input v-model="form.xgPhoneNum" disable></el-input>
+          <el-input v-model="form.xgPhoneNum" disabled></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -282,6 +282,13 @@
   </el-card>
 </template>
 <style lang="scss" scoped>
+.el-table >>> {
+  .rowtitle {
+    .cell {
+      color: #1ca3ff;
+    }
+  }
+}
 .Box {
   margin: 0px;
   .downRow {
@@ -300,6 +307,16 @@
 .el-table >>> .current-row > td {
   background: #1ca3ff !important;
   color: #fff;
+}
+.el-table >>> .warning-row {
+  background: #f56c6c !important;
+  color: #fff !important;
+  &:hover {
+    color: #000 !important;
+    td {
+      background: #fdc7c7;
+    }
+  }
 }
 .el-button {
   &:hover {
@@ -331,7 +348,7 @@ export default {
         this.GLOBAL.AJAX_URL +
         "/v1/alarm/query?user-id=" +
         localStorage.getItem("userId") +
-        "&order-by=alarm.created_at&order=asc&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
+        "&order-by=alarm.created_at&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
       headers: {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
@@ -457,6 +474,11 @@ export default {
     parseTime: parseTime
   },
   methods: {
+    // tableRowClassName({ row, rowIndex }) {
+    //   if (row.hasRead === 0) {
+    //     return "warning-row";
+    //   }
+    // },
     testSelect(val) {
       // console.log(val);
     },
@@ -468,9 +490,9 @@ export default {
           this.GLOBAL.AJAX_URL +
           "/v1/alarm/query?user-id=" +
           localStorage.getItem("userId") +
-          "&order-by=created_at&order=asc&page=" +
+          "&order-by=created_at&&page=" +
           this.index +
-          "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
+          "&size=7",
         headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
@@ -503,25 +525,120 @@ export default {
       });
     },
     current(val) {
-      axios({
-        method: "post",
-        url:
-          this.GLOBAL.AJAX_URL +
-          "/v1/alarm/query?user-id=" +
-          localStorage.getItem("userId") +
-          "&order-by=alarm.created_at&order=asc&page=" +
-          val +
-          "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+      if (this.value2 !== null && this.value2[0] !== undefined) {
+        console.log(this.value2);
+        var i = "";
+        var o = "";
+        if (this.checked) {
+          i = "1";
         }
-      }).then(msg => {
-         console.log(msg);
+        if (this.checked2) {
+          o = "0";
+        }
+        axios({
+          method: "post",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/alarm/query?user-id=" +
+            localStorage.getItem("userId") +
+            "&order-by=alarm.created_at&order=&page=" +
+            val +
+            "&size=7&department=" +
+            this.gjbmname +
+            "&team=" +
+            this.gjbzname +
+            "&has-read=" +
+            i +
+            "" +
+            o +
+            "&start-time=" +
+            this.value2[0] +
+            "&end-time=" +
+            this.value2[1] +
+            "&cause-level=" +
+            this.gjjbvalue +
+            "&location=" +
+            this.jpcxvalue +
+            "&line=" +
+            this.gjxlname +
+            "&tower=" +
+            this.gjgtvalue +
+            "&voltage-level=" +
+            this.dydjvalue +
+            "&cause-name=" +
+            String(this.gjyyvalue),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          console.log(String(this.gjyyvalue));
+          if (msg.data.code === 0) {
+            // this.$message.success("查询成功");
+            this.gjsjdata = msg.data.data.alarms;
+            this.pagess = msg.data.data.totalCount;
+          } else {
+            // this.$message.error("查询失败");
+          }
+          console.log(msg);
+          console.log(this.value2);
 
-        this.gjsjdata = msg.data.data.alarms;
-        // console.log(this.gjsjdata);
-        this.pageindex = val;
-      });
+          // console.log(this.dydjvalue)
+        });
+      } else {
+        var i = "";
+        var o = "";
+        if (this.checked) {
+          i = "1";
+        }
+        if (this.checked2) {
+          o = "0";
+        }
+        axios({
+          method: "post",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/alarm/query?user-id=" +
+            localStorage.getItem("userId") +
+            "&order-by=alarm.created_at&order=&page=" +
+            val +
+            "&size=7&department=" +
+            this.gjbmname +
+            "&team=" +
+            this.gjbzname +
+            "&has-read=" +
+            i +
+            "" +
+            o +
+            "&cause-level=" +
+            this.gjjbvalue +
+            "&location=" +
+            this.jpcxvalue +
+            "&line=" +
+            this.gjxlname +
+            "&tower=" +
+            this.gjgtvalue +
+            "&voltage-level=" +
+            this.dydjvalue +
+            "&cause-name=" +
+            String(this.gjyyvalue),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          console.log(String(this.gjyyvalue));
+          if (msg.data.code === 0) {
+            // this.$message.success("查询成功");
+            this.gjsjdata = msg.data.data.alarms;
+            this.pagess = msg.data.data.totalCount;
+          } else {
+            // this.$message.error("查询失败");
+          }
+          console.log(msg);
+          console.log(this.value2);
+
+          // console.log(this.dydjvalue)
+        });
+      }
     },
     test(row, colunm, event) {
       // console.log(row);
@@ -556,23 +673,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        axios({
-          method: "post",
-          url:
-            this.GLOBAL.AJAX_URL +
-            "/v1/alarm/query?user-id=" +
-            localStorage.getItem("userId") +
-            "&order-by=alarm.created_at&order=asc&page=" +
-            this.index +
-            "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
-          headers: {
-            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-          }
-        }).then(msg => {
-          console.log(msg);
-          // this.gjsjdata = msg.data.data.alarms;
-          // console.log(this.gjsjdata);
-        });
+        row.hasRead = 1;
       });
     },
     handleCurrentChange(val) {
@@ -705,7 +806,8 @@ export default {
       this.pgBox = true;
     },
     pgTrue() {
-      console.log(this.row)
+      console.log(this.row);
+
       axios({
         method: "post",
         url: this.GLOBAL.AJAX_URL + "/v1/work-order/create-work-order",
@@ -720,6 +822,23 @@ export default {
       }).then(msg => {
         if (msg.data.code === 0) {
           this.$message.success("派工成功");
+          axios({
+            method: "post",
+            url:
+              this.GLOBAL.AJAX_URL +
+              "/v1/alarm/send-sms?alarm-id=" +
+              this.row.id,
+            headers: {
+              Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+            }
+          }).then(msg => {
+            console.log(msg);
+            if (msg.data.code === 0) {
+              this.$message.success("短信发送成功");
+            } else {
+              this.$message.error("短信发送失败");
+            }
+          });
         } else {
           this.$message.error(msg.data.message);
         }
@@ -741,6 +860,8 @@ export default {
       this.gjxlvalue = "";
       this.gjxlname = "";
       this.gjgtvalue = "";
+      this.checked = false;
+      this.checked2 = false;
       // this.gjbzname = "";
     },
     createdMsg() {

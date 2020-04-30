@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <el-form
+      v-if="passWordBox"
       ref="loginForm"
       :model="loginForm"
       :rules="loginRules"
@@ -9,7 +10,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">用户登录</h3>
+        <h3 class="title" style="color:#000">AI智能可视化线路监测系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -53,11 +54,58 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >登录</el-button>
+      <span @click="passWordBox=false" style="cursor:pointer">短信登录</span>
+    </el-form>
+    <el-form
+      ref="loginForm2"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+      v-if="!passWordBox"
+     >
+      <div class="title-container">
+        <h3 class="title" style="color:#000">AI智能可视化线路监测系统</h3>
+      </div>
 
-      <!-- <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
-      </div>-->
+      <el-form-item prop="username">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input
+          ref="username2"
+          v-model="loginForm2.username"
+          placeholder="手机号"
+          name="username"
+          tabindex="1"
+          auto-complete="on"
+        ></el-input>
+        <!-- <el-input v-model="domain.value"></el-input> -->
+      </el-form-item>
+
+      <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password2"
+          v-model="loginForm2.password"
+          placeholder="验证码"
+          name="password"
+          tabindex="2"
+          auto-complete="on"
+          @keyup.enter.native="handleLogin"
+        />
+        <span class="show-pwd" @click="phoneNum">获取验证码</span>
+      </el-form-item>
+
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleLogin"
+      >登录</el-button>
+      <span @click="passWordBox=true" style="cursor:pointer">密码登录</span>
     </el-form>
   </div>
 </template>
@@ -83,11 +131,21 @@ export default {
       }
     };
     return {
+      passWordBox: true,
+      msgVal:"获取验证码",
       loginForm: {
         username: "admin",
         password: "123456"
       },
       loginRules: {
+        username: [{ required: true, trigger: "blur" }],
+        password: [{ required: true, trigger: "blur" }]
+      },
+      loginForm2: {
+        username: "",
+        password: ""
+      },
+      loginRules2: {
         username: [{ required: true, trigger: "blur" }],
         password: [{ required: true, trigger: "blur" }]
       },
@@ -133,6 +191,9 @@ export default {
           return false;
         }
       });
+    },
+    phoneNum(){
+      console.log(1)
     }
   }
 };
@@ -143,7 +204,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg: #283443;
-$light_gray: #fff;
+$light_gray: #000;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -154,6 +215,8 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  background: url("../../assets/back.png") no-repeat;
+  background-size: 100% 100%;
   .el-input {
     display: inline-block;
     height: 47px;
