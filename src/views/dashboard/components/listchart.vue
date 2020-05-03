@@ -10,7 +10,7 @@
 import G2 from "@antv/g2";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Axios from "axios";
+// import Axios from "axios";
 import moment from "moment";
 export default {
   name: "listcard",
@@ -109,7 +109,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         chart.changeData(msg.data.data);
         //  console.log(this.data);
       });

@@ -88,7 +88,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         // console.log(this.alarmNum + "alarms");
         // this.alarms = msg.data.data.message.alarms;
         // this.workOrders = msg.data.data.message.workOrders;
@@ -119,7 +119,7 @@ export default {
         }
 
         if (msg.data.data.message.alarms.length !== 0) {
-          console.log(msg.data.data.message.alarms.length)
+          // console.log(msg.data.data.message.alarms.length)
           this.alarmNum = 1;
           if (this.alarms.length !== 0) {
             // console.log(this.alarms);

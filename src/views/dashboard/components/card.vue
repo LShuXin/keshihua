@@ -101,7 +101,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg =>{
-        console.log(msg)
+        // console.log(msg)
         this.datas = msg.data.data
       })
     }

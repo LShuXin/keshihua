@@ -25,7 +25,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error + "789") // for debug
+    // console.log(error + "789") // for debug
     return Promise.reject(error)
   }
 )
@@ -89,7 +89,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error) // for debug
+    // console.log(error) // for debug
     Message({
       message: "网络连接失败",
       type: 'error',

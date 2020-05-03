@@ -525,15 +525,15 @@ export default {
   },
   mounted() {
     //获取设备信息
-    console.log(this.LABEL_DATA.TOWER_CATEGORY);
+    // console.log(this.LABEL_DATA.TOWER_CATEGORY);
     this.oneMsg();
     // this.towerFun();
   },
 
   methods: {
     test(val) {
-      console.log(val);
-      console.log(this.form.towerCreatedAt);
+      // console.log(val);
+      // console.log(this.form.towerCreatedAt);
     },
 
     oneMsg() {
@@ -550,7 +550,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         this.tableData = msg.data.data.towers;
         this.total = msg.data.data.totalCount;
       });
@@ -559,7 +559,7 @@ export default {
       this.companyFun();
       this.riskBigFun();
       this.LineFun(row.lineId);
-      console.log(row);
+      // console.log(row);
       this.xgform.id = Number(row.towerId);
       this.xgform.companyId = Number(row.companyId);
       this.xgform.departmentId = Number(row.departmentId);
@@ -638,7 +638,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         if (msg.data.data.rowsAffected != 0) {
           this.pageChange(this.page);
           this.delBox = false;
@@ -650,9 +650,9 @@ export default {
       });
     },
     pageChange(index) {
-      console.log(index);
+      // console.log(index);
       this.page = index;
-      this.oneMsg();
+      this.chaxun();
     },
 
     tianjia() {
@@ -705,7 +705,7 @@ export default {
 
     //选择部门
     bumen(val) {
-      console.log(val);
+      // console.log(val);
       Axios({
         method: "post",
         url:
@@ -774,7 +774,7 @@ export default {
     },
     towerCreateTrue() {
       this.form.orderNo = Number(this.form.orderNo);
-      console.log(this.form.companyId);
+      // console.log(this.form.companyId);
       switch ("") {
         case this.form.companyId:
           this.$message.error("未选择公司");
@@ -843,19 +843,19 @@ export default {
               Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
             }
           }).then(msg => {
-            console.log(msg);
+            // console.log(msg);
             if (msg.data.code === 0) {
               this.oneMsg();
               this.dialogFormVisible = false;
               this.$message.success("创建成功");
               Object.keys(this.form).forEach(key => (this.form[key] = ""));
-              console.log(this.form);
+              // console.log(this.form);
             } else {
               this.dialogFormVisible = false;
               this.$message.error("创建失败");
-              console.log(this.form);
+              // console.log(this.form);
               Object.keys(this.form).forEach(key => (this.form[key] = ""));
-              console.log(this.form);
+              // console.log(this.form);
             }
           });
           break;
@@ -903,7 +903,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         this.Lines = msg.data.data;
       });
     },
@@ -915,7 +915,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         window.location.href = msg.data.data;
       });
     },

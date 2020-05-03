@@ -110,7 +110,7 @@
         <el-table-column header-align="center" align="center" prop="alarmCauses" label="告警原因"></el-table-column>
         <el-table-column header-align="center" align="center" prop="status" label="工单状态"></el-table-column>
       </el-table>
-      <el-image style="width: 100%; height: 500px" :src="url" fit="fit"></el-image>
+      <el-image style="width: 100%; height: 500px" :src="url" fit="fit" :preview-src-list="[url]"></el-image>
     </el-dialog>
     <el-dialog title :visible.sync="gdcl" width="75%">
       <el-row :gutter="10">
@@ -213,7 +213,7 @@
       </div>
     </el-dialog>
     <el-dialog title="处理历史" :visible.sync="cllsBox" width="70%">
-      <div style="height:800px; overflow-y:auto;">
+      <div style="height:600px; overflow-y:auto;">
         <el-form
           ref="form"
           label-width="80px"
@@ -260,6 +260,7 @@
               v-for="(img,x) in item.pictures"
               :key="x"
               :src="img"
+              :preview-src-list="[img]"
               fit="fill"
             ></el-image>
           </el-form-item>

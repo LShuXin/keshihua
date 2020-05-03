@@ -51,7 +51,7 @@ export default {
         console.log(val);
         for (let a = 0; a < val.objects.length; a++) {
           if (val.objects[a].name.endsWith("/")) {
-            //   console.log(val.objects[a])
+              // console.log(val.objects[a])
             val.objects.splice(a, 1);
           }
           // this.imgslc.push(val.objects.url)

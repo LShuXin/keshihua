@@ -8,7 +8,14 @@ export function login(data) {
     baseURL: process.env.VUE_APP_API 
   })
 }
-
+export function login2(data) {
+  return request({
+    url: '/v1/user/login-sms',
+    method: 'post',
+    data,
+    baseURL: process.env.VUE_APP_API 
+  })
+}
 export function getInfo(token) {
   return request({
     url: '/user/info',
@@ -25,3 +32,4 @@ export function logout() {
     baseURL: process.env.VUE_APP_API 
   })
 }
+

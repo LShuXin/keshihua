@@ -171,7 +171,12 @@ export default {
   },
   mounted() {
     // this.set;
-    Axios({
+    this.msg()
+  },
+  methods: {
+
+    msg(){
+        Axios({
       method: "post",
       url:
         this.GLOBAL.AJAX_URL +
@@ -183,20 +188,19 @@ export default {
       }
     }).then(msg => {
       if (msg.data.code === 0 && msg.data.data.devices != null) {
-        console.log(msg);
+        // console.log(msg);
         this.items = msg.data.data.devices;
         //  console.log(this.items);
         this.index = this.index + 1;
         this.pagess = msg.data.data.totalCount;
-        console.log(this.pagess);
+        // console.log(this.pagess);
       } else {
-        console.log(msg);
+        // console.log(msg);
         this.$message("没有更多图片");
         clearInterval(this.set);
       }
     });
-  },
-  methods: {
+    },
     copyData(item) {
       // console.log(item)
       this.$copyText(
@@ -204,12 +208,12 @@ export default {
           item.imageUrl
         }。`
       );
-      console.log("复制成功！");
+      // console.log("复制成功！");
       this.$message.success("复制成功！");
     },
     test(value) {
       this.srcList = [value];
-      console.log(this.srcList);
+      // console.log(this.srcList);
     },
     pageup() {
       this.index = this.index - 1;
@@ -224,7 +228,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         this.items = msg.data.data.devices;
 
         this.setime = 12;
@@ -242,7 +246,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         this.items = msg.data.data.devices;
         this.index = val;
         this.setime = 12;
@@ -253,6 +257,7 @@ export default {
       if (this.setime === 0) {
         this.setime = "12";
         this.pagenum = this.pagenum + 1;
+        this.index = this.index+1;
         Axios({
           method: "post",
           url:
@@ -265,14 +270,17 @@ export default {
           }
         }).then(msg => {
           if (msg.data.code === 0 && msg.data.data.devices != null) {
-            console.log(msg);
+            // console.log(msg);
             this.items = msg.data.data.devices;
             //  console.log(this.items);
             this.index = this.index + 1;
           } else {
-            console.log(msg);
+            // console.log(msg);
             this.$message("没有更多图片");
-            clearInterval(this.set);
+            // clearInterval(this.set);
+            this.index = 1;
+            this.pagenum = 1;
+            this.msg()
           }
         });
       }
@@ -290,7 +298,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg+111);
+        // console.log(msg+111);
         this.items = msg.data.data.devices;
 
         this.setime = 12;

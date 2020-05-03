@@ -353,13 +353,13 @@ export default {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
     }).then(msg => {
-      console.log(msg);
+      // console.log(msg);
       if (msg.data.data.alarms === []) {
         this.$message.warning("暂无告警");
       } else {
         this.pagess = msg.data.data.totalCount;
         this.gjsjdata = msg.data.data.alarms;
-        console.log(this.gjsjdata);
+        // console.log(this.gjsjdata);
         this.url =
           "http://47.104.136.74:8083/" + msg.data.data.alarms[0].alarmImagePath;
       }
@@ -474,11 +474,11 @@ export default {
     parseTime: parseTime
   },
   methods: {
-    // tableRowClassName({ row, rowIndex }) {
-    //   if (row.hasRead === 0) {
-    //     return "warning-row";
-    //   }
-    // },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.hasRead === 0) {
+        // return "warning-row";
+      }
+    },
     testSelect(val) {
       // console.log(val);
     },
@@ -526,7 +526,7 @@ export default {
     },
     current(val) {
       if (this.value2 !== null && this.value2[0] !== undefined) {
-        console.log(this.value2);
+        // console.log(this.value2);
         var i = "";
         var o = "";
         if (this.checked) {
@@ -571,7 +571,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(String(this.gjyyvalue));
+          // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
             // this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
@@ -579,8 +579,8 @@ export default {
           } else {
             // this.$message.error("查询失败");
           }
-          console.log(msg);
-          console.log(this.value2);
+          // console.log(msg);
+          // console.log(this.value2);
 
           // console.log(this.dydjvalue)
         });
@@ -625,7 +625,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(String(this.gjyyvalue));
+          // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
             // this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
@@ -633,8 +633,8 @@ export default {
           } else {
             // this.$message.error("查询失败");
           }
-          console.log(msg);
-          console.log(this.value2);
+          // console.log(msg);
+          // console.log(this.value2);
 
           // console.log(this.dydjvalue)
         });
@@ -642,7 +642,7 @@ export default {
     },
     test(row, colunm, event) {
       // console.log(row);
-      console.log(row);
+      // console.log(row);
       this.row = row;
       this.form.xgLineName = row.lineName;
       this.form.xgTowerName = row.towerNum;
@@ -692,7 +692,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
 
           this.loading = false;
           this.gjbm = msg.data.data;
@@ -714,7 +714,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
           for (var i = 0; i < msg.data.data.length; i++) {
             var obj = {};
             obj = {
@@ -800,13 +800,13 @@ export default {
       // console.log(obj.name)
       this.gjxlname = obj.name;
 
-      console.log(this.gjxlname);
+      // console.log(this.gjxlname);
     },
     pgFun() {
       this.pgBox = true;
     },
     pgTrue() {
-      console.log(this.row);
+      // console.log(this.row);
 
       axios({
         method: "post",
@@ -832,7 +832,7 @@ export default {
               Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
             }
           }).then(msg => {
-            console.log(msg);
+            // console.log(msg);
             if (msg.data.code === 0) {
               this.$message.success("短信发送成功");
             } else {
@@ -866,7 +866,7 @@ export default {
     },
     createdMsg() {
       if (this.value2 !== null && this.value2[0] !== undefined) {
-        console.log(this.value2);
+        // console.log(this.value2);
         var i = "";
         var o = "";
         if (this.checked) {
@@ -909,7 +909,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(String(this.gjyyvalue));
+          // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
@@ -917,8 +917,8 @@ export default {
           } else {
             this.$message.error("查询失败");
           }
-          console.log(msg);
-          console.log(this.value2);
+          // console.log(msg);
+          // console.log(this.value2);
 
           // console.log(this.dydjvalue)
         });
@@ -961,7 +961,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(String(this.gjyyvalue));
+          // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
@@ -969,8 +969,8 @@ export default {
           } else {
             this.$message.error("查询失败");
           }
-          console.log(msg);
-          console.log(this.value2);
+          // console.log(msg);
+          // console.log(this.value2);
 
           // console.log(this.dydjvalue)
         });

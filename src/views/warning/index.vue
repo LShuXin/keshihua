@@ -25,7 +25,7 @@
             <span v-else style="color:#ff0000;">未读</span>
           </template>
         </el-table-column>
-        <el-table-column header-align="center" align="center" label="抓拍状态">
+        <!-- <el-table-column header-align="center" align="center" label="抓拍状态">
           <template slot-scope="scope">
             <span v-if="scope.row.captureStatus === 0">未抓拍</span>
             <span v-if="scope.row.captureStatus === 1">抓拍中</span>
@@ -37,7 +37,7 @@
             >查看图片</el-button>
             <span v-if="scope.row.captureStatus === 3">抓拍失败</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <el-pagination
         background
@@ -165,9 +165,9 @@ export default {
       if(this.LABEL_DATA.Early_Alarms){
         this.oneMsg()
         this.LABEL_DATA.Early_Alarms = false
-        console.log(this.LABEL_DATA.Early_Alarms +"1")
+        // console.log(this.LABEL_DATA.Early_Alarms +"1")
       }
-        console.log(this.LABEL_DATA.Early_Alarms +"2")
+        // console.log(this.LABEL_DATA.Early_Alarms +"2")
 
     },
     tableRowClassName({ row, rowIndex }) {

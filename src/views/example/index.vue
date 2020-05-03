@@ -1113,7 +1113,7 @@ export default {
     };
   },
   mounted() {
-    this.xinzhi();
+    // this.xinzhi();
     Axios({
       method: "POST",
       url:
@@ -1444,7 +1444,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          // console.log(msg);
           if (msg.data.code === 20011) {
             this.$message.error("没有访问权限！");
           } else {
@@ -1571,7 +1571,7 @@ export default {
     clickDay(data) {
       // console.log( moment(data).format("YYYY-MM-DD"));
       // moment(data).format("YYYY-MM-DD")
-      console.log(this.towerId);
+      // console.log(this.towerId);
 
       Axios({
         method: "POST",
@@ -1985,12 +1985,12 @@ export default {
       });
     },
     xinzhi() {
-      console.log("xina");
+      // console.log("xina");
       Axios({
         url:
           "https://api.seniverse.com/v3/weather/now.json?key=SzL0DKgRtOdN8UCfF&location=linyi&language=zh-Hans&unit=c"
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
       });
     }
   },

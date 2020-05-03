@@ -62,7 +62,7 @@
       auto-complete="on"
       label-position="left"
       v-if="!passWordBox"
-     >
+    >
       <div class="title-container">
         <h3 class="title" style="color:#000">AI智能可视化线路监测系统</h3>
       </div>
@@ -96,14 +96,14 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
-        <span class="show-pwd" @click="phoneNum">获取验证码</span>
+        <span class="show-pwd" @click="phoneNum">{{yzmMsg}}</span>
       </el-form-item>
 
       <el-button
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
+        @click="phoneLogin"
       >登录</el-button>
       <span @click="passWordBox=true" style="cursor:pointer">密码登录</span>
     </el-form>
@@ -112,6 +112,9 @@
 
 <script>
 import { validUsername } from "@/utils/validate";
+import Axios from "axios";
+import Cookies from "js-cookie";
+import { setToken } from "@/utils/auth";
 
 export default {
   name: "Login",
@@ -131,8 +134,10 @@ export default {
       }
     };
     return {
+      timer: "",
+      yzmMsg: "获取验证码",
       passWordBox: true,
-      msgVal:"获取验证码",
+      msgVal: "获取验证码",
       loginForm: {
         username: "admin",
         password: "123456"
@@ -187,13 +192,82 @@ export default {
               this.loading = false;
             });
         } else {
-          console.log("密码错误");
+          // console.log("密码错误");
           return false;
         }
       });
     },
-    phoneNum(){
-      console.log(1)
+    phoneNum() {
+      Axios({
+        method: "POST",
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/sim/send-login-code?phone=" +
+          this.loginForm2.username
+      }).then(msg => {
+        // console.log(msg);
+        if (msg.data.code === 0) {
+          this.$message.success("验证码发送成功");
+          this.yzmMsg = 60;
+
+          this.timer = setInterval(this.set, 1000);
+        } else {
+          if (msg.data.code === 31818) {
+            this.$message.error("该号码没有此权限");
+          } else {
+            this.$message.error(msg.data.message);
+          }
+        }
+      });
+    },
+    set() {
+      if (this.yzmMsg === 1) {
+        this.yzmMsg = "获取验证码";
+        clearInterval(this.timer);
+      } else {
+        this.yzmMsg = this.yzmMsg - 1;
+        // console.log(1);
+      }
+    },
+    phoneLogin() {
+      this.loading = true;
+      // Axios({
+      //   method: "post",
+      //   url: this.GLOBAL.AJAX_URL + "/v1/user/login-sms",
+      //   data: {
+      //     phone: this.loginForm2.username,
+      //     code: this.loginForm2.password
+      //   }
+      // }).then(msg => {
+      //   console.log(msg);
+      //   if (msg.data.code === 0) {
+      //     Cookies.set("vue_admin_template_token", msg.data.data.token);
+      //     console.log(Cookies.get("vue_admin_template_token"));
+      //     localStorage.setItem("userName", msg.data.data.user.name);
+      //     localStorage.setItem("userId", msg.data.data.user.id);
+      //     this.$router.push({ path: this.redirect || "/" });
+      //     this.loading = false;
+      //   } else {
+      //     if (msg.data.code === 31820) {
+      //       this.loading = false;
+      //       this.$message({
+      //         message: "验证码错误",
+      //         type: "error",
+      //         duration: 2000
+      //       });
+      //     } else {
+      //       this.$message.error("验证码失效");
+      //     }
+      //   }
+      // });
+      this.$store.dispatch("user/login2", this.loginForm2).then(msg => {
+        // console.log(msg + "shuj")
+        this.$router.push({ path: this.redirect || "/" });
+        this.loading = false;
+      }).catch(err =>{
+       this.$message.error("验证码错误")
+       this.loading = false;
+      });
     }
   }
 };

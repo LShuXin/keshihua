@@ -369,7 +369,7 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg);
         this.users = msg.data.data.users;
         this.total = msg.data.data.totalCount;
       });

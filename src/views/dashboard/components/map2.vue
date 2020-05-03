@@ -77,7 +77,7 @@ export default {
         // var markerArr = this.data;
         for (var i = 0; i < markerArr.length; i++) {
           //遍历
-          console.log(markerArr[i]);
+          // console.log(markerArr[i]);
           var towers = markerArr[i].towers;
           for (var n = 0; n < towers.length; n++) {
             point[n] = new window.BMap.Point(
