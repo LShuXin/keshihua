@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # vue-admin-template
 
 
@@ -48,3 +49,10 @@ npm run lint
 
 # 代码格式检查并自动修复
 npm run lint -- --fix
+=======
+# dhainghia
+1.0
+npm install
+npm run dev
+npm run build:prod
+>>>>>>> fe45872bbad82dacce67590c1f3ed00d22ceca96
