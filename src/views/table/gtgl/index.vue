@@ -6,22 +6,21 @@
         <el-col :span="4">
           <span>杆塔性质：</span>
           <el-select v-model="natureId" placeholder="选择杆塔性质" size="mini" clearable>
-            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>杆塔类型：</span>
           <el-select v-model="towerId" placeholder="杆塔类型" size="mini" clearable>
-            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>杆塔状态：</span>
-          <el-select clearable v-model="statusId" placeholder="选择杆塔状态" size="mini">
-            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="statusId" clearable placeholder="选择杆塔状态" size="mini">
+            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
-
         <el-col :span="4">
           <el-row :gutter="10">
             <el-col :span="24">
@@ -32,7 +31,7 @@
                 size="mini"
                 style="width:178px;"
                 clearable
-              ></el-input>
+              />
             </el-col>
           </el-row>
         </el-col>
@@ -48,79 +47,52 @@
       </el-row>
     </el-header>
     <el-main>
+      <!-- 表格 -->
       <el-table :data="tableData" :highlight-current-row="true" header-row-class-name="rowtitle">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column label="单位" property="companyName">
-          <!-- <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{scope.row.gongsi}}</span>
-          </template>-->
-        </el-table-column>
+        <!-- <el-table-column type="selection" width="55" align="center" /> -->
+        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column label="单位" property="companyName" />
         <el-table-column label="电压等级">
           <template slot-scope="scope">
-            <!-- <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>-->
-            <span>{{scope.row.voltageLevelName}}</span>
+            <span>{{ scope.row.voltageLevelName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="线路名" property="lineName"></el-table-column>
-        <el-table-column label="杆塔号" property="towerNum"></el-table-column>
-        <el-table-column label="排序号" property="orderNo"></el-table-column>
-        <el-table-column label="杆塔型号" prop="towerTypeName">
-          <!-- <template slot-scope="sim" :prop="towerTypeName">
-            <span v-if="sim.row.simNum ==='未绑定 SIM 卡'" style="color:#d0d0d0;">{{sim.row.simNum}}</span>
-            <span v-else>{{sim.row.simNum}}</span>
-          </template>-->
-        </el-table-column>
-        <el-table-column label="杆塔性质" property="nature">
-          <!-- <template slot-scope="simProvider">
-            <span
-              v-if="simProvider.row.simProvider ==='未绑定 SIM 卡'"
-              style="color:#d0d0d0;"
-            >{{simProvider.row.simProvider}}</span>
-            <span v-else>{{simProvider.row.simProvider }}</span>
-          </template>-->
-        </el-table-column>
-        <el-table-column label="杆塔材质" property="towerCategoryName"></el-table-column>
-        <el-table-column label="杆塔状态" property="status"></el-table-column>
-        <el-table-column label="隐患类型" property="parentRiskName"></el-table-column>
-        <el-table-column label="隐患详情" property="riskName"></el-table-column>
-        <el-table-column label="运维班组" property="teamName"></el-table-column>
-        <!-- <el-table-column label="负责人" property="departmentName"></el-table-column> -->
-        <el-table-column label="位置描述" property="address"></el-table-column>
+        <el-table-column label="线路名" property="lineName" />
+        <el-table-column label="杆塔号" property="towerNum" />
+        <el-table-column label="排序号" property="orderNo" />
+        <el-table-column label="杆塔型号" property="towerTypeName" />
+        <el-table-column label="杆塔性质" property="nature" />
+        <el-table-column label="杆塔材质" property="towerCategoryName" />
+        <el-table-column label="杆塔状态" property="status" />
+        <el-table-column label="隐患类型" property="parentRiskName" />
+        <el-table-column label="隐患详情" property="riskName" />
+        <el-table-column label="运维班组" property="teamName" />
+        <el-table-column label="位置描述" property="address" />
         <el-table-column label="建成日期">
           <template slot-scope="date">
             <span
               v-if="date.row.towerCreatedAt === '未安装'"
               style="color:#d0d0d0"
-            >{{date.row.towerCreatedAt}}</span>
-            <span v-else>{{date.row.towerCreatedAt | parseTime('{y}-{m}-{d}')}}</span>
+            >{{ date.row.towerCreatedAt }}</span>
+            <span v-else>{{ date.row.towerCreatedAt | parseTime('{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-
         <el-table-column label="操作">
           <template slot-scope="scope" style="text-alin">
             <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
       <el-pagination
+        id="el-pagination"
         background
         layout="prev, pager, next"
         :total="total"
         :page-size="8"
         @current-change="pageChange"
-        id="el-pagination"
-      ></el-pagination>
+      />
     </el-main>
     <!-- 添加 -->
     <el-dialog title="添加杆塔" :visible.sync="dialogFormVisible" width="80%">
@@ -128,7 +100,7 @@
         <el-form-item label="公司信息：" :label-width="formLabelWidth" required>
           <span>所属公司：</span>
           <el-select v-model="form.companyId" placeholder="请选择所属公司" @change="bumen">
-            <el-option v-for="item in companys" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in companys" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px;">所属部门：</span>
           <el-select v-model="form.departmentId" placeholder="请选择所属部门" @change="banzu">
@@ -137,11 +109,11 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <span style="margin-left:10px;">所属班组：</span>
           <el-select v-model="form.teamId" placeholder="请选择所属班组">
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
@@ -159,27 +131,27 @@
               :key="item.id"
               :label="item.companyName"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="杆塔信息：" :label-width="formLabelWidth" required>
           <span>杆塔类型：</span>
           <el-select v-model="form.towerCategory" placeholder="请选择杆塔类型">
-            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
 
           <span style="margin-left:10px;">杆塔型号：</span>
-          <el-input v-model="form.towerType" placeholder="请输入杆塔型号" style="width:200px"></el-input>
+          <el-input v-model="form.towerType" placeholder="请输入杆塔型号" style="width:200px" />
 
           <span style="margin-left:10px;">杆塔性质：</span>
           <el-select v-model="form.nature" placeholder="请选择杆塔性质">
-            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span style>杆塔状态：</span>
           <el-select v-model="form.status" placeholder="请选择杆塔状态">
-            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px">所属线路：</span>
           <el-select
@@ -189,14 +161,14 @@
             remote
             :remote-method="LineFun"
           >
-            <el-option v-for="item in Lines" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in Lines" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px">杆塔号：</span>
-          <el-input v-model="form.towerNum" placeholder="请输入杆塔号"></el-input>
+          <el-input v-model="form.towerNum" placeholder="请输入杆塔号" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>杆塔序号：</span>
-          <el-input v-model="form.orderNo" placeholder="请输入杆塔序号(数字)"></el-input>
+          <el-input v-model="form.orderNo" placeholder="请输入杆塔序号(数字)" />
         </el-form-item>
         <el-form-item label="隐患信息：" :label-width="formLabelWidth" required>
           <span>隐患大类：</span>
@@ -206,12 +178,12 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
 
           <span style="margin-left:10px;">隐患小类：</span>
           <el-select v-model="form.riskId" placeholder="请选择隐患小类">
-            <el-option v-for="item in riskIds" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in riskIds" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -224,25 +196,20 @@
             :remote-method="UserFun"
             placeholder="请选择责任人"
           >
-            <el-option v-for="item in Users" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in Users" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px;">建成日期：</span>
-          <el-date-picker
-            v-model="form.towerCreatedAt"
-            type="date"
-            placeholder="选择日期"
-            @change="test"
-          ></el-date-picker>
+          <el-date-picker v-model="form.towerCreatedAt" type="date" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="地址信息：" :label-width="formLabelWidth" required>
           <span>经度：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <el-input v-model="form.longitude" placeholder="请输入经度"></el-input>
+          <el-input v-model="form.longitude" placeholder="请输入经度" />
           <span style="margin-left:10px;">纬度：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <el-input v-model="form.latitude" placeholder="请输入纬度"></el-input>
+          <el-input v-model="form.latitude" placeholder="请输入纬度" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>具体位置：</span>
-          <el-input type="textarea" :rows="2" v-model="form.address" placeholder="请输入具体位置"></el-input>
+          <el-input v-model="form.address" type="textarea" :rows="2" placeholder="请输入具体位置" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -267,7 +234,7 @@
         <el-form-item label="公司信息：" :label-width="formLabelWidth" required>
           <span>所属公司：</span>
           <el-select v-model="xgform.companyId" placeholder="请选择所属公司" @change="bumen">
-            <el-option v-for="item in companys" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in companys" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px;">所属部门：</span>
           <el-select v-model="xgform.departmentId" placeholder="请选择所属部门" @change="banzu">
@@ -276,11 +243,11 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <span style="margin-left:10px;">所属班组：</span>
           <el-select v-model="xgform.teamId" placeholder="请选择所属班组">
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
@@ -298,27 +265,27 @@
               :key="item.id"
               :label="item.companyName"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="杆塔信息：" :label-width="formLabelWidth" required>
           <span>杆塔类型：</span>
           <el-select v-model="xgform.towerCategory" placeholder="请选择杆塔类型">
-            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in towers" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
 
           <span style="margin-left:10px;">杆塔型号：</span>
-          <el-input v-model="xgform.towerType" placeholder="请输入杆塔型号" style="width:200px"></el-input>
+          <el-input v-model="xgform.towerType" placeholder="请输入杆塔型号" style="width:200px" />
 
           <span style="margin-left:10px;">杆塔性质：</span>
           <el-select v-model="xgform.nature" placeholder="请选择杆塔性质">
-            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in natures" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span style>杆塔状态：</span>
           <el-select v-model="xgform.status" placeholder="请选择杆塔状态">
-            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span>所属线路：</span>
           <el-select
@@ -327,15 +294,16 @@
             filterable
             remote
             :remote-method="LineFun"
+            @change="test"
           >
-            <el-option v-for="item in Lines" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in Lines" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px">杆塔号：</span>
-          <el-input v-model="xgform.towerNum" placeholder="请输入杆塔号"></el-input>
+          <el-input v-model="xgform.towerNum" placeholder="请输入杆塔号" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>杆塔序号：</span>
-          <el-input v-model="xgform.orderNo" placeholder="请输入杆塔序号(数字)"></el-input>
+          <el-input v-model="xgform.orderNo" placeholder="请输入杆塔序号(数字)" />
         </el-form-item>
         <el-form-item label="隐患信息：" :label-width="formLabelWidth" required>
           <span>隐患大类：</span>
@@ -345,12 +313,12 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
 
           <span style="margin-left:10px;">隐患小类：</span>
           <el-select v-model="xgform.riskId" placeholder="请选择隐患小类">
-            <el-option v-for="item in riskIds" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in riskIds" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
 
@@ -363,25 +331,20 @@
             :remote-method="XgUserFun"
             placeholder="请选择责任人"
           >
-            <el-option v-for="item in Users" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in Users" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span style="margin-left:10px;">建成日期：</span>
-          <el-date-picker
-            v-model="xgform.towerCreatedAt"
-            type="date"
-            placeholder="选择日期"
-            @change="test"
-          ></el-date-picker>
+          <el-date-picker v-model="xgform.towerCreatedAt" type="date" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="地址信息：" :label-width="formLabelWidth" required>
           <span>经度：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <el-input v-model="xgform.longitude" placeholder="请输入经度"></el-input>
+          <el-input v-model="xgform.longitude" placeholder="请输入经度" />
           <span style="margin-left:10px;">纬度：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <el-input v-model="xgform.latitude" placeholder="请输入纬度"></el-input>
+          <el-input v-model="xgform.latitude" placeholder="请输入纬度" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>具体位置：</span>
-          <el-input type="textarea" :rows="2" v-model="xgform.address" placeholder="请输入具体位置"></el-input>
+          <el-input v-model="xgform.address" type="textarea" :rows="2" placeholder="请输入具体位置" />
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -444,6 +407,9 @@ import Cookies from "js-cookie";
 import { parseTime } from "@/utils/index.js";
 
 export default {
+  filters: {
+    parseTime: parseTime
+  },
   data() {
     return {
       tableData: [],
@@ -456,9 +422,9 @@ export default {
       towerId: "",
       yinhuanId: "",
       yinhuans: [],
-      dialogFormVisible: false, //修改框显示
-      page: 1, //页数
-      total: 1, //总条数
+      dialogFormVisible: false, // 修改框显示
+      page: 1, // 页数
+      total: 1, // 总条数
       form: {
         companyId: "",
         departmentId: "",
@@ -482,12 +448,10 @@ export default {
       companys: [],
       departments: [],
       teams: [],
-      // towerCategorys: [],
       localizations: [],
       parentRisks: [],
       riskIds: [],
       towerTypeIds: [],
-
       xgform: {
         id: "",
         companyId: "",
@@ -520,22 +484,13 @@ export default {
       Lines: []
     };
   },
-  filters: {
-    parseTime: parseTime
-  },
   mounted() {
-    //获取设备信息
-    // console.log(this.LABEL_DATA.TOWER_CATEGORY);
+    // 获取数据
     this.oneMsg();
-    // this.towerFun();
+    // this.LineFun()
   },
 
   methods: {
-    test(val) {
-      // console.log(val);
-      // console.log(this.form.towerCreatedAt);
-    },
-
     oneMsg() {
       Axios({
         method: "post",
@@ -550,16 +505,18 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.tableData = msg.data.data.towers;
         this.total = msg.data.data.totalCount;
       });
     },
+      test(val){
+        
+      },
+    // 修改
     handleEdit(index, row) {
       this.companyFun();
       this.riskBigFun();
-      this.LineFun(row.lineId);
-      // console.log(row);
+      this.LineFun(" ");
       this.xgform.id = Number(row.towerId);
       this.xgform.companyId = Number(row.companyId);
       this.xgform.departmentId = Number(row.departmentId);
@@ -601,6 +558,7 @@ export default {
       this.xgform.address = row.address;
       this.xgBox = true;
     },
+    // 确认修改
     xgTrue() {
       this.xgform.orderNo = Number(this.xgform.orderNo);
       this.xgform.towerCreatedAt =
@@ -626,10 +584,12 @@ export default {
         }
       });
     },
+    // 删除
     handleDelete(index, row) {
       this.delId = row.towerId;
       this.delBox = true;
     },
+    // 确认删除
     delTrue() {
       Axios({
         method: "post",
@@ -638,7 +598,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         if (msg.data.data.rowsAffected != 0) {
           this.pageChange(this.page);
           this.delBox = false;
@@ -649,17 +608,18 @@ export default {
         }
       });
     },
+    // 分页
     pageChange(index) {
-      // console.log(index);
       this.page = index;
       this.chaxun();
     },
-
+    // 添加
     tianjia() {
       this.dialogFormVisible = true;
       this.companyFun();
       this.riskBigFun();
     },
+    // 获取公司
     companyFun() {
       Axios({
         method: "post",
@@ -672,7 +632,7 @@ export default {
         this.companys = msg.data.data;
       });
     },
-
+    // 隐患大类
     riskBigFun() {
       Axios({
         method: "post",
@@ -685,7 +645,7 @@ export default {
         this.parentRisks = msg.data.data;
       });
     },
-    //隐患小类
+    // 隐患小类
     riskFun(val) {
       this.form.riskId = "";
       Axios({
@@ -703,9 +663,8 @@ export default {
       });
     },
 
-    //选择部门
+    // 选择部门
     bumen(val) {
-      // console.log(val);
       Axios({
         method: "post",
         url:
@@ -716,11 +675,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.departments = msg.data.data;
       });
     },
-    //选择班组
+    // 选择班组
     banzu(val) {
       this.form.teamId = "";
       Axios({
@@ -736,7 +694,7 @@ export default {
         this.teams = msg.data.data;
       });
     },
-    //属地化信息
+    // 属地化信息
     localizationFun(query) {
       if (query != "") {
         this.localizationLoading = true;
@@ -750,13 +708,13 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           this.localizations = msg.data.data;
           this.localizationLoading = false;
         });
       }
     },
 
+    // 线路模糊查询
     xianluFun(query) {
       if (query !== "") {
         this.loading = true;
@@ -767,70 +725,69 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           this.xianlus = msg.data.data;
         });
       }
     },
+    // 创建
     towerCreateTrue() {
       this.form.orderNo = Number(this.form.orderNo);
-      // console.log(this.form.companyId);
       switch ("") {
         case this.form.companyId:
           this.$message.error("未选择公司");
           break;
- case this.form.departmentId:
+        case this.form.departmentId:
           this.$message.error("未选择部门");
           break;
-           case this.form.teamId:
+        case this.form.teamId:
           this.$message.error("未选择班组");
           break;
-           case this.form.localizationId:
+        case this.form.localizationId:
           this.$message.error("未选择属地化");
           break;
-           case this.form.towerCategory:
+        case this.form.towerCategory:
           this.$message.error("未选择杆塔类型");
           break;
-           case this.form.towerType:
+        case this.form.towerType:
           this.$message.error("未选择杆塔型号");
           break;
-           case this.form.nature:
+        case this.form.nature:
           this.$message.error("未选择杆塔性质");
           break;
-           case this.form.status:
+        case this.form.status:
           this.$message.error("未选择杆塔状态");
           break;
-           case this.form.lineId:
+        case this.form.lineId:
           this.$message.error("未选择所属线路");
           break;
-           case this.form.towerNum:
+        case this.form.towerNum:
           this.$message.error("未输入杆塔号");
           break;
-           case this.form.orderNo:
+        case this.form.orderNo:
           this.$message.error("未选择输入杆塔序号");
           break;
-           case this.form.parentRiskId:
+        case this.form.parentRiskId:
           this.$message.error("未选择隐患大类");
           break;
-           case this.form.riskId:
+        case this.form.riskId:
           this.$message.error("未选择隐患小类");
           break;
-           case this.form.userId:
+        case this.form.userId:
           this.$message.error("未选择责任人");
           break;
-           case this.form.towerCreatedAt:
+        case this.form.towerCreatedAt:
           this.$message.error("未选择建成日期");
           break;
-           case this.form.latitude:
+        case this.form.latitude:
           this.$message.error("未输入纬度");
           break;
-           case this.form.longitude:
+        case this.form.longitude:
           this.$message.error("未输入经度");
-          break;  
-          case this.form.address:
+          break;
+        case this.form.address:
           this.$message.error("未输入具体位置");
           break;
-          
+
         default:
           Axios({
             method: "post",
@@ -843,24 +800,21 @@ export default {
               Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
             }
           }).then(msg => {
-            // console.log(msg);
             if (msg.data.code === 0) {
               this.oneMsg();
               this.dialogFormVisible = false;
               this.$message.success("创建成功");
               Object.keys(this.form).forEach(key => (this.form[key] = ""));
-              // console.log(this.form);
             } else {
               this.dialogFormVisible = false;
               this.$message.error("创建失败");
-              // console.log(this.form);
               Object.keys(this.form).forEach(key => (this.form[key] = ""));
-              // console.log(this.form);
             }
           });
           break;
       }
     },
+    // 人员
     UserFun(val) {
       Axios({
         method: "post",
@@ -874,10 +828,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.Users = msg.data.data.users;
       });
     },
+    // 修改 人员数据
     XgUserFun(val) {
       Axios({
         method: "post",
@@ -894,8 +848,9 @@ export default {
         this.Users = msg.data.data.users;
       });
     },
-
+  // 线路
     LineFun(val) {
+      console.log(val)
       Axios({
         method: "post",
         url: this.GLOBAL.AJAX_URL + "/v1/line/search-by-name?name=" + val,
@@ -903,10 +858,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.Lines = msg.data.data;
       });
     },
+    // 导出
     daochu() {
       Axios({
         method: "post",
@@ -915,10 +870,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         window.location.href = msg.data.data;
       });
     },
+    // 查询
     chaxun() {
       Axios({
         method: "post",
@@ -941,8 +896,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
-
         this.tableData = msg.data.data.towers;
         this.total = msg.data.data.totalCount;
         this.$message.success("查询成功");

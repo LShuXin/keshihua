@@ -1,25 +1,20 @@
 <template>
-  <el-card shadow="never" class="Box" :body-style="{padding:'0px'}">
+  <el-card shadow="never" class="Box" :body-style="{ padding: '0px' }">
     <el-container>
+      <!-- 搜索条件 -->
       <el-header height style="margin-bottom:10px; padding:0px;">
         <el-card shadow="never">
           <el-row :gutter="10">
             <el-col :span="4">
               <span class="text">告警原因：</span>
-              <el-select
-                v-model="gjyyvalue"
-                placeholder="请选择类别"
-                size="mini"
-                @change="testSelect"
-                clearable
-              >
-                <el-option v-for="item in gjyy" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="gjyyvalue" placeholder="请选择类别" size="mini" clearable>
+                <el-option v-for="item in gjyy" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>告警级别：</span>
               <el-select v-model="gjjbvalue" placeholder size="mini" clearable>
-                <el-option v-for="item in gjjb" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in gjjb" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
@@ -30,25 +25,25 @@
                   :key="item.id"
                   :label="item.name"
                   :value="item.name"
-                ></el-option>
+                />
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>电压等级：</span>
               <el-select v-model="dydjvalue" placeholder size="mini" clearable>
-                <el-option v-for="item in dydj" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in dydj" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>是否分派：</span>
               <el-select v-model="sffpvalue" placeholder size="mini" disabled clearable>
-                <el-option v-for="item in sffp" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in sffp" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>超期提醒：</span>
               <el-select v-model="cqtxvalue" placeholder size="mini" disabled clearable>
-                <el-option v-for="item in cqtx" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in cqtx" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
           </el-row>
@@ -56,7 +51,6 @@
             <el-col :span="4">
               <span>告警部门：</span>
               <el-select
-                @change="gjbmName"
                 v-model="gjbmvalue"
                 filterable
                 remote
@@ -66,14 +60,14 @@
                 :loading="loading"
                 size="mini"
                 clearable
+                @change="gjbmName"
               >
-                <el-option v-for="item in gjbm" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in gjbm" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
               <span>告警班组：</span>
               <el-select
-                @change="gjbzName"
                 v-model="gjbzvalue"
                 filterable
                 remote
@@ -83,8 +77,9 @@
                 :remote-method="remoteMethodbz"
                 :loading="loadingbz"
                 clearable
+                @change="gjbzName"
               >
-                <el-option v-for="item in gjbz" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in gjbz" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
             <el-col :span="4">
@@ -97,33 +92,13 @@
                 placeholder="请输入关键词"
                 :remote-method="remoteMethodxl"
                 :loading="loadingxl"
-                @change="gjxlName"
                 size="mini"
                 clearable
+                @change="gjxlName"
               >
-                <el-option v-for="item in gjxl" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in gjxl" :key="item.id" :label="item.name" :value="item.id" />
               </el-select>
             </el-col>
-            <!-- <el-col :span="4">
-              <span>告警杆塔：</span>
-              <el-select
-                v-model="gjgtvalue"
-                filterable
-                remote
-                reserve-keyword
-                placeholder="请输入关键词"
-                :remote-method="remoteMethodgt"
-                :loading="loadinggt"
-                size="mini"
-              >
-                <el-option
-                  v-for="item in gjgt"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name"
-                ></el-option>
-              </el-select>
-            </el-col>-->
             <el-col :span="4">
               <span>是否已读：</span>
               <el-checkbox v-model="checked">已读</el-checkbox>
@@ -132,8 +107,8 @@
             <el-col :span="5">
               <span>告警时间：</span>
               <el-date-picker
-                size="mini"
                 v-model="value2"
+                size="mini"
                 type="daterange"
                 align="right"
                 unlink-panels
@@ -143,89 +118,80 @@
                 :picker-options="pickerOptions"
                 value-format="yyyy-MM-dd"
                 clearable
-              ></el-date-picker>
+              />
             </el-col>
             <el-col :span="3">
               <el-button
-                @click="resloveFun"
                 plain
                 icon="el-icon-search"
                 style="border:0; background: #f7b84f; color:#fff;"
+                @click="resloveFun"
               >重置</el-button>
               <el-button
                 plain
                 icon="el-icon-search"
-                @click="createdMsg"
                 style="border:0; background: #1ca3ff;color:#fff;"
+                @click="createdMsg"
               >查询</el-button>
             </el-col>
           </el-row>
           <el-row :gutter="10" class="btnBoxRow">
-            <el-col :span="2" :offset="6">
-              <!-- <el-button
-                plain
-                icon="el-icon-search"
-                @click="created"
-                style="border:0; background: #1ca3ff;color:#fff;"
-              >查询</el-button>
-            </el-col>
-            <el-col :span="2">
-              <el-button
-                @click="msgc"
-                plain
-                icon="el-icon-search"
-                style="border:0; background: #f7b84f; color:#fff;"
-              >重置</el-button>-->
-            </el-col>
+            <el-col :span="2" :offset="6"></el-col>
             <el-col :span="3" :offset="8">
               <el-button
-                @click="msgc"
                 plain
                 icon="el-icon-search"
                 style="border:0; background: #28d7c0; color:#fff;"
+                @click="msgc"
               >&nbsp;&nbsp;&nbsp;&nbsp;今日告警&nbsp;&nbsp;&nbsp;&nbsp;</el-button>
             </el-col>
             <el-col :span="3">
               <el-button
-                @click="msgc"
                 plain
                 icon="el-icon-search"
                 style="border:0; background: #6b5af4; color:#fff;"
+                @click="msgc"
               >最近一周告警</el-button>
             </el-col>
-            <el-col :span="3"></el-col>
+            <el-col :span="3" />
           </el-row>
         </el-card>
       </el-header>
+
       <el-container>
+        <!-- 告警图片 -->
         <el-aside width="50%">
           <el-card id="gjimgBox">
             <p>告警详情图</p>
-            <el-image style="width:100%; height:100%" :src="url" :preview-src-list="[url]"></el-image>
+            <el-image style="width:100%; height:100%" :src="url" :preview-src-list="[url]" />
           </el-card>
         </el-aside>
         <el-main style="padding:0 20px 15px 20px">
           <p>数据详情表</p>
+          <!-- 告警列表 -->
           <el-table
             :data="gjsjdata"
             highlight-current-row
-            @current-change="handleCurrentChange"
             style="width: 100%;height:88%; "
-            @row-click="test"
             header-row-class-name="rowtitle"
             :row-class-name="tableRowClassName"
+            @row-click="test"
           >
-            <el-table-column prop="createdAt" label="告警时间" width="120px">
+            <el-table-column label="告警时间" width="100px">
               <template slot-scope="scope">
-                <span>{{scope.row.createdAt | parseTime('{y}-{m}-{d}')}}</span>
+                <span>
+                  {{
+                  scope.row.updatedAt | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
+                  }}
+                </span>
               </template>
             </el-table-column>
-            <el-table-column prop="level" label="告警级别"></el-table-column>
-            <el-table-column prop="departmentName" label="部门"></el-table-column>
-            <el-table-column prop="teamName" label="班组"></el-table-column>
-            <el-table-column prop="lineName" label="线路"></el-table-column>
-            <el-table-column prop="towerNum" label="杆塔"></el-table-column>
-            <el-table-column prop="causes" label="告警原因"></el-table-column>
+            <el-table-column prop="level" label="告警级别" />
+            <el-table-column prop="departmentName" label="部门" />
+            <el-table-column prop="teamName" label="班组" />
+            <el-table-column prop="lineName" label="线路" />
+            <el-table-column prop="towerNum" label="杆塔" />
+            <el-table-column prop="causes" label="告警原因" />
             <el-table-column prop="hasRead" label="是否已读">
               <template slot-scope="scope">
                 <span v-if="scope.row.hasRead === 0" style="color: #ff0000">未读</span>
@@ -233,49 +199,51 @@
               </template>
             </el-table-column>
             <el-table-column label="分派" width="100">
-              <template>
+              <template slot-scope="data">
                 <el-button
-                  @click="pgFun"
+                  v-if="!data.row.hasWorkOrder"
                   plain
                   icon="el-icon-user"
                   style="border:0; background: #f74f77; color:#fff;"
                   size="mini"
+                  @click="()=>{this.pgBox = true;}"
                 >派工</el-button>
+                <span v-else>已派工</span>
               </template>
             </el-table-column>
-            <el-table-column prop="installationLocationName" label="监拍朝向"></el-table-column>
+            <el-table-column prop="installationLocationName" label="监拍朝向" />
 
-            <el-table-column prop="gjcqLabel" label="超期"></el-table-column>
+            <el-table-column prop="gjcqLabel" label="超期" />
           </el-table>
+          <!-- 分页 -->
           <el-pagination
             background
-            layout="prev, pager, next"
             style="float:right;"
             :total="pagess"
             :page-size="7"
             @current-change="current"
-          ></el-pagination>
+          />
         </el-main>
       </el-container>
     </el-container>
+    <!-- 派工联系人信息 -->
     <el-dialog title :visible.sync="pgBox" width="30%">
       <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-form-item label="线路名">
-          <el-input v-model="form.xgLineName" disabled></el-input>
+          <el-input v-model="form.xgLineName" disabled />
         </el-form-item>
         <el-form-item label="杆塔号">
-          <el-input v-model="form.xgTowerName" disabled></el-input>
+          <el-input v-model="form.xgTowerName" disabled />
         </el-form-item>
         <el-form-item label="负责人">
-          <el-input v-model="form.xgUserName" disabled></el-input>
+          <el-input v-model="form.xgUserName" disabled />
         </el-form-item>
         <el-form-item label="手机号码">
-          <el-input v-model="form.xgPhoneNum" disabled></el-input>
+          <el-input v-model="form.xgPhoneNum" disabled />
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="
-        pgBox= false">取 消</el-button>
+        <el-button @click="pgBox = false">取 消</el-button>
         <el-button type="primary" @click="pgTrue">确 定</el-button>
       </div>
     </el-dialog>
@@ -340,30 +308,8 @@ import Cookies from "js-cookie";
 import moment from "moment";
 import { parseTime } from "@/utils/index.js";
 export default {
-  created() {
-    //告警列表
-    axios({
-      method: "post",
-      url:
-        this.GLOBAL.AJAX_URL +
-        "/v1/alarm/query?user-id=" +
-        localStorage.getItem("userId") +
-        "&order-by=alarm.created_at&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
-      headers: {
-        Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-      }
-    }).then(msg => {
-      // console.log(msg);
-      if (msg.data.data.alarms === []) {
-        this.$message.warning("暂无告警");
-      } else {
-        this.pagess = msg.data.data.totalCount;
-        this.gjsjdata = msg.data.data.alarms;
-        // console.log(this.gjsjdata);
-        this.url =
-          "http://47.104.136.74:8083/" + msg.data.data.alarms[0].alarmImagePath;
-      }
-    });
+  filters: {
+    parseTime: parseTime
   },
   data() {
     return {
@@ -435,27 +381,19 @@ export default {
       gjbm: [],
       gjbmvalue: "",
       gjbmname: "",
-      // list: [],
       loading: false,
       gjbz: [],
       gjbzvalue: "",
       gjbzname: "",
-      // list: [],
       loadingbz: false,
       gjxl: [],
       gjxlvalue: "",
       gjxlname: "",
-      // list: [],
       loadingxl: false,
       gjgt: [],
       gjgtvalue: "",
-      // list: [],
       loadinggt: false,
       url: "http://47.104.136.74/image/error.jpg",
-      srcList: [
-        "http://47.104.136.74/image/3.jpg",
-        "http://47.104.136.74/image/2.jpg"
-      ],
       gjsjdata: [],
       pagess: 0,
       pageindex: 1,
@@ -470,60 +408,40 @@ export default {
       row: {}
     };
   },
-  filters: {
-    parseTime: parseTime
+  created() {
+    // 告警列表
+    axios({
+      method: "post",
+      url:
+        this.GLOBAL.AJAX_URL +
+        "/v1/alarm/query?user-id=" +
+        localStorage.getItem("userId") +
+        "&order-by=alarm.created_at&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
+      headers: {
+        Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+      }
+    }).then(msg => {
+      console.log(msg);
+      if (msg.data.data.alarms === []) {
+        this.$message.warning("暂无告警");
+      } else {
+        this.pagess = msg.data.data.totalCount;
+        this.gjsjdata = msg.data.data.alarms;
+        this.url =
+          "http://47.104.136.74:8083/" + msg.data.data.alarms[0].alarmImagePath;
+      }
+    });
   },
   methods: {
+    // 未读消息添加背景色
     tableRowClassName({ row, rowIndex }) {
       if (row.hasRead === 0) {
         // return "warning-row";
+        return;
       }
     },
-    testSelect(val) {
-      // console.log(val);
-    },
-    prev() {
-      this.index = this.index - 1;
-      axios({
-        method: "post",
-        url:
-          this.GLOBAL.AJAX_URL +
-          "/v1/alarm/query?user-id=" +
-          localStorage.getItem("userId") +
-          "&order-by=created_at&&page=" +
-          this.index +
-          "&size=7",
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        // console.log(msg);
 
-        this.gjsjdata = msg.data.data.alarms;
-        // console.log(this.gjsjdata);
-      });
-    },
-    next() {
-      this.index = this.index + 1;
-      axios({
-        method: "post",
-        url:
-          this.GLOBAL.AJAX_URL +
-          "/v1/alarm/query?user-id=" +
-          localStorage.getItem("userId") +
-          "&order-by=created_at&order=asc&page=" +
-          this.index +
-          "&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        // console.log(msg);
-
-        this.gjsjdata = msg.data.data.alarms;
-        // console.log(this.gjsjdata);
-      });
-    },
+    // 查询条件下的翻页
     current(val) {
       if (this.value2 !== null && this.value2[0] !== undefined) {
         // console.log(this.value2);
@@ -571,18 +489,13 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
-            // this.$message.success("查询成功");
+            console.log(msg)
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;
           } else {
-            // this.$message.error("查询失败");
+            this.$message.error("查询失败");
           }
-          // console.log(msg);
-          // console.log(this.value2);
-
-          // console.log(this.dydjvalue)
         });
       } else {
         var i = "";
@@ -640,28 +553,14 @@ export default {
         });
       }
     },
+    // 点击改为已读状态
     test(row, colunm, event) {
-      // console.log(row);
-      // console.log(row);
       this.row = row;
       this.form.xgLineName = row.lineName;
       this.form.xgTowerName = row.towerNum;
       this.form.xgUserName = row.userName;
       this.form.xgPhoneNum = row.userPhone;
       this.url = "http://47.104.136.74:8083/" + row.alarmImagePath;
-      // console.log(event);
-      // axios({
-      //   method: "post",
-      //   url:
-      //     this.GLOBAL.AJAX_URL +
-      //     "/v1/alarm/update-has-read?has-read=1&id=" +
-      //     row.id,
-      //   headers: {
-      //     Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-      //   }
-      // }).then(msg => {
-      //   row.hasRead = 1;
-      // });
       axios({
         method: "post",
         url: this.GLOBAL.AJAX_URL + "/v1/user-alarm/create",
@@ -676,9 +575,7 @@ export default {
         row.hasRead = 1;
       });
     },
-    handleCurrentChange(val) {
-      // console.log(val);
-    },
+    // 告警部门模糊查询
     remoteMethod(query) {
       if (query !== "") {
         this.loading = true;
@@ -692,13 +589,12 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
-
           this.loading = false;
           this.gjbm = msg.data.data;
         });
       }
     },
+    // 告警班组模糊查询
     remoteMethodbz(query) {
       if (query !== "") {
         this.loadingbz = true;
@@ -714,7 +610,6 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           for (var i = 0; i < msg.data.data.length; i++) {
             var obj = {};
             obj = {
@@ -725,10 +620,10 @@ export default {
             this.loadingbz = false;
             this.gjbz.push(obj);
           }
-          //console.log(this.gjbmvalue)
         });
       }
     },
+    // 告警线路模糊查询
     remoteMethodxl(query) {
       if (query !== "") {
         this.loadingxl = true;
@@ -739,75 +634,37 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           this.loadingxl = false;
           this.gjxl = msg.data.data;
         });
       }
     },
-    // remoteMethodgt(query) {
-    //   if (query !== "") {
-    //     this.loadinggt = true;
-    //     //console.log(this.gjxlvalue)
-    //     axios({
-    //       method: "post",
-    //       url:
-    //         this.GLOBAL.AJAX_URL +
-    //         "/v1/line-tower/search-by-tower-num?tower-num=" +
-    //         query +
-    //         "&line-id=" +
-    //         this.gjxlvalue,
-    //       headers: {
-    //         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-    //       }
-    //     }).then(msg => {
-    //       for (var i = 0; i < msg.data.data.length; i++) {
-    //         var obj = {};
-    //         obj = {
-    //           id: i,
-    //           name: msg.data.data[i]
-    //         };
-
-    //         this.loadinggt = false;
-    //         this.gjgt.push(obj);
-    //       }
-    //     });
-    //   }
-    // },
+    // id转换成name
     gjbmName(id) {
       var obj = {};
       obj = this.gjbm.find(function(item) {
         return item.id === id;
       });
-
-      // console.log(obj.name)
       this.gjbmname = obj.name;
-      // console.log(this.gjbmname)
     },
+    // id转换成name
     gjbzName(id) {
       var obj = {};
       obj = this.gjbz.find(function(item) {
         return item.id === id;
       });
-      // console.log(obj.name)
       this.gjbzname = obj.name;
     },
+    // id转换成name
     gjxlName(id) {
       var obj = {};
       obj = this.gjxl.find(function(item) {
         return item.id === id;
       });
-      // console.log(obj.name)
       this.gjxlname = obj.name;
-
-      // console.log(this.gjxlname);
     },
-    pgFun() {
-      this.pgBox = true;
-    },
+    // 确认派工
     pgTrue() {
-      // console.log(this.row);
-
       axios({
         method: "post",
         url: this.GLOBAL.AJAX_URL + "/v1/work-order/create-work-order",
@@ -845,6 +702,7 @@ export default {
         this.pgBox = false;
       });
     },
+    // 重置查询条件
     resloveFun() {
       this.gjyyvalue = "";
       this.gjjbvalue = "";
@@ -864,6 +722,7 @@ export default {
       this.checked2 = false;
       // this.gjbzname = "";
     },
+    // 查询
     createdMsg() {
       if (this.value2 !== null && this.value2[0] !== undefined) {
         // console.log(this.value2);
@@ -911,16 +770,13 @@ export default {
         }).then(msg => {
           // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
+            console.log(msg)
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;
           } else {
             this.$message.error("查询失败");
           }
-          // console.log(msg);
-          // console.log(this.value2);
-
-          // console.log(this.dydjvalue)
         });
       } else {
         var i = "";
@@ -963,6 +819,7 @@ export default {
         }).then(msg => {
           // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
+            console.log(msg)
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;
@@ -971,13 +828,14 @@ export default {
           }
           // console.log(msg);
           // console.log(this.value2);
-
+          //
           // console.log(this.dydjvalue)
         });
       }
     },
+    // 提示信息
     msgc() {
-      this.$message.warning("该功能正在研发中~");
+      this.$message.warning("该账号没有此权限~");
     }
   }
 };

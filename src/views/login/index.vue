@@ -8,6 +8,7 @@
       class="login-form"
       auto-complete="on"
       label-position="left"
+      show-message:false
     >
       <div class="title-container">
         <h3 class="title" style="color:#000">AI智能可视化线路监测系统</h3>
@@ -54,14 +55,14 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >登录</el-button>
-      <span @click="passWordBox=false" style="cursor:pointer">短信登录</span>
+      <span style="cursor:pointer" @click="passWordBox=false">短信登录</span>
     </el-form>
     <el-form
+      v-if="!passWordBox"
       ref="loginForm2"
       class="login-form"
       auto-complete="on"
       label-position="left"
-      v-if="!passWordBox"
     >
       <div class="title-container">
         <h3 class="title" style="color:#000">AI智能可视化线路监测系统</h3>
@@ -78,7 +79,7 @@
           name="username"
           tabindex="1"
           auto-complete="on"
-        ></el-input>
+        />
         <!-- <el-input v-model="domain.value"></el-input> -->
       </el-form-item>
 
@@ -96,7 +97,7 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
-        <span class="show-pwd" @click="phoneNum">{{yzmMsg}}</span>
+        <span class="show-pwd" @click="phoneNum">{{ yzmMsg }}</span>
       </el-form-item>
 
       <el-button
@@ -105,7 +106,7 @@
         style="width:100%;margin-bottom:30px;"
         @click="phoneLogin"
       >登录</el-button>
-      <span @click="passWordBox=true" style="cursor:pointer">密码登录</span>
+      <span style="cursor:pointer" @click="passWordBox=true">密码登录</span>
     </el-form>
   </div>
 </template>
@@ -121,14 +122,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+        callback(new Error("请输入用户名"));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("The password can not be less than 6 digits"));
+        callback(new Error("密码不能小于6位"));
       } else {
         callback();
       }
@@ -143,16 +144,16 @@ export default {
         password: "123456"
       },
       loginRules: {
-        username: [{ required: true, trigger: "blur" }],
-        password: [{ required: true, trigger: "blur" }]
+        username: [{ required: true, trigger: "blur" ,message:"用户名不能为空"}],
+        password: [{ required: true, trigger: "blur" ,message:"密码不能为空"}]
       },
       loginForm2: {
         username: "",
         password: ""
       },
       loginRules2: {
-        username: [{ required: true, trigger: "blur" }],
-        password: [{ required: true, trigger: "blur" }]
+        username: [{ required: true, trigger: "blur" ,message:"手机号不能为空"}],
+        password: [{ required: true, trigger: "blur" ,message:"验证码不能为空"}]
       },
       loading: false,
       passwordType: "password",
@@ -184,9 +185,11 @@ export default {
           this.loading = true;
           this.$store
             .dispatch("user/login", this.loginForm)
-            .then(() => {
+            .then(res => {
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
+
+              console.log(res);
             })
             .catch(() => {
               this.loading = false;
@@ -215,7 +218,7 @@ export default {
           if (msg.data.code === 31818) {
             this.$message.error("该号码没有此权限");
           } else {
-            this.$message.error(msg.data.message);
+            this.$message.error("手机号不能为空");
           }
         }
       });
@@ -231,43 +234,18 @@ export default {
     },
     phoneLogin() {
       this.loading = true;
-      // Axios({
-      //   method: "post",
-      //   url: this.GLOBAL.AJAX_URL + "/v1/user/login-sms",
-      //   data: {
-      //     phone: this.loginForm2.username,
-      //     code: this.loginForm2.password
-      //   }
-      // }).then(msg => {
-      //   console.log(msg);
-      //   if (msg.data.code === 0) {
-      //     Cookies.set("vue_admin_template_token", msg.data.data.token);
-      //     console.log(Cookies.get("vue_admin_template_token"));
-      //     localStorage.setItem("userName", msg.data.data.user.name);
-      //     localStorage.setItem("userId", msg.data.data.user.id);
-      //     this.$router.push({ path: this.redirect || "/" });
-      //     this.loading = false;
-      //   } else {
-      //     if (msg.data.code === 31820) {
-      //       this.loading = false;
-      //       this.$message({
-      //         message: "验证码错误",
-      //         type: "error",
-      //         duration: 2000
-      //       });
-      //     } else {
-      //       this.$message.error("验证码失效");
-      //     }
-      //   }
-      // });
-      this.$store.dispatch("user/login2", this.loginForm2).then(msg => {
-        // console.log(msg + "shuj")
-        this.$router.push({ path: this.redirect || "/" });
-        this.loading = false;
-      }).catch(err =>{
-       this.$message.error("验证码错误")
-       this.loading = false;
-      });
+      this.$store
+        .dispatch("user/login2", this.loginForm2)
+        .then(msg => {
+          // console.log(msg + "shuj")
+          this.$router.push({ path: this.redirect || "/" });
+
+          this.loading = false;
+        })
+        .catch(err => {
+          this.$message.error("验证码错误");
+          this.loading = false;
+        });
     }
   }
 };
@@ -277,9 +255,9 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg: #283443;
+$bg: #e5e5e5;
 $light_gray: #000;
-$cursor: #fff;
+$cursor: rgb(0, 0, 0);
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {

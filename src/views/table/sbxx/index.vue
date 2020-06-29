@@ -6,40 +6,45 @@
         <el-col :span="4">
           <span>公司名称：</span>
           <el-select v-model="gongsiId" placeholder="选择公司" size="mini" clearable>
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>电压等级：</span>
           <el-select v-model="dianyaId" placeholder="选择电压等级" size="mini" clearable>
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>线路名称：</span>
           <el-select
-            clearable
             v-model="xianluId"
+            clearable
             placeholder="选择线路名"
             size="mini"
             filterable
             remote
             :remote-method="xianluFun"
           >
-            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
 
         <el-col :span="4">
           <span>生产厂家：</span>
           <el-select v-model="changjiaId" placeholder="选择生产厂家" size="mini" clearable>
-            <el-option v-for="item in changjias" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in changjias"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>隐患类型：</span>
           <el-select v-model="yinhuanId" placeholder="选择隐患类型" size="mini" clearable>
-            <el-option v-for="item in yinhuans" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in yinhuans" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -48,50 +53,23 @@
           <el-button type="primary" size="mini" icon="el-icon-download" @click="daochu">导出</el-button>
         </el-col>
       </el-row>
-      <!-- <el-row :gutter="10" style="margin-top:10px;">
-        <el-col :span="2" :offset="6">
-          <el-button type="primary" size="mini" icon="el-icon-plus">添加</el-button>
-        </el-col>
-        <el-col :span="2" :offset="1">
-          <el-button type="primary" size="mini">添加</el-button>
-        </el-col>
-        <el-col :span="2" :offset="1">
-          <el-button type="primary" size="mini">添加</el-button>
-        </el-col>
-        <el-col :span="2" :offset="1">
-          <el-button type="primary" size="mini">添加</el-button>
-        </el-col>
-      </el-row>-->
     </el-header>
     <el-main>
       <el-table :data="tableData" :highlight-current-row="true" header-row-class-name="rowtitle">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column label="公司" property="companyName" width="220px">
-          <!-- <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{scope.row.gongsi}}</span>
-          </template>-->
-        </el-table-column>
+        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column label="公司" property="companyName" width="220px" /> 
         <el-table-column label="电压等级">
           <template slot-scope="scope">
-            <!-- <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>-->
-            <span>{{scope.row.voltageLevelName}}</span>
+            <span>{{ scope.row.voltageLevelName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="线路名" property="lineName"></el-table-column>
-        <el-table-column label="杆塔号" property="towerNum"></el-table-column>
-        <el-table-column label="安装方向" property="deviceInstallationLocationName"></el-table-column>
+        <el-table-column label="线路名" property="lineName" />
+        <el-table-column label="杆塔号" property="towerNum" />
+        <el-table-column label="安装方向" property="deviceInstallationLocationName" />
         <el-table-column label="SIM卡号" width="120px">
           <template slot-scope="sim">
-            <span v-if="sim.row.simNum ==='未绑定 SIM 卡'" style="color:#d0d0d0;">{{sim.row.simNum}}</span>
-            <span v-else>{{sim.row.simNum}}</span>
+            <span v-if="sim.row.simNum ==='未绑定 SIM 卡'" style="color:#d0d0d0;">{{ sim.row.simNum }}</span>
+            <span v-else>{{ sim.row.simNum }}</span>
           </template>
         </el-table-column>
         <el-table-column label="网络类型" property="simProvider">
@@ -99,26 +77,26 @@
             <span
               v-if="simProvider.row.simProvider ==='未绑定 SIM 卡'"
               style="color:#d0d0d0;"
-            >{{simProvider.row.simProvider}}</span>
-            <span v-else>{{simProvider.row.simProvider }}</span>
+            >{{ simProvider.row.simProvider }}</span>
+            <span v-else>{{ simProvider.row.simProvider }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="设备编号" property="deviceCode"></el-table-column>
-        <el-table-column label="生产厂家" property="manufactureName"></el-table-column>
+        <el-table-column label="设备编号" property="deviceCode" />
+        <el-table-column label="生产厂家" property="manufactureName" />
         <el-table-column label="安装日期">
           <template slot-scope="date">
             <span
               v-if="date.row.deviceInstalledAt === '未安装'"
               style="color:#d0d0d0"
-            >{{date.row.deviceInstalledAt}}</span>
-            <span v-else>{{date.row.deviceInstalledAt | parseTime('{y}-{m}-{d}')}}</span>
+            >{{ date.row.deviceInstalledAt }}</span>
+            <span v-else>{{ date.row.deviceInstalledAt | parseTime('{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="隐患类型" property="parentRiskName"></el-table-column>
-        <el-table-column label="隐患详情" property="riskName"></el-table-column>
-        <el-table-column label="运维单位" property="departmentName"></el-table-column>
-        <el-table-column label="检测类型" property="deviceCategoryName"></el-table-column>
-        <el-table-column label="设备型号" property="deviceType"></el-table-column>
+        <el-table-column label="隐患类型" property="parentRiskName" />
+        <el-table-column label="隐患详情" property="riskName" />
+        <el-table-column label="运维单位" property="departmentName" />
+        <el-table-column label="检测类型" property="deviceCategoryName" />
+        <el-table-column label="设备型号" property="deviceType" />
 
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -133,30 +111,40 @@
         layout="prev, pager, next"
         :total="total"
         :page-size="8"
-        @current-change="pageChange"
         style="float:right;margin-top:5px;"
-      ></el-pagination>
+        @current-change="pageChange"
+      />
     </el-main>
 
     <el-dialog title="新增设备" :visible.sync="dialogFormVisible" width="60%">
       <el-form :model="form">
         <el-form-item label="设备编码" :label-width="formLabelWidth" required>
-          <el-input v-model="form.code" autocomplete="off" placeholder="请输入设备编码"></el-input>
+          <el-input v-model="form.code" autocomplete="off" placeholder="请输入设备编码" />
           <label class="miniTitle trueClass">安裝日期</label>
           <el-date-picker
             v-model="form.installedAt"
             type="date"
             placeholder="请选择安装日期"
             @change="ATdate"
-          ></el-date-picker>
+          />
         </el-form-item>
         <el-form-item label="设备类型" :label-width="formLabelWidth" required>
           <el-select v-model="form.type" placeholder="请选择设备类型">
-            <el-option v-for="item in formtypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in formtypes"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
           <label class="miniTitle trueClass">设备厂商</label>
           <el-select v-model="form.manufactureId" placeholder="请选择设备厂商">
-            <el-option v-for="item in changjias" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in changjias"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
           <label class="miniTitle trueClass">设备分类</label>
           <el-select v-model="form.deviceCategory" placeholder="请选择设备分类">
@@ -165,7 +153,7 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -173,23 +161,23 @@
       <el-form :model="form">
         <el-form-item label="电压等级" :label-width="formLabelWidth" required>
           <el-select v-model="form.voltageLevel" placeholder="请选择电压等级">
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">线路名称</label>
           <el-select
-            clearable
             v-model="form.lineId"
+            clearable
             placeholder="请输入所属线路"
             filterable
             remote
             :remote-method="xianluFun"
           >
-            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">杆 塔 号</label>
           <el-select
-            clearable
             v-model="form.towerId"
+            clearable
             placeholder="请输入杆塔号"
             filterable
             remote
@@ -200,34 +188,34 @@
               :key="item.towerId"
               :label="item.towerNum"
               :value="item.towerId"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="SIM卡号" :label-width="formLabelWidth" required>
           <el-select
-            clearable
             v-model="form.simId"
+            clearable
             placeholder="请输入SIM卡号"
             filterable
             remote
             :remote-method="SIMFun"
           >
-            <el-option v-for="item in SIMs" :key="item.id" :label="item.num" :value="item.id"></el-option>
+            <el-option v-for="item in SIMs" :key="item.id" :label="item.num" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">安装方向</label>
-          <el-select clearable v-model="form.deviceInstallationLocation" placeholder="请选择安装方向">
+          <el-select v-model="form.deviceInstallationLocation" clearable placeholder="请选择安装方向">
             <el-option
               v-for="item in deviceLocation"
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门" :label-width="formLabelWidth" required>
           <el-select
-            clearable
             v-model="form.departmentId"
+            clearable
             placeholder="请选择部门"
             filterable
             remote
@@ -239,18 +227,18 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <label class="miniTitle trueClass">运维班组</label>
           <el-select
-            clearable
             v-model="form.teamId"
+            clearable
             placeholder="请选择班组"
             filterable
             remote
             :remote-method="BanZuFun"
           >
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -262,13 +250,23 @@
     <!-- 修改框 -->
     <el-dialog title="修改设备信息" :visible.sync="xgbool" width="width">
       <el-form :model="upData">
-        <el-form-item label="设备类型" :label-width="formLabelWidth" required >
+        <el-form-item label="设备类型" :label-width="formLabelWidth" required>
           <el-select v-model="upData.type" :placeholder="typeTxt">
-            <el-option v-for="item in formtypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in formtypes"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
           <label class="miniTitle trueClass">设备厂商</label>
           <el-select v-model="upData.manufactureId" :placeholder="manufactureIdTxt">
-            <el-option v-for="item in changjias" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in changjias"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
           </el-select>
           <label class="miniTitle trueClass">设备分类</label>
           <el-select v-model="upData.deviceCategory" :placeholder="deviceCategoryTxt">
@@ -277,28 +275,28 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="电压等级" :label-width="formLabelWidth" required >
+        <el-form-item label="电压等级" :label-width="formLabelWidth" required>
           <el-select v-model="upData.voltageLevel" :placeholder="voltageLevelTxt">
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">线路名称</label>
           <el-select
-            clearable
             v-model="upData.lineId"
+            clearable
             :placeholder="lineIdTxt"
             filterable
             remote
             :remote-method="xianluFun"
           >
-            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">杆 塔 号</label>
           <el-select
-            clearable
             v-model="upData.towerId"
+            clearable
             :placeholder="towerIdTxt"
             filterable
             remote
@@ -309,25 +307,25 @@
               :key="item.towerId"
               :label="item.towerNum"
               :value="item.towerId"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="SIM卡号" :label-width="formLabelWidth" required >
+        <el-form-item label="SIM卡号" :label-width="formLabelWidth" required>
           <el-select
-            clearable
             v-model="upData.simId"
+            clearable
             :placeholder="simIdTxt"
             filterable
             remote
             :remote-method="SIMFun"
             @change="test"
           >
-            <el-option v-for="item in SIMs" :key="item.id" :label="item.num" :value="item.id"></el-option>
+            <el-option v-for="item in SIMs" :key="item.id" :label="item.num" :value="item.id" />
           </el-select>
           <label class="miniTitle trueClass">安装方向</label>
           <el-select
-            clearable
             v-model="upData.deviceInstallationLocation"
+            clearable
             :placeholder="deviceInstallationLocationTxt"
           >
             <el-option
@@ -335,13 +333,13 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="所属部门" :label-width="formLabelWidth" required >
+        <el-form-item label="所属部门" :label-width="formLabelWidth" required>
           <el-select
-            clearable
             v-model="upData.departmentId"
+            clearable
             :placeholder="departmentIdTxt"
             filterable
             remote
@@ -353,18 +351,18 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <label class="miniTitle trueClass">运维班组</label>
           <el-select
-            clearable
             v-model="upData.teamId"
+            clearable
             :placeholder="teamIdTxt"
             filterable
             remote
             :remote-method="BanZuFun"
           >
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -438,6 +436,9 @@ import Cookies from "js-cookie";
 import { parseTime } from "@/utils/index.js";
 import moment from "moment";
 export default {
+  filters: {
+    parseTime: parseTime
+  },
   data() {
     return {
       tableData: [],
@@ -453,12 +454,12 @@ export default {
       yinhuans: [],
       departments: [],
       teams: [],
-      dialogFormVisible: false, //添加设备显示
-      page: 1, //页数
-      total: 1, //总条数
+      dialogFormVisible: false, // 添加设备显示
+      page: 1, // 页数
+      total: 1, // 总条数
       form: {
         companyId: 1282,
-        code: "", //添加设备Id
+        code: "", // 添加设备Id
         type: "",
         manufactureId: "",
         deviceCategory: "",
@@ -509,11 +510,8 @@ export default {
       rowDate: ""
     };
   },
-  filters: {
-    parseTime: parseTime
-  },
   mounted() {
-    //获取设备信息
+    // 获取设备信息
     this.oneMsg();
     this.gongsiFun();
     // this.dianyaFun();
@@ -561,13 +559,15 @@ export default {
       });
     },
     handleEdit(index, row) {
+      console.log(row)
+      // this.BanZuFun(" ")
       this.rowDate = row;
       this.manufactureIdTxt = row.manufactureName;
       this.typeTxt = row.deviceType;
       this.deviceCategoryTxt = row.deviceCategoryName;
       this.simIdTxt = row.simNum;
       this.departmentIdTxt = row.departmentName;
-      this.teamIdTxt = row.teamId;
+      this.teamIdTxt = row.teamName;
       this.voltageLevelTxt = row.voltageLevelName;
       this.lineIdTxt = row.lineName;
       this.towerIdTxt = row.towerNum;
@@ -757,27 +757,70 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
+        // console.log(msg)
         this.yinhuans = msg.data.data;
       });
     },
     deviceTrue() {
-      console.log(this.form);
-      Axios({
-        method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/device/create",
-        data: this.form,
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        this.dialogFormVisible = false;
-        console.log(msg);
-        if (msg.data.code === 0) {
-          this.$message.success("添加成功");
-          this.oneMsg();
-        }
-      });
+      // console.log(this.form)
+      switch ("") {
+        case this.form.code:
+          this.$message.error("请输入设备编码");
+          break;
+        case this.form.installedAt:
+          this.$message.error("请选择安装日期");
+          break;
+        case this.form.type:
+          this.$message.error("请选择设备类型");
+          break;
+        case this.form.manufactureId:
+          this.$message.error("请选择设备厂商");
+          break;
+        case this.form.deviceCategory:
+          this.$message.error("请选择设备分类");
+          break;
+        case this.form.voltageLevel:
+          this.$message.error("请选择电压等级");
+          break;
+        case this.form.lineId:
+          this.$message.error("请选择所属线路");
+          break;
+        case this.form.towerId:
+          this.$message.error("请选择所属杆塔");
+          break;
+        case this.form.simId:
+          this.$message.error("请选择SIM卡");
+          break;
+        case this.form.deviceInstallationLocation:
+          this.$message.error("请选择安装方向");
+          break;
+        case this.form.departmentId:
+          this.$message.error("请选择所属部门");
+          break;
+        case this.form.teamId:
+          this.$message.error("请选择运维班组");
+          break;
+        default:
+          Axios({
+            method: "post",
+            url: this.GLOBAL.AJAX_URL + "/v1/device/create",
+            data: this.form,
+            headers: {
+              Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+            }
+          }).then(msg => {
+            this.dialogFormVisible = false;
+            // console.log(msg)
+            if (msg.data.code === 0) {
+              this.$message.success("添加成功");
+              Object.keys(this.form).forEach(key =>(this.form[key]= ''))
+              this.oneMsg();
+            } else {
+              this.$message.error("添加失败");
+            }
+          });
+          break;
+      }
     },
     SIMFun(query) {
       if (query !== "") {

@@ -3,18 +3,6 @@
     <el-header>
       <el-row :gutter="10">
         <el-col :span="4">
-          <!-- <span>用户名：</span>
-          <el-select
-            v-model="userId"
-            placeholder="请输入用户名"
-            clearable
-            size="mini"
-            filterable
-            remote
-            :remote-method="userFun"
-          >
-            <el-option v-for="item in users" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>-->
           <el-row :gutter="10">
             <el-col :span="24">
               <span>用户名：</span>
@@ -24,7 +12,7 @@
                 size="mini"
                 style="width:178px;"
                 clearable
-              ></el-input>
+              />
             </el-col>
           </el-row>
         </el-col>
@@ -36,13 +24,13 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-col>
         <el-col :span="4">
           <span>所属公司：</span>
-          <el-select v-model="gongsiId" placeholder size="mini" @change="bumenFun" clearable>
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-select v-model="gongsiId" placeholder size="mini" clearable @change="bumenFun">
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -53,7 +41,7 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-col>
         <el-col :span="2" :offset="2">
@@ -69,16 +57,16 @@
     </el-header>
     <el-main>
       <el-table :data="users" highlight-current-row header-row-class-name="rowtitle">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column property="companyName" label="公司"></el-table-column>
-        <el-table-column property="departmentName" label="部门"></el-table-column>
-        <el-table-column property="teamName" label="班组"></el-table-column>
-        <el-table-column property="roleName" label="角色"></el-table-column>
-        <el-table-column property="userUsername" label="用户名"></el-table-column>
-        <el-table-column property="userName" label="姓名"></el-table-column>
-        <el-table-column property="phone" label="电话"></el-table-column>
-        <el-table-column property="weChat" label="微信号"></el-table-column>
+        <!-- <el-table-column type="selection" width="55" align="center" /> -->
+        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column property="companyName" label="公司" />
+        <el-table-column property="departmentName" label="部门" />
+        <el-table-column property="teamName" label="班组" />
+        <el-table-column property="roleName" label="角色" />
+        <el-table-column property="userUsername" label="用户名" />
+        <el-table-column property="userName" label="姓名" />
+        <el-table-column property="phone" label="电话" />
+        <el-table-column property="weChat" label="微信号" />
         <el-table-column label="操作" width="280px">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="xgFun(scope.row)">修改</el-button>
@@ -92,9 +80,9 @@
         layout="prev, pager, next"
         :total="total"
         :page-size="10"
-        @current-change="pageChange"
         style="float:right;margin-top:5px;"
-      ></el-pagination>
+        @current-change="pageChange"
+      />
     </el-main>
     <!-- 删除 -->
     <el-dialog id="delBox" title="删除用户" :visible.sync="delBox" width="30%" style="color:#F56C6C;">
@@ -108,19 +96,19 @@
       <el-form v-model="tjform">
         <el-form-item label="个人信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;姓名：</span>
-          <el-input v-model="tjform.name" size="mini"></el-input>
+          <el-input v-model="tjform.name" size="mini" />
           <span id="right-item">手机号：</span>
-          <el-input v-model="tjform.phone" size="mini"></el-input>
+          <el-input v-model="tjform.phone" size="mini" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>微信号：</span>
-          <el-input v-model="tjform.weChat" size="mini"></el-input>
+          <el-input v-model="tjform.weChat" size="mini" />
         </el-form-item>
         <el-form-item label="账户信息：" :label-width="formLabelWidth" required>
           <span>用户名：</span>
-          <el-input v-model="tjform.userName" size="mini"></el-input>
+          <el-input v-model="tjform.userName" size="mini" />
           <span id="right-item">密码：</span>
-          <el-input v-model="tjform.password" show-password size="mini"></el-input>
+          <el-input v-model="tjform.password" show-password size="mini" />
         </el-form-item>
         <el-form-item
           prop="email"
@@ -132,12 +120,12 @@
           ]"
         >
           <span>&nbsp;&nbsp;&nbsp;邮箱：</span>
-          <el-input v-model="tjform.email" size="mini"></el-input>
+          <el-input v-model="tjform.email" size="mini" />
         </el-form-item>
         <el-form-item label="公司信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;公司：</span>
           <el-select v-model="tjform.companyId" placeholder size="mini" @change="bumenFunxg">
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span id="right-item">&nbsp;&nbsp;&nbsp;部门：</span>
           <el-select
@@ -152,11 +140,11 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <span id="right-item">&nbsp;&nbsp;&nbsp;班组：</span>
           <el-select v-model="tjform.teamId" placeholder size="mini">
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
@@ -167,7 +155,7 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -181,28 +169,28 @@
       <el-form :model="xgform">
         <el-form-item label="个人信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;姓名：</span>
-          <el-input v-model="xgform.name" size="mini"></el-input>
+          <el-input v-model="xgform.name" size="mini" />
           <span id="right-item">手机号：</span>
-          <el-input v-model="xgform.phone" size="mini"></el-input>
+          <el-input v-model="xgform.phone" size="mini" />
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
           <span>微信号：</span>
-          <el-input v-model="xgform.weChat" size="mini"></el-input>
+          <el-input v-model="xgform.weChat" size="mini" />
         </el-form-item>
         <el-form-item label="账户信息：" :label-width="formLabelWidth" required>
           <span>用户名：</span>
-          <el-input v-model="xgform.userName" size="mini"></el-input>
+          <el-input v-model="xgform.userName" size="mini" />
           <span id="right-item">密码：</span>
-          <el-input v-model="xgform.password" show-password size="mini"></el-input>
+          <el-input v-model="xgform.password" show-password size="mini" />
         </el-form-item>
         <el-form-item :label-width="formLabelWidth">
           <span>&nbsp;&nbsp;&nbsp;邮箱：</span>
-          <el-input v-model="xgform.email" size="mini"></el-input>
+          <el-input v-model="xgform.email" size="mini" />
         </el-form-item>
         <el-form-item label="公司信息：" :label-width="formLabelWidth" required>
           <span>&nbsp;&nbsp;&nbsp;公司：</span>
           <el-select v-model="xgform.companyId" placeholder size="mini" @change="bumenFunXg2">
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
           <span id="right-item">&nbsp;&nbsp;&nbsp;部门：</span>
           <el-select
@@ -217,11 +205,11 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
           <span id="right-item">&nbsp;&nbsp;&nbsp;班组：</span>
           <el-select v-model="xgform.teamId" placeholder size="mini">
-            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in teams" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label :label-width="formLabelWidth">
@@ -232,7 +220,7 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -242,9 +230,10 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="用户访问权限" :visible.sync="qxBox" width="30%" @opened="openFun">
+    <el-dialog title="用户访问权限" :visible.sync="qxBox" width="30%">
       <div class style="margin-left:40px;">
         <el-tree
+          ref="tree"
           :props="props"
           :load="loadNode"
           lazy
@@ -255,13 +244,11 @@
           :render-content="renderConent"
           @check-change="userTower"
           @check="userTowerFun"
-          ref="tree"
-        ></el-tree>
+        />
       </div>
     </el-dialog>
   </el-container>
 </template>
-
 
 <script>
 import Axios from "axios";
@@ -336,15 +323,13 @@ export default {
     };
   },
   mounted() {
-    this.usersFun();
-    this.casbinRolesFun();
-    this.gongsiFun();
-    this.bumenFun();
+    this.usersFun(); // 人员数据
+    this.casbinRolesFun(); // 角色名
+    this.gongsiFun(); // 公司
+    this.bumenFun(); // 部门
   },
   methods: {
-    valFun(val) {
-      console.log(val);
-    },
+    // 导出
     daochu() {
       Axios({
         method: "post",
@@ -369,12 +354,11 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.users = msg.data.data.users;
         this.total = msg.data.data.totalCount;
       });
     },
-    //翻页
+    // 翻页
     pageChange(val) {
       this.page = val;
       this.usersFun();
@@ -388,11 +372,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.casbinRoles = msg.data.data;
       });
     },
-    //公司
+    // 公司
     gongsiFun() {
       Axios({
         method: "post",
@@ -401,11 +384,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
         this.gongsis = msg.data.data;
       });
     },
-    //部门
+    // 部门
     bumenFun() {
       Axios({
         method: "post",
@@ -416,11 +398,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
         this.departments = msg.data.data;
       });
     },
-    //添加部门
+    // 添加部门
     bumenFunxg() {
       Axios({
         method: "post",
@@ -432,14 +413,11 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.departments = msg.data.data;
       });
     },
+    // 公司
     bumenFunXg2(val) {
-      console.log(val);
-      console.log(this.xgform.companyId);
-      console.log(this.gongsis);
       Axios({
         method: "post",
         url:
@@ -450,11 +428,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.departments = msg.data.data;
       });
     },
-    //添加班组
+    // 添加班组
     banzuFun() {
       Axios({
         method: "post",
@@ -466,7 +443,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.teams = msg.data.data;
       });
     },
@@ -481,7 +457,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.teams = msg.data.data;
       });
     },
@@ -498,8 +473,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
-
         this.delBox = false;
         if (msg.data.code === 0) {
           if (msg.data.data.rowsAffected != 0) {
@@ -563,8 +536,6 @@ export default {
               Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
             }
           }).then(msg => {
-            console.log(msg);
-            // this.tjBox = false;
             if (msg.data.code === 0) {
               this.$message.success("添加成功");
               this.tjform.name = "";
@@ -578,13 +549,12 @@ export default {
               this.tjform.teamId = "";
               this.tjform.roleId = "";
               this.usersFun();
-            } else {
             }
           });
           break;
       }
     },
-    //修改
+    // 修改
     xgFun(row) {
       console.log(row);
       this.xgform.id = row.userId;
@@ -592,7 +562,6 @@ export default {
       this.xgform.phone = row.phone;
       this.xgform.weChat = row.weChat;
       this.xgform.userName = row.userUsername;
-      // this.xgform.phone = row.phone;
       this.xgform.teamId = Number(row.teamId);
       this.xgform.companyId = Number(row.companyId);
       this.xgform.departmentId = Number(row.departmentId);
@@ -613,7 +582,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         this.xgBox = false;
         if (msg.data.code === 0) {
           if (msg.data.data.rowsAffected != 0) {
@@ -630,6 +598,7 @@ export default {
         }
       });
     },
+    // 访问权限
     QXFun(row) {
       this.qxBox = true;
       this.Rowdata = row;
@@ -644,7 +613,6 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
           var a = [];
           if (msg.data.data.towers !== null) {
             for (var i = 0; i < msg.data.data.towers.length; i++) {
@@ -655,15 +623,13 @@ export default {
           } else {
             this.$refs.tree.setCheckedKeys([]);
           }
-
-          // console.log(this.Keys)
         });
 
         this.UserId = Number(this.Rowdata.userId);
         // console.log(this.UserId);
       });
     },
-    openFun() {},
+    // 权限数据
     oneleave(node, resolve) {
       Axios({
         method: "post",
@@ -674,12 +640,10 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
-        // console.log("权限");
-        // this.companys = msg.data.data;
         resolve(msg.data.data);
       });
     },
+    // 权限数据
     voltageFun(node, resolve) {
       this.qxform.companyId = node.data.id;
       Axios({
@@ -695,8 +659,8 @@ export default {
         resolve(msg.data.data);
       });
     },
+    // 权限数据
     xianluFun(node, resolve) {
-      // console.log(this.qxform.companyId);
       Axios({
         method: "post",
         url:
@@ -714,6 +678,7 @@ export default {
         resolve(msg.data.data);
       });
     },
+    // 权限数据
     TowerFun(node, resolve) {
       Axios({
         method: "post",
@@ -725,22 +690,18 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
-        console.log("杆塔");
         resolve(msg.data.data);
       });
     },
-
+    // 权限树
     loadNode(node, resolve) {
       if (node.level === 0) {
         this.oneleave(node, resolve);
       }
       if (node.level === 1) {
-        console.log("第1层");
         this.voltageFun(node, resolve);
       }
       if (node.level === 2) {
-        console.log("第2层");
         this.xianluFun(node, resolve);
       }
       if (node.level === 3) {
@@ -748,9 +709,9 @@ export default {
       }
       if (node.level === 4) {
         resolve([]);
-        console.log(node);
       }
     },
+    // 权限树
     renderConent(h, node, data, store) {
       if (node.node.level === 0) {
         return (
@@ -788,11 +749,8 @@ export default {
         );
       }
     },
+    // 添加或删除权限
     userTowerFun(a, b) {
-      // console.log("aaaaa")
-      // console.log(a)
-      // console.log("bbbb")
-      // console.log(b)
       if (this.TrueorFalse === true) {
         Axios({
           method: "post",
@@ -805,7 +763,7 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          return;
         });
       } else {
         Axios({
@@ -820,43 +778,15 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          console.log(msg);
+          return;
         });
       }
     },
+    // 状态
     userTower(a, b, c) {
-      // console.log(a);
-      // console.log(b);
       this.TrueorFalse = b;
-      // console.log(c);
-      // console.log(this.UserId)
-      // if (b === true) {
-      //   Axios({
-      //     method: "post",
-      //     url: this.GLOBAL.AJAX_URL + "/v1/user-tower/create",
-      //     data: {
-      //       userId: this.UserId,
-      //       towerId: a.towerID
-      //     },
-      //     headers: {
-      //       Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-      //     }
-      //   }).then(msg => {
-      //     console.log(msg);
-      //   });
-      // }else{
-      //     Axios({
-      //     method: "post",
-      //     url: this.GLOBAL.AJAX_URL + "/v1/user-tower/delete-by-user-id-and-tower-id?user-id="+this.UserId+"&tower-id="+a.towerID,
-      //     headers: {
-      //       Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-      //     }
-      //   }).then(msg => {
-      //     console.log(msg);
-      //   });
-      // }
     },
-    //查询
+    // 查询
     chaxun() {
       this.page = 1;
       Axios({
@@ -878,19 +808,13 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        console.log(msg);
         this.users = msg.data.data.users;
-
-        // this.total = msg.data.data.totalCount;
         this.$message.success("查询成功");
       });
     }
   }
 };
 </script>
-
-
-
 
 <style lang="scss" scoped>
 .el-table >>> {

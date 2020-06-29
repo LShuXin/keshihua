@@ -1,67 +1,37 @@
 <template>
   <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name: {{ name }}</div> -->
-
-    <!-- <div id="linechart">
-      <lineChart></lineChart>
-    </div>
-    <div id="cardBox">
-      <cardBox></cardBox>
-    </div>
-    <div id="listchart">
-      <listchart></listchart>
-    </div>
-    <div id="buttonBox">
-      <card2Box></card2Box>
-    </div>-->
     <el-row :gutter="10">
       <el-col :span="8">
         <div id="linechart">
-          <lineChart></lineChart>
+          <lineChart />
         </div>
       </el-col>
       <el-col :span="3">
         <div id="cardBox">
-          <cardBox></cardBox>
+          <cardBox />
         </div>
       </el-col>
       <el-col :span="7">
         <div id="listchart">
-          <listchart></listchart>
+          <listchart />
         </div>
       </el-col>
 
       <el-col :span="6">
         <div id="buttonBox">
-          <card2Box></card2Box>
+          <card2Box />
         </div>
       </el-col>
     </el-row>
-    <!-- <div id="mapBox">
-      <mapBox></mapBox>
-    </div>
-    <div id="ssgj">
-      <ssgj></ssgj>
-    </div>
-    <div id="rouechart">
-      <rouechart />
-    </div>
-
-    <div id="sbgl">
-      <sbgl></sbgl>
-    </div>
-    <div id="sbxx">
-      <sbxx></sbxx>
-    </div>-->
     <el-row :gutter="10">
       <el-col :span="18">
         <div id="mapBox">
-          <mapBox></mapBox>
+          <mapBox />
         </div>
       </el-col>
       <el-col :span="6">
         <div id="ssgj">
-          <ssgj></ssgj>
+          <ssgj />
         </div>
       </el-col>
       <el-col :span="6">
@@ -73,12 +43,12 @@
         <el-row :gutter="10">
           <el-col :span="12">
             <div id="sbgl">
-              <sbgl></sbgl>
+              <sbgl />
             </div>
           </el-col>
           <el-col :span="12">
             <div id="sbxx">
-              <sbxx></sbxx>
+              <sbxx />
             </div>
           </el-col>
         </el-row>
@@ -109,10 +79,6 @@ export default {
     ssgj,
     sbgl,
     sbxx
-  },
-  name: "首页",
-  computed: {
-    ...mapGetters(["name"])
   }
 };
 </script>
@@ -137,70 +103,55 @@ export default {
   padding-top: 10px;
 }
 #linechart {
-  // background: blue;
   width: 100%;
   height: 246px;
   float: left;
 }
 #cardBox {
-  // background: pink;
   width: 100%;
   height: 246px;
-  // margin-left: 20px;
   float: left;
 }
 #listchart {
-  // background: skyblue;
   width: 100%;
   height: 246px;
   float: left;
-  // margin-left: 20px;
 }
 #buttonBox {
-  // background: slateblue;
   float: left;
-  // margin-left: 20px;
+
   width: 100%;
   height: 246px;
 }
 #mapBox {
-  // background: gold;
   float: left;
   margin-top: 10px;
   width: 100%;
   height: 708px;
 }
 #rouechart {
-  // background: greenyellow;
   float: left;
   margin-top: 10px;
-  // margin-left: 20px;
   width: 100%;
   height: 260px;
 }
 #ssgj {
-  // background: hotpink;
   width: 100%;
   height: 260px;
-  // margin-left: 20px;
   float: left;
   margin-top: 10px;
 }
 #sbgl {
-  // background: aquamarine;
   width: 100%;
   height: 158px;
   float: left;
   margin-top: 10px;
-  // margin-left: 20px;
 }
 #sbxx {
-  // background: violet;
   width: 100%;
   height: 158px;
   float: left;
   margin-top: 10px;
-  // margin-left: 20px;
   margin-bottom: 10px;
 }
 </style>

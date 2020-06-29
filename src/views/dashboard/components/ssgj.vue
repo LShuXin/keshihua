@@ -17,49 +17,46 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="causes" label="告警原因"></el-table-column>
-      <el-table-column prop="reportedAt" label="巡视时间"></el-table-column>
+      <el-table-column prop="causes" label="告警原因" />
+      <el-table-column prop="reportedAt" label="巡视时间" />
     </el-table>
   </el-card>
 </template>
 <script>
-import Axios from "axios";
-import Cookies from "js-cookie";
+import Axios from 'axios'
+import Cookies from 'js-cookie'
 export default {
   data() {
     return {
       tableData: [],
       set: null
-    };
+    }
   },
   created() {
-    this.set = setInterval(this.setFun, 5000);
-    this.setFun();
+    this.set = setInterval(this.setFun, 5000)
+    this.setFun()
+  },
+  beforeDestroy() {
+    clearInterval(this.set)
   },
   methods: {
     rout() {
-      this.$router.push("/form");
+      this.$router.push('/form')
     },
     setFun() {
       Axios({
-        method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/alarm/get-real-time-alarm?user-id="+localStorage.getItem("userId"),
+        method: 'post',
+        url: this.GLOBAL.AJAX_URL + '/v1/alarm/get-real-time-alarm?user-id=' + localStorage.getItem('userId'),
         headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          Authorization: 'Bearer ' + Cookies.get('vue_admin_template_token')
         }
       }).then(msg => {
-        this.tableData = msg.data.data;
+        this.tableData = msg.data.data
         // console.log(msg);
-      });
+      })
     }
-  },
-  // destoryed() {
-  //   clearInterval(this.set);
-  // },
-  beforeDestroy() {
-    clearInterval(this.set);
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 #topBox {

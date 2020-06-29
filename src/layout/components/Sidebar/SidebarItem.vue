@@ -12,8 +12,8 @@
           <!-- <el-badge is-dot v-else class="itemFalse item"></el-badge> -->
 
           <el-badge
-            is-dot
             v-if="onlyOneChild.name==='工单管理'&&this.workOrders === 1"
+            is-dot
             class="item"
             style="position:absolute"
           >
@@ -23,8 +23,8 @@
             />
           </el-badge>
           <el-badge
-            is-dot
             v-if="onlyOneChild.name==='预警页面'&&this.crealarmNum === 1"
+            is-dot
             class="item"
             style="position:absolute"
           >
@@ -34,8 +34,8 @@
             />
           </el-badge>
           <el-badge
-            is-dot
             v-if="onlyOneChild.name==='告警列表'&&this.alarms === 1"
+            is-dot
             class="item"
             style="position:absolute"
           >
@@ -71,7 +71,6 @@
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 .item >>> .is-dot {
   width: 10px !important;
@@ -94,16 +93,15 @@
 }
 </style>
 
-
 <script>
-import path from "path";
-import { isExternal } from "@/utils/validate";
-import Item from "./Item";
-import AppLink from "./Link";
-import FixiOSBug from "./FixiOSBug";
-import { on } from "events";
+import path from 'path'
+import { isExternal } from '@/utils/validate'
+import Item from './Item'
+import AppLink from './Link'
+import FixiOSBug from './FixiOSBug'
+import { on } from 'events'
 export default {
-  name: "SidebarItem",
+  name: 'SidebarItem',
   components: { Item, AppLink },
   mixins: [FixiOSBug],
   props: {
@@ -118,7 +116,7 @@ export default {
     },
     basePath: {
       type: String,
-      default: ""
+      default: ''
     },
     alarms: {
       type: Number,
@@ -136,72 +134,47 @@ export default {
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
-    this.onlyOneChild = null;
-    return {};
+    this.onlyOneChild = null
+    return {}
   },
-  created() {},
   watch: {},
+  created() {},
   methods: {
     hasOneShowingChild(children = [], parent) {
       // console.log(parent)
       // console.log(children);
       const showingChildren = children.filter(item => {
         if (item.hidden) {
-          return false;
+          return false
         } else {
-          // console.log(this.crealarmNum);
-          // // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item;
-          // if (this.workOrders === 1) {
-          //   if (this.onlyOneChild.name === "工单管理") {
-          //     this.onlyOneChild.hase = 1;
-          //   }
-          // }
-          // if (this.alarms === 1) {
-          //   if (this.onlyOneChild.name === "告警列表") {
-          //     this.onlyOneChild.hase = 1;
-          //   }
-          // }
-          // if (this.crealarmNum === 1) {
-          //   if (this.onlyOneChild.name === "预警页面") {
-          //     this.onlyOneChild.hase = 1;
-          //   }
-          // }
-          return true;
+          this.onlyOneChild = item 
+          return true
         }
-      });
+      })
 
       // When there is only one child router, the child router is displayed by default
       if (showingChildren.length === 1) {
-        return true;
+        return true
       }
 
       // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ...parent, path: "", noShowingChildren: true };
-        return true;
+        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
+        return true
       }
 
-      return false;
+      return false
     },
     resolvePath(routePath) {
       if (isExternal(routePath)) {
-        return routePath;
+        return routePath
       }
       if (isExternal(this.basePath)) {
-        return this.basePath;
+        return this.basePath
       }
-      return path.resolve(this.basePath, routePath);
+      return path.resolve(this.basePath, routePath)
     }
-    // autoPlay() {
-    //   var msg = new SpeechSynthesisUtterance("您有新的信息请及时查看");
-    //   msg.lang = "zh";
-    //   msg.volume = 1;
-    //   msg.rate = 0.8;
-    //   msg.pitch = 2;
-    //   speechSynthesis.speak(msg);
-    //   // console.log(msg);
-    // }
+   
   }
-};
+}
 </script>

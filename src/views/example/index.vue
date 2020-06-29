@@ -18,23 +18,26 @@
         </el-select>-->
         <!-- <span class="btnSelect" style="float:right">快速搜索</span>
         <span class="btnSelect" style="float:right">详情搜索</span>-->
+        <!-- 搜索功能未实现，注释掉了 -->
         <el-tree
           :props="props"
           :load="loadNode"
           lazy
           node-key="key"
           accordion
-          @node-click="msgId"
           :render-content="renderConent"
           :default-expanded-keys="[1]"
-        ></el-tree>
+          @node-click="msgId"
+        />
       </el-aside>
 
-      <el-card shadow="never" id="imgBox" :body-style="{padding:'0px'}" style="height:100%;">
-        <div class="Small">{{this.topData}}</div>
+      <el-card id="imgBox" shadow="never" :body-style="{padding:'0px'}" style="height:100%;">
+        <div class="Small">{{ this.topData }}</div>
+        <!-- 左上角线路杆塔信息  -->
         <el-card id="imgCardBox" shadow="always" :body-style="{padding:'10px'}">
-          <span class="timeBox">{{dateMsg}}</span>
-          <!-- <span class="newPhont" v-if="newPhont">新抓拍</span></span> -->
+          <!-- 右上角时间 -->
+          <span v-if="dateMsg" class="timeBox">{{ dateMsg | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+          <!-- 气象信息  未实现 -->
           <div class="qixiang">
             <p>
               <span class="QxName">温度：</span>
@@ -63,53 +66,72 @@
             fit="contain"
             :src="url"
             :preview-src-list="[url]"
-          ></el-image>
+          />
         </el-card>
 
         <el-container>
           <el-aside width="60px">
+            <!-- 左箭头 -->
             <div id="leftBox" @click="uparr">
-              <i id="leftIconSmall" class="el-icon-arrow-left"></i>
+              <i id="leftIconSmall" class="el-icon-arrow-left" />
             </div>
           </el-aside>
           <el-main id="SmallBox" style="position:relative">
+            <!-- 抓拍标志  未实现 -->
             <el-badge
               v-if="newPhont"
               value="抓拍"
               class="item"
               style="position:absolute;top:22px;left:15px; z-index:999;"
             />
-            <el-card shadow="never" v-for="(item,i) in imgArr" :key="i">
-              <div style="text-align: right;">{{item.createdAt}}</div>
+            <!-- 小图列表 -->
+            <el-card
+              ref="imgSbox"
+              v-for="(item,i) in imgArr"
+              :key="i"
+              shadow="never"
+              style="width:20%"
+            >
+              <div
+              v-if='(item.createdAt !=="暂无图片")'
+                style="text-align: right;"
+              >{{ item.createdAt | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</div>
               <el-image
+                v-if="item.url"
                 :key="i"
+                ref="i"
+                lazy
                 style="width: 100%; height: 89%; margin:1%;border-radius:10px;"
                 :src="item.url"
-                @click="testIndex(item.url,i)"
-                v-bind:class="{'ImgActive' : i === imgIndex}"
+                @error="imgErrFun()"
+                :class="{'ImgActive' : i === imgIndex}"
                 fit="contain"
-              ></el-image>
+                @click="testIndex(item.url,i)"
+              />
             </el-card>
           </el-main>
+          <!-- 右箭头 -->
           <el-aside width="60px">
             <div id="leftBox" @click="downarr">
-              <i id="leftIconSmall" class="el-icon-arrow-right"></i>
+              <i id="leftIconSmall" class="el-icon-arrow-right" />
             </div>
           </el-aside>
         </el-container>
       </el-card>
+      <!-- 右边栏 -->
       <el-aside id="rightBox" width="320px">
         <el-card shadow="never" class="elCard" style="height:100%" :body-style="{padding:'10px'}">
           <div id="top" style="font-family: SimHei; font-weight:600;">选项操作</div>
-          <el-card shadow="never" id="clenderBox" :body-style="{padding:'10px'}">
-            <!-- <div id="title">选择日期快速查询</div> -->
+          <el-card id="clenderBox" shadow="never" :body-style="{padding:'10px'}">
             <div
               style="color:#888; font-family: SimHei; font-size:10px; padding-bottom:5px;"
             >选择日期快速查询</div>
+            <!-- 日历插件 Calendar -->
             <div id="calender">
-              <Calendar v-on:choseDay="clickDay" ref="Calendar"></Calendar>
+              <Calendar ref="Calendar" @choseDay="clickDay" />
             </div>
           </el-card>
+          <!-- 按钮组 -->
           <el-card id="btnBox" shadow="never" :body-style="{padding:'10px'}">
             <div
               id="btnBoxTop"
@@ -118,15 +140,15 @@
             <el-row :gutter="20" :span="24">
               <el-col :span="10" :offset="1">
                 <el-card
+                  id="txzp"
                   class="box-card"
                   shadow="never"
-                  id="txzp"
                   :body-style="{padding:'0px'}"
                   @click.native="deviceSnap"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe620;</span>
                   <p>主动抓拍</p>
@@ -134,15 +156,15 @@
               </el-col>
               <el-col :span="10" :offset="2">
                 <el-card
+                  id="spps"
                   class="box-card"
                   shadow="never"
-                  id="spps"
                   :body-style="{padding:'0px'}"
                   @click.native="msgBox"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px; display:block;"
                   >&#xe828;</span>
 
@@ -153,15 +175,15 @@
             <el-row :gutter="20" :span="24">
               <el-col :span="10" :offset="1">
                 <el-card
+                  id="kpsz"
                   class="box-card"
                   shadow="never"
-                  id="kpsz"
                   :body-style="{padding:'0px'}"
                   @click.native="DeviceSetting"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px; display:block;"
                   >&#xe6e7;</span>
 
@@ -170,15 +192,15 @@
               </el-col>
               <el-col :span="10" :offset="2">
                 <el-card
+                  id="pzsz"
                   class="box-card"
                   shadow="never"
-                  id="pzsz"
                   :body-style="{padding:'0px'}"
                   @click.native="CopeyFun"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe618;</span>
 
@@ -189,15 +211,15 @@
             <el-row :gutter="20" :span="24">
               <el-col :span="10" :offset="1">
                 <el-card
+                  id="yjts"
                   class="box-card"
                   shadow="never"
-                  id="yjts"
                   :body-style="{padding:'0px'}"
                   @click.native="alarmBoxFun"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe615;</span>
 
@@ -206,15 +228,15 @@
               </el-col>
               <el-col :span="10" :offset="2">
                 <el-card
+                  id="lstp"
                   class="box-card"
                   shadow="never"
-                  id="lstp"
                   :body-style="{padding:'0px'}"
                   @click.native="lsImgFun"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe66a;</span>
 
@@ -225,15 +247,15 @@
             <el-row :gutter="20" :span="24">
               <el-col :span="10" :offset="1">
                 <el-card
+                  id="sbcq"
                   class="box-card"
                   shadow="never"
-                  id="sbcq"
                   :body-style="{padding:'0px'}"
                   @click.native="msgBox"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe661;</span>
 
@@ -242,15 +264,15 @@
               </el-col>
               <el-col :span="10" :offset="2">
                 <el-card
+                  id="sbcz"
                   class="box-card"
                   shadow="never"
-                  id="sbcz"
                   :body-style="{padding:'0px'}"
                   @click.native="msgBox"
                 >
                   <span
-                    class="icon iconfont"
                     id="One"
+                    class="icon iconfont"
                     style="font-size:30px;display:block;"
                   >&#xe611;</span>
 
@@ -259,12 +281,13 @@
               </el-col>
             </el-row>
           </el-card>
+          <!-- 设备操作 -->
           <el-card id="jcxBox" shadow="never">
             <p class="topTextSmall">设备配置</p>
             <el-row :gutter="10" :span="24" class="btnRow">
               <el-col :span="22" :offset="1">
                 <div class="btnCol" @click="msgBox">
-                  <span class="icon iconfont" id="One">&#xe764;</span>
+                  <span id="One" class="icon iconfont">&#xe764;</span>
                   线路总览
                 </div>
               </el-col>
@@ -273,7 +296,7 @@
             <el-row :gutter="10" class="btnRow">
               <el-col :span="22" :offset="1">
                 <div class="btnCol" @click="msgBox">
-                  <span class="icon iconfont" id="One">&#xe65b;</span>
+                  <span id="One" class="icon iconfont">&#xe65b;</span>
                   隐患设置
                 </div>
               </el-col>
@@ -281,7 +304,7 @@
             <el-row :gutter="10" :span="24" class="btnRow">
               <el-col :span="22" :offset="1">
                 <div class="btnCol" @click="yxcsFun">
-                  <span class="icon iconfont" id="One">&#xe6a6;</span>
+                  <span id="One" class="icon iconfont">&#xe6a6;</span>
                   运行参数
                 </div>
               </el-col>
@@ -289,13 +312,13 @@
             <el-row :gutter="10" class="btnRow">
               <el-col :span="22" :offset="1">
                 <div class="btnCol" @click="msgBox">
-                  <span class="icon iconfont" id="One">&#xe606;</span>
+                  <span id="One" class="icon iconfont">&#xe606;</span>
                   设备详情
                 </div>
               </el-col>
             </el-row>
           </el-card>
-
+          <!-- 切换杆塔，未实现 注释掉 -->
           <!-- <el-card style="margin-top:10px;" shadow="never">
             <el-button type="button" style="background:#f7b84f; color:#Fff;" @click="msgBox">
               <i class="el-icon-arrow-left"></i> 上一杆塔
@@ -308,25 +331,14 @@
               下一杆塔
               <i class="el-icon-arrow-right"></i>
             </el-button>
-          </el-card> -->
+          </el-card>-->
         </el-card>
       </el-aside>
     </el-container>
-    <!-- <el-dialog
-      title="请输入密码"
-      :visible.sync="mimaBox"
-      width="30%"
-      >
-     
-      <div><el-input v-model="mima" placeholder="请输入密码" show-password></el-input></div>
-      <div slot="footer">
-        <el-button @click="mimaBox = false">取 消</el-button>
-        <el-button type="primary" @click="mimaFun">确 定</el-button>
-      </div>
-    </el-dialog>-->
+    <!-- 定时拍照间隔设置 -->
     <el-dialog :title="titleName" :visible.sync="SettingBox" width="30%" center>
       <div v-if="!mimaBox">
-        <el-input v-model="mima" placeholder="123456" show-password></el-input>
+        <el-input v-model="mima" placeholder="123456" show-password />
       </div>
       <div v-if="!mimaBox" slot="footer">
         <el-button type="primary" @click="mimaFun">确定</el-button>
@@ -337,107 +349,116 @@
         <el-button type="primary" @click="Halfhour">30分钟</el-button>
       </div>
     </el-dialog>
-
+    <!-- 运行参数 未实现  假数据 -->
     <el-dialog title="运行参数" :visible.sync="yxcsBox" width="20%">
       <el-form ref="form" label-width="120px">
         <el-form-item label="程序版本号" size="mini">
-          <el-input v-model="yxcs.cxbbh" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.cxbbh" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="电池类型" size="mini">
-          <el-input v-model="yxcs.dclx" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.dclx" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="有无降级电容" size="mini">
-          <el-input v-model="yxcs.jjdr" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.jjdr" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="当前时间" size="mini">
-          <el-input v-model="yxcs.dqsj" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.dqsj" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="电池电量" size="mini">
-          <el-input v-model="yxcs.dcdl" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.dcdl" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="电池电压" size="mini">
-          <el-input v-model="yxcs.dcdy" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.dcdy" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="充电电压" size="mini">
-          <el-input v-model="yxcs.cddy" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.cddy" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="太阳能板电压" size="mini">
-          <el-input v-model="yxcs.tynbdy" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.tynbdy" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="超级电容电压" size="mini">
-          <el-input v-model="yxcs.ckdrdy" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.ckdrdy" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="充电电流" size="mini">
-          <el-input v-model="yxcs.cddl" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.cddl" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="负载电流" size="mini">
-          <el-input v-model="yxcs.fzdl" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.fzdl" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="工作温度" size="mini">
-          <el-input v-model="yxcs.gzwd" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.gzwd" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="控制板工作模式" size="mini">
-          <el-input v-model="yxcs.kzbgzms" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.kzbgzms" placeholder disabled class="yxcsInput" />
         </el-form-item>
         <el-form-item label="浮充状态" size="mini">
-          <el-input v-model="yxcs.fczt" placeholder disabled class="yxcsInput"></el-input>
+          <el-input v-model="yxcs.fczt" placeholder disabled class="yxcsInput" />
         </el-form-item>
       </el-form>
-      <!-- <div slot="footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </div>-->
     </el-dialog>
-    <el-dialog id="lsImg" title :visible.sync="lsImgBox" width="90%">
+    <!-- 历史图片  粗略功能  需要完善 -->
+    <el-dialog id="lsImg" :title="topData" :visible.sync="lsImgBox" width="90%">
       <el-row :gutter="10" style="padding-bottom:20px;">
         <el-col :span="4" :offset="4">
-          <label style="font-size:16px;">所属线路：{{topData}}</label>
+          <!-- <label style="font-size:16px;">所属线路：{{ topData }}</label> -->
         </el-col>
-        <el-col :span="6">
+        <el-col :span="6" :offset="3">
+          <label>选择时间：</label>
           <el-date-picker
             v-model="LsImgDate"
             type="date"
             placeholder="选择日期"
-            @change="lsImgdateFun"
             value-format="yyyy-MM-dd"
-            size="mini"
-          ></el-date-picker>
+            @change="lsImgdateFun"
+          />
         </el-col>
       </el-row>
 
-      <div style="height:800px;overflow:auto;">
-        <el-card v-for="(item ,i) in lsImgData " :key="i">
-          <label
-            style="padding-bottom:15px; display:block;text-align:center"
-          >拍摄时间：{{item.createdAt}}</label>
-          <el-image style="width: 100%; height: 600px" :src="item.url" fit="fill" lazy></el-image>
-        </el-card>
+      <div style="height:800px;overflow:auto; position:relative">
+        <el-row :gutter="20">
+          <el-col :span="6" v-for="(item ,i) in lsImgData " :key="i">
+            <el-card style="margin-top:20px">
+              <label
+                style="padding-bottom:15px; display:block;text-align:center"
+              >拍摄时间：{{ item.createdAt | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</label>
+              <el-image
+                style="width: 100%; height: 400px"
+                :src="item.url"
+                fit="fill"
+                :preview-src-list="[item.url]"
+                lazy
+              />
+            </el-card>
+          </el-col>
+        </el-row>
       </div>
-      <!-- <div slot="footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </div>-->
     </el-dialog>
+    <!-- 预警推送 -->
     <el-dialog title="预警推送" :visible.sync="yujingBox" width="30%">
       <div>
-        <label for>告警原因：</label>
-        <el-select v-model="alarmCause" placeholder multiple>
-          <el-option
-            v-for="item in this.LABEL_DATA.ALARM_CAUSE"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
-        <label for>告警级别：</label>
-        <el-select v-model="alarmLevel" placeholder>
-          <el-option
-            v-for="item in this.LABEL_DATA.ALARM_LEVEL"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
+        <el-form ref="form" label-width="180px">
+          <el-form-item label="预警原因：">
+            <el-select v-model="alarmCause" placeholder multiple>
+              <!-- 与后端约定变量 详细值在语雀-->
+              <el-option
+                v-for="item in this.LABEL_DATA.ALARM_CAUSE"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="预警级别：">
+            <el-select v-model="alarmLevel" placeholder>
+              <el-option
+                v-for="item in this.LABEL_DATA.ALARM_LEVEL"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
       </div>
       <div slot="footer">
         <el-button @click="yujingBox = false">取 消</el-button>
@@ -1031,13 +1052,39 @@ import Axios from "axios";
 import Cookies from "js-cookie";
 import Calendar from "vue-calendar-component";
 import moment from "moment";
+import { parseTime } from "@/utils/index.js";
 export default {
   components: {
     Calendar
   },
+  filters: {
+    parseTime: parseTime
+  },
   data() {
     return {
-      imgArr: [],
+      imgReload: true,
+      imgArr: [
+        {
+          url: "http://47.104.136.74/image/error.jpg",
+          createdAt: "暂无图片"
+        },
+        {
+          url: "http://47.104.136.74/image/error.jpg",
+          createdAt: "暂无图片"
+        },
+        {
+          url: "http://47.104.136.74/image/error.jpg",
+          createdAt: "暂无图片"
+        },
+        {
+          url: "http://47.104.136.74/image/error.jpg",
+          createdAt: "暂无图片"
+        },
+        {
+          url: "http://47.104.136.74/image/error.jpg",
+          createdAt: "暂无图片"
+        }
+      ],
       titleName: "请输入密码",
       mimaBox: false,
       newPhont: false,
@@ -1053,8 +1100,6 @@ export default {
       ul: 1,
       imgIndex: 0,
       url: "http://47.104.136.74/image/error.jpg",
-
-      //"https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
       srcList: ["http://47.104.136.74/image/3.jpg"],
       urls: [
         "http://47.104.136.74/image/error.jpg",
@@ -1074,7 +1119,6 @@ export default {
       department: 0,
       topData: "",
       topDataSave: " ",
-      // value: new Date()
       towerId: "",
       gongsi: "",
       bumen: "",
@@ -1109,11 +1153,12 @@ export default {
       lsImgBox: false,
       lsImgData: undefined,
       LsImgDate: undefined,
-      totalCountNum: undefined
+      totalCountNum: undefined,
+      loading: ""
     };
   },
   mounted() {
-    // this.xinzhi();
+    //获取最近一次上传图片的杆塔id
     Axios({
       method: "POST",
       url:
@@ -1124,13 +1169,40 @@ export default {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
     }).then(msg => {
-      // console.log(msg);
       this.TowerNumId = msg.data.data.id;
-      // console.log(this.TowerNumId);
       this.msg();
     });
   },
+  //页面关闭时清除定时任务
+  beforeDestroy() {
+    if (this.set) {
+      clearInterval(this.set);
+    }
+  },
   methods: {
+    // 小图加载失败
+    imgErrFun() {
+      if (this.towerId !== "") {
+        Axios({
+          method: "POST",
+          url:
+            this.GLOBAL.AJAX_URL +
+            "/v1/picture/get-by-tower-id?size=5&user-id=" +
+            Number(localStorage.getItem("userId")) +
+            "&tower-id=" +
+            this.towerId +
+            "&day=" +
+            moment().format("YYYY-MM-DD"),
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          this.imgArr = msg.data.data.pictures;
+        });
+      }
+      this.$forceUpdate();
+    },
+    //拍照间隔二级密码确认  演示使用
     mimaFun() {
       if (this.mima === "123456") {
         this.titleName = "请选择拍摄间隔";
@@ -1139,21 +1211,18 @@ export default {
         this.$message.error("密码错误！");
       }
     },
-    imgBigBox(url) {
-      // console.log(url);
-      this.srcList = [url];
-    },
+
     alarmBoxFun() {
       if (this.deviceCode === null) {
         this.$message.error("请选择杆塔");
       } else {
         this.yujingBox = true;
+        // 图片 url前加上ip
         this.alarmImgUrl = this.url.replace("http://47.104.136.74:8083/", "");
-        // console.log(this.alarmImgUrl);
       }
     },
     alarmFun() {
-      // console.log(String(this.alarmCause))
+      // 预警推送
       Axios({
         method: "POST",
         url: this.GLOBAL.AJAX_URL + "/v1/alarm/create",
@@ -1167,8 +1236,6 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log("第一层");
-        // console.log(msg);
         if (msg.data.code === 0) {
           this.$message.success("预警成功！");
           this.yujingBox = false;
@@ -1180,10 +1247,9 @@ export default {
           this.alarmCause = [];
           this.alarmLevel = null;
         }
-        // msg.data.data[0].key = 1;
-        // console.log(msg.data.data);
       });
     },
+    // 初始函数  获取图片
     msg() {
       Axios({
         method: "POST",
@@ -1197,8 +1263,9 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
-        if (msg.data.data.code === 20011) {
+        console.log(msg);
+        console.log(this.imgArr.createdAt);
+        if (msg.data.code === 20011) {
           this.$message.error("没有访问权限！");
         } else {
           if (msg.data.data.totalCount === 0) {
@@ -1206,7 +1273,9 @@ export default {
           } else {
             this.imgArr = msg.data.data.pictures;
             this.url = msg.data.data.pictures[0].url;
-            this.dateMsg = msg.data.data.pictures[0].createdAt;
+            this.dateMsg = moment(msg.data.data.pictures[0].createdAt).format(
+              "YYYY-MM-DD hh:mm:ss"
+            );
             var urlse = [];
             var dateArr = [];
             for (var a = 0; a < msg.data.data.pictures.length; a++) {
@@ -1223,7 +1292,6 @@ export default {
                 urlsev.push(msg.data.data.pictures[b].url);
                 // console.log(this.urls);
               }
-              // console.log();
               this.urls = urlsev;
               this.dateArr = dateArr;
               this.ul = this.urls.length;
@@ -1243,8 +1311,8 @@ export default {
         }
       });
     },
+    // 树列表样式
     renderConent(h, node, data, store) {
-      // console.log(node.node.level);
       if (node.node.level === 1) {
         return (
           <span>
@@ -1300,6 +1368,7 @@ export default {
         );
       }
     },
+    // 树列表每层数据
     oneleave(node, resolve) {
       Axios({
         method: "POST",
@@ -1308,12 +1377,11 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log("第一层");
-        // console.log(msg);
         msg.data.data[0].key = 1;
         resolve(msg.data.data);
       });
     },
+    // 树列表数据
     loadNode(node, resolve) {
       if (node.level === 0) {
         this.oneleave(node, resolve);
@@ -1339,7 +1407,6 @@ export default {
       }
       if (node.level === 2) {
         this.department = node.data.id;
-        // console.log(this.department);
         Axios({
           method: "POST",
           url:
@@ -1358,8 +1425,6 @@ export default {
         });
       }
       if (node.level === 3) {
-        // console.log(this.department);
-        // console.log(node.data.id);
         Axios({
           method: "POST",
           url:
@@ -1372,7 +1437,6 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           if (msg.data.data === null) {
             return resolve([]);
           } else {
@@ -1400,7 +1464,6 @@ export default {
               msgdataobj.name = msg.data.data[i].towerNum;
               msgdataobj.id = msg.data.data[i].towerID;
               msgdata.push(msgdataobj);
-              // console.log(msg);
             }
 
             return resolve(msgdata);
@@ -1408,10 +1471,10 @@ export default {
         });
       }
       if (node.level === 5) {
-        // console.log(node);
         return resolve([]);
       }
     },
+    // 图片左上角杆塔
     msgId(data, node, objc) {
       if (node.level === 1) {
         this.gongsi = node.data.name;
@@ -1453,10 +1516,14 @@ export default {
             } else {
               this.imgArr = msg.data.data.pictures;
               this.url = msg.data.data.pictures[0].url;
-              this.dateMsg = msg.data.data.pictures[0].createdAt;
+              this.dateMsg = moment(msg.data.data.pictures[0].createdAt).format(
+                "YYYY-MM-DD hh:mm:ss"
+              );
               this.deviceCode = msg.data.data.pictures[0].deviceCode;
               this.deviceId = msg.data.data.pictures[0].deviceId;
-              this.totalAt = msg.data.data.pictures[0].createdAt;
+              this.totalAt = moment(msg.data.data.pictures[0].createdAt).format(
+                "YYYY-MM-DD hh:mm:ss"
+              );
               var urlse = [];
               var dateArr = [];
               for (var a = 0; a < msg.data.data.pictures.length; a++) {
@@ -1495,12 +1562,14 @@ export default {
         });
       }
     },
+    // 点击小图预览大图
     testIndex(url, i) {
       this.url = url;
       this.imgIndex = i;
       this.dateMsg = this.dateArr[i];
       this.newPhont = false;
     },
+    // 上一页
     uparr() {
       if (this.ul === 1) {
         this.$message("没有更多的图片了");
@@ -1534,6 +1603,7 @@ export default {
         });
       }
     },
+    // 下一页
     downarr() {
       this.ul = this.ul + 1;
       Axios({
@@ -1568,11 +1638,8 @@ export default {
         }
       });
     },
+    // 选择日期
     clickDay(data) {
-      // console.log( moment(data).format("YYYY-MM-DD"));
-      // moment(data).format("YYYY-MM-DD")
-      // console.log(this.towerId);
-
       Axios({
         method: "POST",
         url:
@@ -1641,12 +1708,12 @@ export default {
         }
       });
     },
-    clickToday(data) {
-      // console.log(data); // 跳到了本月
-    },
+    clickToday(data) {},
+    // 未完成功能提示信息
     msgBox() {
       this.$message.warning("该账号不支持此功能");
     },
+    // 抓拍
     deviceSnap() {
       if (this.towerId !== "") {
         Axios({
@@ -1655,15 +1722,12 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/hub/device-snap?user-id=" +
             this.userId +
-            // "&uuid=" +
-            // this.deviceCode +
             "&tower-id=" +
             this.towerId,
           headers: {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
           if (msg.data.message === "OK") {
             this.$message.success("抓拍成功！");
           }
@@ -1672,16 +1736,15 @@ export default {
         this.$message.warning("请选择杆塔！");
       }
     },
-
+    // 判断是否选择杆塔
     DeviceSetting() {
-      // console.log(this.deviceCode)
       if (this.deviceCode !== "") {
         this.SettingBox = true;
-        // this.mimaBox = true;
       } else {
         this.$message.warning("请选择设备！");
       }
     },
+    // 设置抓拍时间
     FiveM() {
       Axios({
         method: "post",
@@ -1707,6 +1770,7 @@ export default {
         this.mimaBox = false;
       });
     },
+    // 设置抓拍时间
     FifteenM() {
       Axios({
         method: "post",
@@ -1732,6 +1796,7 @@ export default {
         this.mimaBox = false;
       });
     },
+    // 设置抓拍时间
     Halfhour() {
       Axios({
         method: "post",
@@ -1757,6 +1822,7 @@ export default {
         this.mimaBox = false;
       });
     },
+    // 复制信息
     CopeyFun() {
       if (this.ganta !== "") {
         this.$copyText(
@@ -1767,6 +1833,7 @@ export default {
         this.$message.error("请先选择杆塔");
       }
     },
+    // 定时任务已选择杆塔
     setFun() {
       if (this.towerId !== "") {
         Axios({
@@ -1792,8 +1859,16 @@ export default {
               if (this.totalAt === msg.data.data.pictures[0].createdAt) {
                 // console.log(this.totalAt);
                 // console.log(msg)
+                if (this.loading !== "") {
+                  this.loading.close();
+                  this.loading = "";
+                }
                 return;
               } else {
+                if (this.loading !== "") {
+                  this.loading.close();
+                  this.loading = "";
+                }
                 this.imgArr = msg.data.data.pictures;
                 // console.log(this.totalAt);
                 // console.log(msg.data.data.pictures[0].createdAt)
@@ -1843,6 +1918,7 @@ export default {
         this.setmsg();
       }
     },
+    // 定时任务未选择杆塔
     setmsg() {
       Axios({
         method: "POST",
@@ -1858,16 +1934,11 @@ export default {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
       }).then(msg => {
-        // console.log(msg);
         if (msg.data.data.code === 20011) {
-          // this.$message.error("没有访问权限！");
         } else {
           if (msg.data.data.totalCount === 0) {
-            // this.$message.error("暂无图片");
           } else {
-            // console.log(msg)
             if (this.totalAt === msg.data.data.pictures[0].createdAt) {
-              // console.log(this.totalCountNum);
               return;
             } else {
               this.imgArr = msg.data.data.pictures;
@@ -1888,9 +1959,7 @@ export default {
                 for (var b = 0; b < msg.data.data.pictures.length; b++) {
                   dateArr.push(msg.data.data.pictures[b].createdAt);
                   urlsev.push(msg.data.data.pictures[b].url);
-                  // console.log(this.urls);
                 }
-                // console.log();
                 this.urls = urlsev;
                 this.dateArr = dateArr;
                 this.ul = this.urls.length;
@@ -1911,6 +1980,7 @@ export default {
         }
       });
     },
+    // 运行参数
     yxcsFun() {
       this.yxcsBox = true;
       this.yxcs.dcdl = `9${Math.floor(Math.random() * 10)}%`;
@@ -1924,6 +1994,7 @@ export default {
         Math.random() * 10
       )}℃`;
     },
+    // 历史图片
     lsImgFun() {
       if (this.ganta !== "") {
         this.lsImgBox = true;
@@ -1941,7 +2012,8 @@ export default {
             Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
           }
         }).then(msg => {
-          // console.log(msg);
+          console.log(msg);
+
           if (msg.data.code === 0) {
             if (msg.data.data.totalCount !== 0) {
               this.lsImgData = msg.data.data.pictures;
@@ -1983,20 +2055,6 @@ export default {
           this.$message.error(msg.data.message);
         }
       });
-    },
-    xinzhi() {
-      // console.log("xina");
-      Axios({
-        url:
-          "https://api.seniverse.com/v3/weather/now.json?key=SzL0DKgRtOdN8UCfF&location=linyi&language=zh-Hans&unit=c"
-      }).then(msg => {
-        // console.log(msg);
-      });
-    }
-  },
-  beforeDestroy() {
-    if (this.set) {
-      clearInterval(this.set);
     }
   }
 };

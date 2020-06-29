@@ -7,18 +7,17 @@
     />
 
     <breadcrumb class="breadcrumb-container" />
-       <el-avatar class="header" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-        <span class="nameBox">{{Username}}</span>
+    <el-avatar class="header" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <span class="nameBox">{{ Username }}</span>
     <div class="right-menu">
-        <el-dialog title="确定退出吗？" :visible.sync="logout" width="30%" id="dialog">
-          <div></div>
-          <div slot="footer">
-            <el-button @click="logout = false">取 消</el-button>
-            <el-button type="primary" @click="logoutFunT">确 定</el-button>
-          </div>
-        </el-dialog>
-        
-      <el-dropdown split-button trigger="click" size="small" type="primary" @click="logoutFun" class="avatar-container" :hide-on-click="false">
+      <el-dialog id="dialog" title="确定退出吗？" center :visible.sync="logout" width="30%">
+        <div />
+        <div slot="footer">
+          <el-button @click="logout = false">取 消</el-button>
+          <el-button type="primary" @click="logoutFunT">确 定</el-button>
+        </div>
+      </el-dialog>
+      <el-dropdown split-button trigger="click" size="small" type="primary" class="avatar-container" :hide-on-click="false" @click="logoutFun">
         退出登录
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>设备升级</el-dropdown-item>
@@ -45,40 +44,40 @@
 }
 </style>
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
-import Cookies from "js-cookie";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
+import Cookies from 'js-cookie'
 
 export default {
-  data() {
-    return {
-      logout: false,
-      Username:localStorage.getItem("userName")
-    };
-  },
   components: {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      logout: false,
+      Username: localStorage.getItem('userName')
+    }
+  },
   computed: {
-    ...mapGetters(["sidebar", "avatar"])
+    ...mapGetters(['sidebar', 'avatar'])
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     logoutFun() {
-      this.logout = true;
+      this.logout = true
     },
     async logoutFunT() {
-      Cookies.remove("vue_admin_template_token");
-      await this.$store.dispatch("user/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
-      this.$router.go(0);
+      Cookies.remove('vue_admin_template_token')
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.go(0)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

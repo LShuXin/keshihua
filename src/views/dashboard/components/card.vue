@@ -2,27 +2,13 @@
   <el-card class="box-card BigBox" shadow="hover" style="height:100%">
     <span class="topBox">厂商兼容</span>
     <div class="text item">
-      <el-card class="box-card SmallBox" shadow="hover" v-for="(item,i) in datas" :key="i">
+      <el-card v-for="(item, i) in datas" :key="i" class="box-card SmallBox" shadow="hover">
         <div class="text item">
-          <span class="icon iconfont" id="One" :class="'ss'+i">&#xe7e5;</span>
-          <span class="nameBox">{{item.shortName}}</span>
-          <span class="numBox">{{item.percent}}</span>
+          <span id="One" class="icon iconfont" :class="'ss' + i">&#xe7e5;</span>
+          <span class="nameBox">{{ item.shortName }}</span>
+          <span class="numBox">{{ item.percent }}</span>
         </div>
       </el-card>
-      <!-- <el-card class="box-card SmallBox" shadow="hover">
-        <div class="text item">
-          <span class="icon iconfont" id="Two">&#xe7e5;</span>
-          <span class="nameBox">{{datas[1].name}}</span>
-          <span class="numBox">{{datas[1].num}}</span>
-        </div>
-      </el-card>
-      <el-card class="box-card SmallBox" shadow="hover">
-        <div class="text item">
-          <span class="icon iconfont" id="Three">&#xe7e5;</span>
-          <span class="nameBox">{{datas[2].name}}</span>
-          <span class="numBox">{{datas[2].num}}</span>
-        </div>
-      </el-card> -->
     </div>
   </el-card>
 </template>
@@ -53,24 +39,22 @@
   color: #f74f77;
 }
 .BigBox {
-  /* width: 332px;
-  height: 432px; */
   border-radius: 10px;
-  cursor:default
+  cursor: default;
 }
 .SmallBox {
   margin-top: 20px;
   border-radius: 10px;
 }
-.item{
+.item {
   margin: -10px;
 }
 </style>
 <script>
-import Axios from 'axios';
+import Axios from "axios";
 import Cookies from "js-cookie";
 export default {
-  name: "card",
+  name: "Card",
   data() {
     return {
       datas: [
@@ -89,21 +73,31 @@ export default {
       ]
     };
   },
-  mounted(){
-    this.msg()
+  mounted() {
+    this.msg();
   },
-  methods:{
-    msg(){
+  methods: {
+    //获取厂商信息
+    msg() {
       Axios({
-        method:"post",
-        url:this.GLOBAL.AJAX_URL + "/v1/device/get-device-manufacture-info?user-id="+localStorage.getItem("userId"),
-        headers:{
+        method: "post",
+        url:
+          this.GLOBAL.AJAX_URL +
+          "/v1/device/get-device-manufacture-info?user-id=" +
+          localStorage.getItem("userId"),
+        headers: {
           Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
         }
-      }).then(msg =>{
-        // console.log(msg)
-        this.datas = msg.data.data
-      })
+      }).then(msg => {
+        if (msg.data.code !== 0) {
+          Cookies.remove("vue_admin_template_token");
+          this.$store.dispatch("user/logout");
+          this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+          this.$router.go(0);
+        } else {
+          this.datas = msg.data.data;
+        }
+      });
     }
   }
 };

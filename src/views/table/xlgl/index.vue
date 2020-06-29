@@ -6,27 +6,32 @@
         <el-col :span="4">
           <span>公司名称：</span>
           <el-select v-model="gongsiId" placeholder="选择公司" size="mini" clearable>
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4" :offset="2">
           <span>电压等级：</span>
           <el-select v-model="dianyaId" placeholder="选择电压等级" size="mini" clearable>
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-col>
         <el-col :span="4" :offset="2">
           <span>线路名称：</span>
           <el-select
-            clearable
             v-model="xianluId"
+            clearable
             placeholder="选择线路名"
             size="mini"
             filterable
             remote
             :remote-method="xianluFun"
           >
-            <el-option v-for="item in xianlus" :key="item.id" :label="item.name" :value="item.name"></el-option>
+            <el-option
+              v-for="item in xianlus"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"
+            />
           </el-select>
         </el-col>
         <el-col :span="2" :offset="2">
@@ -56,19 +61,18 @@
     </el-header>
     <el-main>
       <el-table :data="tableData" :highlight-current-row="true" header-row-class-name="rowtitle">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
-        <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column label="单位" property="companyName"></el-table-column>
-        <el-table-column label="部门" property="departmentName"></el-table-column>
+        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column label="单位" property="companyName" />
+        <el-table-column label="部门" property="departmentName" />
 
         <el-table-column label="电压等级">
           <template slot-scope="scope">
-            <span>{{scope.row.voltageLevelName}}</span>
+            <span>{{ scope.row.voltageLevelName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="线路名" property="lineName"></el-table-column>
-        <el-table-column label="备注信息" property="desc"></el-table-column>
-        <el-table-column label="排序号" property="orderNo"></el-table-column>
+        <el-table-column label="线路名" property="lineName" />
+        <el-table-column label="备注信息" property="desc" />
+        <el-table-column label="排序号" property="orderNo" />
         <el-table-column label="运行状态" property="status">
           <template slot-scope="status">
             <span v-if="status.row.status === '1'">运行中</span>
@@ -78,14 +82,14 @@
 
         <el-table-column label="建成日期">
           <template slot-scope="date">
-            <span v-if="date.row.createdAt === '未安装'" style="color:#d0d0d0">{{date.row.createdAt}}</span>
-            <span v-else>{{date.row.createdAt | parseTime('{y}-{m}-{d}')}}</span>
+            <span v-if="date.row.createdAt === '未安装'" style="color:#d0d0d0">{{ date.row.createdAt }}</span>
+            <span v-else>{{ date.row.createdAt | parseTime('{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="更新日期">
           <template slot-scope="date">
-            <span v-if="date.row.updatedAt === '未安装'" style="color:#d0d0d0">{{date.row.updatedAt}}</span>
-            <span v-else>{{date.row.updatedAt | parseTime('{y}-{m}-{d}')}}</span>
+            <span v-if="date.row.updatedAt === '未安装'" style="color:#d0d0d0">{{ date.row.updatedAt }}</span>
+            <span v-else>{{ date.row.updatedAt | parseTime('{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="250px">
@@ -101,42 +105,42 @@
       </el-table>
       <!-- 分页 -->
       <el-pagination
+        id="el-pagination"
         background
         layout="prev, pager, next"
         :total="total"
         :page-size="10"
         @current-change="pageChange"
-        id="el-pagination"
-      ></el-pagination>
+      />
     </el-main>
     <!-- 添加 -->
     <el-dialog title="添加线路" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form">
         <el-form-item label="线路名称：" :label-width="formLabelWidth" required>
-          <el-input v-model="form.name" placeholder="请输入线路名"></el-input>
+          <el-input v-model="form.name" placeholder="请输入线路名" />
         </el-form-item>
         <el-form-item label="电压等级：" :label-width="formLabelWidth" required>
           <el-select v-model="form.voltageLevel">
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="排序号：" :label-width="formLabelWidth" required>
-          <el-input v-model="form.orderNo" placeholder="请输入排序号"></el-input>
+          <el-input v-model="form.orderNo" placeholder="请输入排序号" />
         </el-form-item>
         <el-form-item label="起始杆塔号：" :label-width="formLabelWidth" required>
-          <el-input v-model="form.startTowerNum" placeholder="请输入起始杆塔号"></el-input>
+          <el-input v-model="form.startTowerNum" placeholder="请输入起始杆塔号" />
         </el-form-item>
         <el-form-item label="终止杆塔号：" :label-width="formLabelWidth" required>
-          <el-input v-model="form.endTowerNum" placeholder="请输入终止杆塔号"></el-input>
+          <el-input v-model="form.endTowerNum" placeholder="请输入终止杆塔号" />
         </el-form-item>
         <el-form-item label="运行状态：" :label-width="formLabelWidth" required>
           <el-select v-model="form.status">
-            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属公司：" :label-width="formLabelWidth" required>
           <el-select v-model="form.companyId" placeholder="请选择所属公司" @change="bumenFun">
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属部门：" :label-width="formLabelWidth" required>
@@ -146,11 +150,11 @@
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息：" :label-width="formLabelWidth" required>
-          <el-input v-model="form.desc" placeholder="请输入备注信息"></el-input>
+          <el-input v-model="form.desc" placeholder="请输入备注信息" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,45 +176,45 @@
     <!-- 修改 -->
     <el-dialog title="修改信息" :visible.sync="xgBox" width="30%">
       <el-form :model="xgform">
-        <el-form-item label="线路名称：" :label-width="formLabelWidth">
-          <el-input v-model="xgform.name"></el-input>
+        <el-form-item label="线路名称：" :label-width="formLabelWidth" required>
+          <el-input v-model="xgform.name" />
         </el-form-item>
-        <el-form-item label="电压等级：" :label-width="formLabelWidth">
+        <el-form-item label="电压等级：" :label-width="formLabelWidth" required>
           <el-select v-model="xgform.voltageLevel">
-            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in dianyas" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="排序号：" :label-width="formLabelWidth">
-          <el-input v-model="xgform.orderNo"></el-input>
+        <el-form-item label="排序号：" :label-width="formLabelWidth" required>
+          <el-input v-model="xgform.orderNo" />
         </el-form-item>
-        <el-form-item label="起始杆塔号：" :label-width="formLabelWidth">
-          <el-input v-model="xgform.startTowerNum" placeholder="请输入起始杆塔号"></el-input>
+        <el-form-item label="起始杆塔号：" :label-width="formLabelWidth" required>
+          <el-input v-model="xgform.startTowerNum" placeholder="请输入起始杆塔号" />
         </el-form-item>
-        <el-form-item label="终止杆塔号：" :label-width="formLabelWidth">
-          <el-input v-model="xgform.endTowerNum" placeholder="请输入终止杆塔号"></el-input>
+        <el-form-item label="终止杆塔号：" :label-width="formLabelWidth" required>
+          <el-input v-model="xgform.endTowerNum" placeholder="请输入终止杆塔号" />
         </el-form-item>
-        <el-form-item label="线路状态：" :label-width="formLabelWidth">
+        <el-form-item label="线路状态：" :label-width="formLabelWidth" required>
           <el-select v-model="xgform.status" placeholder>
-            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in statuss" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="所属公司：" :label-width="formLabelWidth">
+        <el-form-item label="所属公司：" :label-width="formLabelWidth" required>
           <el-select v-model="xgform.companyId" placeholder="请选择所属公司" @change="bumenFun">
-            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in gongsis" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="所属部门：" :label-width="formLabelWidth">
+        <el-form-item label="所属部门：" :label-width="formLabelWidth" required>
           <el-select v-model="xgform.departmentId" placeholder="请选择所属部门">
             <el-option
               v-for="item in departments"
               :key="item.id"
               :label="item.name"
               :value="item.id"
-            ></el-option>
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="备注信息：" :label-width="formLabelWidth">
-          <el-input type="textarea" :rows="2" v-model="xgform.desc" placeholder="备注信息"></el-input>
+        <el-form-item label="备注信息：" :label-width="formLabelWidth" required>
+          <el-input v-model="xgform.desc" type="textarea" :rows="2" placeholder="备注信息" />
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -269,6 +273,9 @@ import Cookies from "js-cookie";
 import { parseTime } from "@/utils/index.js";
 
 export default {
+  filters: {
+    parseTime: parseTime
+  },
   data() {
     return {
       tableData: [],
@@ -305,9 +312,9 @@ export default {
       towerId: "",
       yinhuanId: "",
       yinhuans: [],
-      dialogFormVisible: false, //修改框显示
-      page: 1, //页数
-      total: 1, //总条数
+      dialogFormVisible: false, // 修改框显示
+      page: 1, // 页数
+      total: 1, // 总条数
       form: {
         name: "",
         desc: "",
@@ -349,15 +356,10 @@ export default {
       localizationLoading: false
     };
   },
-  filters: {
-    parseTime: parseTime
-  },
   mounted() {
-    //获取设备信息
-
+    // 获取设备信息
     this.oneMsg();
     this.gongsiFun();
-    // this.dianyaFun();
   },
 
   methods: {
@@ -406,33 +408,6 @@ export default {
         this.gongsis = msg.data.data;
       });
     },
-    // dianyaFun() {
-    //   Axios({
-    //     method: "post",
-    //     url: this.GLOBAL.AJAX_URL+"/v1/voltage-level/get-no-limit",
-    //     headers: {
-    //       Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-    //     }
-    //   }).then(msg => {
-    //     console.log(msg);
-    //     this.dianyas = msg.data.data;
-    //   });
-    // },
-    // xianluFun(query) {
-    //   if (query !== "") {
-    //     this.loading = true;
-    //     Axios({
-    //       method: "post",
-    //       url: this.GLOBAL.AJAX_URL+"/v1/line/search-by-name?name=" + query,
-    //       headers: {
-    //         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-    //       }
-    //     }).then(msg => {
-    //       // console.log(msg);
-    //       this.xianlus = msg.data.data;
-    //     });
-    //   }
-    // },
     handleEdit(index, row) {
       console.log(row);
       this.xgform.id = Number(row.lineId);
@@ -449,25 +424,41 @@ export default {
       this.xgBox = true;
     },
     xgTrue() {
+      console.log(this.xgform)
       this.xgform.orderNo = Number(this.xgform.orderNo);
-      Axios({
-        method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/line/update",
-        data: this.xgform,
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        // console.log(msg);
-        if (msg.data.code === 0 && msg.data.data.rowsAffected != 0) {
-          this.pageChange(this.page);
-          this.xgBox = false;
-          this.$message.success("修改成功");
-        } else {
-          this.xgBox = false;
-          this.$message.error("修改失败");
-        }
-      });
+      switch ("") {
+        case this.xgform.name:
+          this.$message.error("未输入线路名");
+          break;
+        case this.xgform.voltageLevel:
+          this.$message.error("未选择电压等级");
+          break;
+        default:
+          Axios({
+            method: "post",
+            url: this.GLOBAL.AJAX_URL + "/v1/line/update",
+            data: this.xgform,
+            headers: {
+              Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+            }
+          }).then(msg => {
+            console.log(msg);
+            if (msg.data.code === 0) {
+              if (msg.data.data.rowsAffected != 0) {
+                this.pageChange(this.page);
+                this.xgBox = false;
+                this.$message.success("修改成功");
+              } else {
+                this.$message.warning("未修改");
+                this.xgBox = false;
+              }
+            } else {
+              this.xgBox = false;
+              this.$message.error("修改失败");
+            }
+          });
+          break;
+      }
     },
     handleDelete(index, row) {
       this.delId = row.lineId;
@@ -525,7 +516,7 @@ export default {
         case this.form.voltageLevel:
           this.$message.error("未选择电压等级");
           break;
-          case this.form.orderNo:
+        case this.form.orderNo:
           this.$message.error("未输入排序号");
           break;
         default:

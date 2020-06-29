@@ -15,10 +15,10 @@ import VueClipboard from 'vue-clipboard2'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-import API_DATA from '@/api/axios.js';
+import API_DATA from '@/api/axios.js'
 Vue.prototype.GLOBAL = API_DATA
-import LABEL_DATA from '@/api/label.js';
-Vue.prototype.LABEL_DATA = LABEL_DATA;
+import LABEL_DATA from '@/api/label.js'
+Vue.prototype.LABEL_DATA = LABEL_DATA
 
 /**
  * If you don't want to use mock-server

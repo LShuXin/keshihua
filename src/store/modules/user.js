@@ -1,11 +1,11 @@
-import { login, logout, getInfo,login2} from '@/api/user'
+import { login, logout, getInfo, login2 } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
   name: '',
-  avatar: '',
+  avatar: ''
 }
 
 const mutations = {
@@ -31,8 +31,8 @@ const actions = {
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         commit('SET_NAME', data.user.name)
-        commit('SET_AVATAR', "")
-        resolve()
+        commit('SET_AVATAR', '')
+        resolve(response)
       }).catch(error => {
         // console.log(error)
         reject(error)
@@ -49,7 +49,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         commit('SET_NAME', data.user.name)
-        commit('SET_AVATAR', "")
+        commit('SET_AVATAR', '')
         resolve(response)
       }).catch(error => {
         console.log(error)

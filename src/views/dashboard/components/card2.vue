@@ -1,59 +1,44 @@
 
 <template>
   <el-card class="box-card BigBox" shadow="hover" style="height:100%;">
-    <!-- <el-button
-      style="float: right; padding: 3px 0;font-size:20px; line-height:0px;"
-      type="text"
-    >· · ·</el-button>-->
     <span class="topBox">工作台</span>
     <el-row :gutter="20" :span="24">
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="rdgt" @click.native="msge">
-          <!-- <img src="../../../../public/image/rdgt.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe79b;</span>
-
+        <el-card id="rdgt" class="box-card" shadow="hover" @click.native="msge">
+          <span id="One" class="icon iconfont" style="font-size:25px;line-height:30px;">&#xe79b;</span>
           <p>事故多发</p>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="wqx" @click.native="msge">
-          <!-- <img src="../../../../public/image/wqx.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:35px;line-height:30px;">&#xe60e;</span>
+        <el-card id="wqx" class="box-card" shadow="hover" @click.native="msge">
+          <span id="One" class="icon iconfont" style="font-size:35px;line-height:30px;">&#xe60e;</span>
 
           <p>微气象</p>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="xlfb" @click.native="msge">
-          <!-- <img src="../../../../public/image/xlfb.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe660;</span>
-
+        <el-card id="xlfb" class="box-card" shadow="hover" @click.native="msge">
+          <span id="One" class="icon iconfont" style="font-size:25px;line-height:30px;">&#xe660;</span>
           <p>线路分布</p>
         </el-card>
       </el-col>
     </el-row>
     <el-row :gutter="20" :span="24">
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="ssjk" @click.native="rout">
-          <!-- <img src="../../../../public/image/ssjk.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe609;</span>
-
+        <el-card id="ssjk" class="box-card" shadow="hover" @click.native="rout">
+          <span id="One" class="icon iconfont" style="font-size:25px;line-height:30px;">&#xe609;</span>
           <p>实时监控</p>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="zcgl" @click.native="zcgl">
-          <!-- <img src="../../../../public/image/tj.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe6d9;</span>
-
+        <el-card id="zcgl" class="box-card" shadow="hover" @click.native="zcgl">
+          <span id="One" class="icon iconfont" style="font-size:25px;line-height:30px;">&#xe6d9;</span>
           <p>资产管理</p>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card class="box-card" shadow="hover" id="qtxm" @click.native="msge">
-          <!-- <img src="../../../../public/image/qtxm.png" alt  /> -->
-          <span class="icon iconfont" id="One" style="font-size:25px;line-height:30px;">&#xe786;</span>
-
+        <el-card id="qtxm" class="box-card" shadow="hover" @click.native="msge">
+          <span id="One" class="icon iconfont" style="font-size:25px;line-height:30px;">&#xe786;</span>
           <p>其他项目</p>
         </el-card>
       </el-col>
@@ -103,7 +88,6 @@ img {
 .BigBox >>> .el-card__body {
   height: 100%;
 }
-
 #rdgt {
   background: #1ca3ff;
   &:hover {
@@ -118,19 +102,12 @@ img {
     box-shadow: 0 26px 40px -24px rgba(0, 36, 100, 0.3) !important ;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
-
     border: 0px solid #fff;
     margin-left: 0;
     box-shadow: 0 0 0 #fff !important;
   }
-  // box-shadow: 6 6 10 #fff !important;
 }
 #wqx {
   background: #f74f77;
@@ -144,11 +121,6 @@ img {
     border: 0px solid #fff;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
     border: 0px solid #fff;
@@ -168,11 +140,6 @@ img {
     border: 0px solid #fff;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
     border: 0px solid #fff;
@@ -193,11 +160,6 @@ img {
     border: 0px solid #fff;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
     border: 0px solid #fff;
@@ -218,11 +180,6 @@ img {
     border: 0px solid #fff;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
     border: 0px solid #fff;
@@ -233,7 +190,6 @@ img {
 #zcgl {
   background: #28d7c0;
   color: #fff;
-
   &:hover {
     background: #fff;
     color: #28d7c0;
@@ -244,11 +200,6 @@ img {
     border: 0px solid #fff;
   }
   &:active {
-    // margin-top: 10%;
-    // margin-left: 20%;
-    // width: 85%;
-    // height: 65%;
-    // background: pink;
     -webkit-transform: translateY(0px);
     transform: translateY(0px);
     border: 0px solid #fff;
@@ -260,20 +211,22 @@ img {
 <script>
 export default {
   methods: {
+    //未开发功能提示
     msge() {
       this.$message({
         showClose: false,
-        message: "该账号没有此权限~",
-        type: "warning"
-      });
+        message: '该账号没有此权限~',
+        type: 'warning'
+      })
     },
-    rout(){
-       this.$router.push("/nested")
+    //页面跳转
+    rout() {
+      this.$router.push('/nested')
     },
-    zcgl(){
-      this.$router.push("/table/xlgl")
+    zcgl() {
+      this.$router.push('/table/xlgl')
     }
 
   }
-};
+}
 </script>

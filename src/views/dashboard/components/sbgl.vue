@@ -3,50 +3,50 @@
     <div id="boxTop">设备管理</div>
     <p class="one">新装设备匹配</p>
     <p class="two">
-      +{{installedCount}}
-      <span style="font-size:16px; color:#333;">/{{totalCount}}</span>
+      +{{ installedCount }}
+      <span style="font-size:16px; color:#333;">/{{ totalCount }}</span>
     </p>
-    <el-progress :percentage="installedPercent" :show-text="false"></el-progress>
+    <el-progress :percentage="installedPercent" :show-text="false" />
     <p class="three">
       最新安装了
-      <span>{{installedCount}}</span> 台设备
+      <span>{{ installedCount }}</span> 台设备
     </p>
   </el-card>
 </template>
 <script>
-import Axios from "axios";
-import Cookies from "js-cookie";
+import Axios from 'axios'
+import Cookies from 'js-cookie'
 export default {
   data() {
     return {
-      totalCount: "",
+      totalCount: '',
       installedPercent: 0,
-      installedCount:""
-    };
+      installedCount: ''
+    }
   },
   mounted() {
-    this.msg();
+    this.msg()
   },
   methods: {
     msg() {
       Axios({
-        method: "post",
+        method: 'post',
         url:
           this.GLOBAL.AJAX_URL +
-          "/v1/device/get-device-manager?user-id=" +
-          localStorage.getItem("userId"),
+          '/v1/device/get-device-manager?user-id=' +
+          localStorage.getItem('userId'),
         headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          Authorization: 'Bearer ' + Cookies.get('vue_admin_template_token')
         }
       }).then(msg => {
         // console.log(msg);
-        this.totalCount = msg.data.data.totalCount;
-        this.installedPercent =Number(msg.data.data.installedPercent);
-        this.installedCount = Number(msg.data.data.installedCount);
-      });
+        this.totalCount = msg.data.data.totalCount
+        this.installedPercent = Number(msg.data.data.installedPercent)
+        this.installedCount = Number(msg.data.data.installedCount)
+      })
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .el-card >>> .el-card__body {
