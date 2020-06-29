@@ -234,6 +234,7 @@ export default {
     },
     phoneLogin() {
       this.loading = true;
+      
       this.$store
         .dispatch("user/login2", this.loginForm2)
         .then(msg => {

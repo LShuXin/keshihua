@@ -118,7 +118,6 @@ const Device_Snap_Setting = [
   { id: 3, name: '30分钟' }
 ]
 const Early_Alarms = false
-
 export default {
   ALARM_CAUSE, // 告警原因
   ALARM_LEVEL, // 告警等级

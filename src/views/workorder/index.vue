@@ -367,12 +367,18 @@ export default {
         { id: 1, name: '是' }
       ],
       fileList: [],
-      totalNum: null
+      totalNum: null,
+      set: setInterval(this.setFun ,2000)
     }
   },
   mounted() {
     this.gongsiFun()
     this.workOrder()
+  },
+  beforeDestroy() {
+    if (this.set) {
+      clearInterval(this.set);
+    }
   },
   methods: {
     tableRowClassName({ row, rowIndex }) {
@@ -420,10 +426,12 @@ export default {
           Authorization: 'Bearer ' + Cookies.get('vue_admin_template_token')
         }
       }).then(msg => {
-        console.log(msg)
         this.gdVal = msg.data.data.devices
         this.totalNum = msg.data.data.totalCount
       })
+    },
+    setFun(){
+      this.workOrder()
     },
     xiangqing(row) {
       console.log(row)

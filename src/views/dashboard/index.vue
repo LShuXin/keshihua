@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+// import { mapGetters } from "vuex";
 import lineChart from "./components/lineChart";
 import cardBox from "./components/card";
 import rouechart from "./components/rouechart";

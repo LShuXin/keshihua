@@ -186,7 +186,12 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column prop="level" label="告警级别" />
+            <el-table-column prop="level" label="告警级别" >
+              <template slot-scope="scop">
+                <span v-if ="scop.row.level === 1"> 紧急</span>
+                <span v-else>非紧急</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="departmentName" label="部门" />
             <el-table-column prop="teamName" label="班组" />
             <el-table-column prop="lineName" label="线路" />
@@ -206,7 +211,7 @@
                   icon="el-icon-user"
                   style="border:0; background: #f74f77; color:#fff;"
                   size="mini"
-                  @click="()=>{this.pgBox = true;}"
+                  @click="paFun()"
                 >派工</el-button>
                 <span v-else>已派工</span>
               </template>
@@ -416,7 +421,7 @@ export default {
         this.GLOBAL.AJAX_URL +
         "/v1/alarm/query?user-id=" +
         localStorage.getItem("userId") +
-        "&order-by=alarm.created_at&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
+        "&order-by=alarm.updated_at&page=1&size=7&department=&team=&start-time=&end-time=&cause-level=&location=&line=&tower=&voltage-level=",
       headers: {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
@@ -433,6 +438,10 @@ export default {
     });
   },
   methods: {
+    // paigong
+    paFun(){
+      this.pgBox = true;
+    },
     // 未读消息添加背景色
     tableRowClassName({ row, rowIndex }) {
       if (row.hasRead === 0) {
@@ -692,6 +701,7 @@ export default {
             // console.log(msg);
             if (msg.data.code === 0) {
               this.$message.success("短信发送成功");
+              this.row.hasWorkOrder = 1;
             } else {
               this.$message.error("短信发送失败");
             }
