@@ -78,7 +78,9 @@ export default {
   },
   methods: {
     //获取厂商信息
+    
     msg() {
+       console.log(Cookies.get('vue_admin_template_token'))
       Axios({
         method: "post",
         url:

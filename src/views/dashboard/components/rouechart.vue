@@ -133,6 +133,7 @@ export default {
           Authorization: 'Bearer ' + Cookies.get('vue_admin_template_token')
         }
       }).then(msg => {
+       
         for (var i = 0; i < msg.data.data.length; i++) {
           msg.data.data[i].percent = msg.data.data[i].percent / 100
         }

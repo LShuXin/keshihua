@@ -66,7 +66,7 @@
           <el-row :gutter="10" style="margin-top:20px;">
             <el-col :span="7">
               <span>告警原因</span>
-              <el-select v-model="alarmCause" placeholder size="mini" multiple @change="val">
+              <el-select v-model="alarmCause" placeholder size="mini" multiple >
                 <el-option
                   v-for="item in this.LABEL_DATA.ALARM_CAUSE"
                   :key="item.id"
@@ -77,7 +77,7 @@
             </el-col>
             <el-col :span="7">
               <span>告警级别</span>
-              <el-select v-model="alarmLevel" placeholder size="mini" @change="val">
+              <el-select v-model="alarmLevel" placeholder size="mini" >
                 <el-option
                   v-for="item in this.LABEL_DATA.ALARM_LEVEL"
                   :key="item.id"

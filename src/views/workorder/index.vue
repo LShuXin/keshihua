@@ -61,7 +61,7 @@
         :row-class-name="tableRowClassName"
         @row-click="reading"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <!-- <el-table-column type="selection" width="55" align="center" /> -->
         <el-table-column label="序号" type="index" />
         <el-table-column prop="createdAt" label="派单时间" style="background:#000;" >
           <template slot-scope="data">

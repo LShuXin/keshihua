@@ -52,7 +52,7 @@ export default {
         }
       }).then(msg => {
         this.tableData = msg.data.data
-        console.log(msg);
+        // console.log(msg);
       })
     }
   }

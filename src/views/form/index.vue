@@ -186,9 +186,9 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column prop="level" label="告警级别" >
+            <el-table-column prop="level" label="告警级别">
               <template slot-scope="scop">
-                <span v-if ="scop.row.level === 1"> 紧急</span>
+                <span v-if="scop.row.level === 1">紧急</span>
                 <span v-else>非紧急</span>
               </template>
             </el-table-column>
@@ -426,7 +426,7 @@ export default {
         Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
       }
     }).then(msg => {
-      console.log(msg);
+      // console.log(msg);
       if (msg.data.data.alarms === []) {
         this.$message.warning("暂无告警");
       } else {
@@ -439,7 +439,7 @@ export default {
   },
   methods: {
     // paigong
-    paFun(){
+    paFun() {
       this.pgBox = true;
     },
     // 未读消息添加背景色
@@ -468,7 +468,7 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/alarm/query?user-id=" +
             localStorage.getItem("userId") +
-            "&order-by=alarm.created_at&order=&page=" +
+            "&order-by=alarm.updated_at&order=&page=" +
             val +
             "&size=7&department=" +
             this.gjbmname +
@@ -499,7 +499,7 @@ export default {
           }
         }).then(msg => {
           if (msg.data.code === 0) {
-            console.log(msg)
+            console.log(msg);
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;
           } else {
@@ -521,7 +521,7 @@ export default {
             this.GLOBAL.AJAX_URL +
             "/v1/alarm/query?user-id=" +
             localStorage.getItem("userId") +
-            "&order-by=alarm.created_at&order=&page=" +
+            "&order-by=alarm.updated_at&order=&page=" +
             val +
             "&size=7&department=" +
             this.gjbmname +
@@ -570,19 +570,23 @@ export default {
       this.form.xgUserName = row.userName;
       this.form.xgPhoneNum = row.userPhone;
       this.url = "http://47.104.136.74:8083/" + row.alarmImagePath;
-      axios({
-        method: "post",
-        url: this.GLOBAL.AJAX_URL + "/v1/user-alarm/create",
-        data: {
-          userId: Number(localStorage.getItem("userId")),
-          alarmId: Number(row.id)
-        },
-        headers: {
-          Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
-        }
-      }).then(msg => {
-        row.hasRead = 1;
-      });
+      if (row.hasRead !== 1) {
+        axios({
+          method: "post",
+          url: this.GLOBAL.AJAX_URL + "/v1/user-alarm/create",
+          data: {
+            userId: Number(localStorage.getItem("userId")),
+            alarmId: Number(row.id)
+          },
+          headers: {
+            Authorization: "Bearer " + Cookies.get("vue_admin_template_token")
+          }
+        }).then(msg => {
+          row.hasRead = 1;
+        });
+      } else {
+        return;
+      }
     },
     // 告警部门模糊查询
     remoteMethod(query) {
@@ -780,7 +784,7 @@ export default {
         }).then(msg => {
           // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
-            console.log(msg)
+            console.log(msg);
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;
@@ -829,7 +833,7 @@ export default {
         }).then(msg => {
           // console.log(String(this.gjyyvalue));
           if (msg.data.code === 0) {
-            console.log(msg)
+            console.log(msg);
             this.$message.success("查询成功");
             this.gjsjdata = msg.data.data.alarms;
             this.pagess = msg.data.data.totalCount;

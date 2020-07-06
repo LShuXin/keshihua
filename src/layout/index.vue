@@ -2,7 +2,7 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div class="main-container" @mouseenter="mouseFun" @mouseleave="mouseFun2">
+    <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
@@ -43,15 +43,6 @@ export default {
     }
   },
   methods: {
-    mouseFun() {
-      // console.log(111);
-      // this.$store.state.app.sidebar.opened = false
-    },
-    mouseFun2() {
-      // console.log(222);
-      // this.$store.state.app.sidebar.opened = true
-
-    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }
